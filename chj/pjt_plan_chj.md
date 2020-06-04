@@ -25,7 +25,7 @@
   ## <개발 환경> 
   ### HW 구성
   
-  `필요 모듈` 
+  `필요 모듈`  <br>
   라즈베리파이 야간 적외선 카메라 모듈  <br>
   라즈베리파이 공식 7인치 터치스크린 + LCD 케이스 Black <br>
   DHT11 온습도센서 모듈 <br>
@@ -35,6 +35,7 @@
   ReSpeaker 2-Mics Pi HAT <br>
   소형 스테레오 스피커 Stereo Enclosed Speaker - 3W 8Ω  <br>
   WIFI 모듈  <br>
+  
   
   ### HW 기능(제어 방법)
   

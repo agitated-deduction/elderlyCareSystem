@@ -33,8 +33,10 @@
   
   ### 프로그램 사용법 (interface)
   
-  ### 개발 환경 (언어, 툴, 사용 시스템 등)
-  
+  ### 개발 환경
+   OS : Windows 10 , Linux Raspbian  
+   Tool : Visual Studio code, gcc  
+   Language : C, Python
   
   ## <개발 일정>
   내용 | 일정 

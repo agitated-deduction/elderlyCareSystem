@@ -41,9 +41,9 @@
   
   ### SW 설계도 (흐름도 및 다이어 그램)
   
-  ### SW 알고리즘 
+  ### SW 기능 (알고리즘 설명) 
   
-  ### 프로그램 사용법 (interface)
+  ### 프로그램 사용법 (interface 시나리오)
   
   ### 개발 환경
    OS : Windows 10 , Linux Raspbian  

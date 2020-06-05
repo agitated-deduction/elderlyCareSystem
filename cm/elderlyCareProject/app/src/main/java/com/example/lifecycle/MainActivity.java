@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //  0.2radio 값 저장하기
+        //  0.2 radio 값 저장하기
         final RadioButton option_admin = (RadioButton) findViewById(R.id.op_admin);
         final RadioButton option_user = (RadioButton) findViewById(R.id.op_user);
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 String id = edit_id.getText().toString();
                 String pw = edit_pw.getText().toString();
 
-                // 전송 데이터(Message)를 문자열로
+                //  > 전송 데이터(Message) : String
                 String send_data = String.format("%-10s%-10s%d", id, pw,rad_value);
 
 

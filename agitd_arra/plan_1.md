@@ -182,3 +182,12 @@
     2. 
 * 대체 흐름 :<br>
 <br><br>
+
+## 환경설정
+
+* JDK 11.0.6
+* Eclipse 2019-09
+* Tomcat 8.5.55
+* maven 3.6.3
+* spring tools 3.9.12
+* MySQL 8.0.20

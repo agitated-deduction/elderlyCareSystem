@@ -52,3 +52,34 @@ datalog_today
 
 datalog_day
 datalog_month
+
+
+
+-------------
+#DB connection
+
+
+```java
+
+    static final String DRIVER = "com.mysql.jdbc.Driver";
+    static final String URL = "jdbc:mysql://127.0.0.1:3306/healthmonitoring";
+    static final String USERNAME = "healthmonitoring";
+    static final String PASSWORD = "hm1234";
+
+```
+DB 연결 테스트를 하는데 오류가 발생했다.
+```
+Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary. java.sql.SQLException: The server time zone value '????α? ????' is unrecognized or represents more than one time zone. You must configure either the server or JDBC driver (via the 'serverTimezone' configuration property) to use a more specifc time zone value if you want to utilize time zone support. at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129)
+```
+
+
+https://developer-kylee.tistory.com/8<br>
+위의 블로그 참고하여 수정
+```java
+
+    static final String DRIVER = "com.mysql.cj.jdbc.Driver";
+    static final String URL = "jdbc:mysql://127.0.0.1:3306/healthmonitoring?serverTimezone=UTC";
+    static final String USERNAME = "healthmonitoring";
+    static final String PASSWORD = "hm1234";
+
+```

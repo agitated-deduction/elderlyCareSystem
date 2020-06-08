@@ -8,24 +8,37 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lifecycle.DataSet;
 import com.example.lifecycle.R;
 
-public class MenuActivity extends AppCompatActivity {
+import org.w3c.dom.Text;
 
-    public static final String KEY_SIMPLE_DATA = "data"
-            ;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class MenuActivity extends AppCompatActivity {
+    // 1.1 Button(name) & TextView(data) 생성
+    public ArrayList<Button> buttons;
+    public ArrayList<TextView> temps;
+    public ArrayList<TextView> purses;
+    public ArrayList<TextView> gpss;
+    public ArrayList<TextView> stats;
+
+    public static final String KEY_SIMPLE_DATA = "data";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // 1. MenuActivity 화면 구성하기
         LinearLayout mainLayout = new LinearLayout(this);
-        LinearLayout subLayout = new LinearLayout(this);
-
         mainLayout.setOrientation(LinearLayout.VERTICAL);
-        subLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        ArrayList<LinearLayout> subLayouts;
+
 
         //  > Main Layer
         LinearLayout.LayoutParams params1 =
@@ -42,40 +55,68 @@ public class MenuActivity extends AppCompatActivity {
                         LinearLayout.HORIZONTAL
                 );
 
-        // 1.1 Button(name) & TextView(data) 생성
-        Button button1 = new Button(this);
-        TextView text_temp = new TextView(this);
-        TextView text_pur = new TextView(this);
-        TextView text_gps = new TextView(this);
-        TextView text_stat = new TextView(this);
-
-
+        buttons = new ArrayList<Button>();
+        temps = new ArrayList<TextView>();
+        purses = new ArrayList<TextView>();
+        gpss = new ArrayList<TextView>();
+        stats = new ArrayList<TextView>();
 
         // 2.1 데이터 적용
         Intent intent = getIntent();
         if(intent!=null){
-            Bundle bundle = intent.getExtras();
-            DataSet data = bundle.getParcelable(KEY_SIMPLE_DATA);
-            if (intent != null) {
-                text_temp.setText("체온 "+data.temporature + "°C\t");
-                text_temp.setLayoutParams(params2);
-                subLayout.addView(text_temp);
-                text_pur.setText("맥박 "+data.purse + "bpm\t");
-                text_pur.setLayoutParams(params2);
-                subLayout.addView(text_pur);
-                text_gps.setText("집-거리 "+data.gps + "m\t");
-                text_gps.setLayoutParams(params2);
-                subLayout.addView(text_gps);
-                text_stat.setText("상태 "+data.statement + "  \t");
-                text_stat.setLayoutParams(params2);
-                subLayout.addView(text_stat);
-                button1.setText(data.user_name);//
-                button1.setLayoutParams(params1);
-                mainLayout.addView(button1);
+            Bundle bundle = intent.getBundleExtra(KEY_SIMPLE_DATA);
+            ArrayList<DataSet> elderData = bundle.getParcelableArrayList(KEY_SIMPLE_DATA);
+            //Toast.makeText(MenuActivity.this,"First name: "+elderData.get(0).user_name,Toast.LENGTH_SHORT).show();
+
+            int j = 0;
+            for (DataSet i:elderData) {
+                //Toast.makeText(MenuActivity.this,"First name: "+i.user_name,Toast.LENGTH_SHORT).show();
+                if ((i != null)) {
+
+                    Button button = new Button(this);
+                    TextView temp = new TextView(this);
+                    TextView purse = new TextView(this);
+                    TextView gps = new TextView(this);
+                    TextView stat = new TextView(this);
+
+                    button.setText(i.user_name);
+                    temp.setText("체온 " + i.temporature + "°C\t");
+                    purse.setText("맥박 " + i.purse + "bpm\t");
+                    gps.setText("집-거리 " + i.gps + "m\t");
+                    stat.setText("상태 " + i.statement + "  \t");
+
+                    buttons.add(j, button);
+                    temps.add(j, temp);
+                    purses.add(j, temp);
+                    gpss.add(j, temp);
+                    stats.add(j, temp);
+                    // SubLayout 구성해서 내용 담고 MainLayout에 추가!!
+                    LinearLayout subLayout = new LinearLayout(this);
+
+                    subLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                    subLayout.addView(buttons.get(j),0,params2);
+                    subLayout.addView(temps.get(j),1,params2);
+
+//                    purses.get(j).setLayoutParams(params2);
+//                    subLayout.addView(purses.get(j),2);
+
+//                    gpss.get(j).setLayoutParams(params2);
+//                    subLayout.addView(gpss.get(j));
+//
+//                    stats.get(j).setLayoutParams(params2);
+//                    subLayout.addView(stats.get(j));
+
+                    mainLayout.addView(subLayout);
+                    j++;
+                }
             }
+            setContentView(mainLayout);
         }
-        mainLayout.addView(subLayout);
-        setContentView(mainLayout);
+
+
+        // Todo 이름 버튼 누르면 영상 Url로 이동 기능 추가!!
+
 
 
 

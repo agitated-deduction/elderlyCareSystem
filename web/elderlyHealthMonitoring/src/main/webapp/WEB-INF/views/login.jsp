@@ -1,17 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
 <form action = "/member/memberLogin" method = "post" id = "loginForm">
 <div>
-	¾ÆÀÌµğ<input type = "text" name = "m_id" >
-	ºñ¹Ğ¹øÈ£<input type = "password" name = "m_pwd">
-	<button type = "submit">·Î±×ÀÎ</button>
+	ì•„ì´ë””<input type = "text" name = "m_id" >
+	ë¹„ë°€ë²ˆí˜¸<input type = "password" name = "m_pwd">
+	<button type = "submit">ë¡œê·¸ì¸</button>
 </div>
 </form>
 

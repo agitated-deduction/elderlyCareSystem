@@ -10,9 +10,11 @@
 <h1>
 	Hello world!  
 </h1>
-
+<p>session id : ${m_id }</p>
+<p></p>
 <P>  The time on the server is ${serverTime}. </P>
 <a href = "memberLogin" class = "btn btn-default" role = "button">로그인</a>
 <a href = "memberJoin" class = "btn btn-default" role = "button">회원가입</a>
+<a href = "mypage" class = "btn btn-default" role = "button">내 정보</a>
 </body>
 </html>

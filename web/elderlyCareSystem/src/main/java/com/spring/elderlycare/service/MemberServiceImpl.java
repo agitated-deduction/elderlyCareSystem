@@ -21,8 +21,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 	@Override
 	public boolean loginCheck(MemberDTO mdto){
-		boolean isExist = mdao.exist(mdto);
-		return isExist;
+		return mdao.exist(mdto);
 	}
 	@Override
 	public int modify(MemberDTO mdto){
@@ -31,9 +30,9 @@ public class MemberServiceImpl implements MemberService{
 		return ret;
 	}
 	@Override
-	public int delet(String id){
+	public int delet(MemberDTO mdto){
 		int ret = 0;
-		mdao.deleteMember(id);
+		mdao.deleteMember(mdto);
 		return ret;
 	}
 	@Override

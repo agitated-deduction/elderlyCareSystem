@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1>login page</h1>
-<form action ="memberCheck" method = "POST">
+<form action ="memberLogin" method = "POST">
 <div>
 	<label for = "inp_m_id">ID:</label>
 	<input id = "inp_m_id" type = "text" name = "inp_m_id" >

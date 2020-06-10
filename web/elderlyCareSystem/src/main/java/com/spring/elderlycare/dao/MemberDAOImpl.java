@@ -1,32 +1,42 @@
 package com.spring.elderlycare.dao;
 
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.elderlycare.dto.MemberDTO;
 
 @Repository("memberDAO")
 public class MemberDAOImpl implements MemberDAO{
+	
+	@Autowired
+	private SqlSession sqlSession;
+	@Autowired
+	MemberDTO mdto;
+	private static final String ns = "com.spring.elderlycare.dao.MemberDAOImpl.";
 	@Override
 	public void insertMember(MemberDTO mdto) {
+		sqlSession.insert(ns+"insertMember", mdto);
+		
 	}
 	@Override
 	public void updateMember(MemberDTO mdto) {
+		sqlSession.update(ns+"modifyMember", mdto);
 	}
 	@Override
-	public void deleteMember(String id) {
+	public void deleteMember(MemberDTO mdto) {
+		sqlSession.delete(ns+"deleteMember", mdto);
 	}
 	@Override
 	public MemberDTO selectOne(String id) {
-		MemberDTO mdto = null;
-		
+		mdto = sqlSession.selectOne(ns+"selectOne", id);
 		return mdto;
 	}
 	@Override
 	public boolean exist(MemberDTO mdto) {
-		boolean isExist = false;
-		//test 
-		if(mdto.getM_id().equals("test"))
-			isExist = true;
-		return isExist;
+		//System.out.printf("%d", (int)sqlSession.selectOne(ns+"isExist", mdto));
+//		
+//		return false;
+		return (boolean)sqlSession.selectOne(ns+"isExist", mdto);
 	}
 }

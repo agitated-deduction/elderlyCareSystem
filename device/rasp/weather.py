@@ -45,3 +45,6 @@ print('미세먼지:'+FineDust)
 print('초미세먼지:'+UltraFineDust)
 print('오존 지수:'+Ozon)
 
+
+# print('reload')
+

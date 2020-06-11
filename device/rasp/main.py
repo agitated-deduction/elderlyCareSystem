@@ -1,11 +1,14 @@
 #-*- encoding:utf-8 -*-
-import time, random, sys
+import time, random, sys, os
+import subprocess
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4 import *
 from PyQt4 import uic
 from PyQt4 import QtCore, QtCore, QtGui
-from weather import NowTemp, WeatherCast, TodayUV, FineDust, UltraFineDust, Ozon
+from weather import *
+# from weather import NowTemp
+
 
 # -- 온습도 센서 모듈 
 import Adafruit_DHT
@@ -13,18 +16,18 @@ sensor = Adafruit_DHT.DHT11
 pin = 4  # 온습도 센서 핀 
 
 
-class self(QDialog):
-    
+class mainGUI(QDialog):
+
     def __init__(self, parent=None):
         QDialog.__init__(self, parent)
         self.ui = uic.loadUi("main.ui")  # ui불러오기 
         self.ui.show()
+        # self.ui.showMaximized()
         self.setGeometry(0, 0, 800, 480)  # 화면 사이즈 
 
-        # self.worker_thread = QThread() # 쓰레드  
-        # self.worker_thread.start()
-
-        self.th = Thread1()
+        self.th = Thread1()  # dht
+        self.th2 = Thread2()  # weather
+        self.th3 = Thread3() # timer
         
 
         # 현재 날짜 세팅 
@@ -33,24 +36,31 @@ class self(QDialog):
         self.displayDateTime() # 날짜 함수 실행 
         self.image()  # 이미지 함수 실행 
         self.dht() # 온도 센서 
-        self.displayweather()
+        self.displayweather()  # 날씨 
         
         
-    
-
     def timer_(self):
 
+        self.th3.start()  # 쓰레드 시작 
+
+        #---- 시계
         # timer 초기화
         self.timer = QtCore.QTimer()
         
         # 업데이트 및 시작
         self.timer.timeout.connect(self.displayDateTime)
-        self.timer.start(1000)
-        
+        self.timer.start(1000) # 1초다마 실행 
+
+
+        #---- 날씨 
+        self.Weathertimer = QtCore.QTimer()
+        self.Weathertimer.setInterval(1000*60*60*3)      # 1000*60*60*3  세 시간 마다 실행 
+        self.Weathertimer.timeout.connect(self.displayweather)
+        self.Weathertimer.start()
+
 
     def displayDateTime(self) :
         
-
         # 현재 날짜 세팅 
         self.dateTimeVar = QDateTime.currentDateTime()  # 값 받아오기
         currenttime = self.dateTimeVar.toString("yyyy-MM-dd      hh:mm:ss")
@@ -78,7 +88,7 @@ class self(QDialog):
 
     def dht(self):  # 온습도 센서 
 
-        self.th.start()
+        self.th.start()  # 쓰레드 시작 
 
         self.th.change_value1.connect(self.ui.progressBar.setValue)
         self.th.change_value2.connect(self.ui.progressBar_2.setValue)
@@ -86,14 +96,16 @@ class self(QDialog):
         #---- 35도 이상일경우 열사병 알림 
         # if()
 
-    def displayweather(self):
-
+    def displayweather(self):  
+        self.th2.start()  # 쓰레드 시작 
+ 
         self.ui.label_weather_6.setText('현재온도: '+NowTemp+'\n')
         self.ui.label_weather_5.setText(WeatherCast+'\n')
         self.ui.label_weather_4.setText('자외선:'+TodayUV+'\n')
         self.ui.label_weather_3.setText('미세먼지:'+FineDust+'\n')
         self.ui.label_weather_2.setText('초미세먼지:'+UltraFineDust+'\n')
         self.ui.label_weather.setText('오존 지수:'+Ozon+'\n')
+
 
 
 class Thread1(QThread):
@@ -111,23 +123,49 @@ class Thread1(QThread):
 
     def run(self):
         
+        
         while True:
             
-
-            h, t = Adafruit_DHT.read_retry(sensor, pin)
-            
+            h, t = Adafruit_DHT.read_retry(sensor, pin)         
 
             self.change_value1.emit(t)
             self.change_value2.emit(h)
             
-            print(t)  # 쓰레드 확인용
-            print(h)
+            # print(t)  # 쓰레드 확인용
+            # print(h)
             self.msleep(100)
+
+
+class Thread2(QThread):   ## weather.py  reload
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+            
+        from weather import *
+        import weather  
+        reload(weather)   # 날씨를 3 시간 마다 다시 읽기 위해서 
+
+
+class Thread3(QThread):   ## 타이머,카메라 쓰레드 
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+            
+        mainGUI.dateTimeVar = QDateTime.currentDateTime()  # 값 받아오기
+
+        subprocess.call('sh ~/stream.sh', shell=True)  ## 카메라 스트리밍 
+        # stream.sh 파일 없으면 만든다.  mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/"
+
+       
 
 
 if __name__ == '__main__':
     
     app = QApplication(sys.argv)    
-    w = self()
+    w = mainGUI()
     sys.exit(app.exec_())
     

@@ -210,3 +210,159 @@ https://www.lesstif.com/java/logback-spring-framework-log-19365998.html
 
 ### interceptor
 컨트롤러에서 들어오는 HttpRequest와 컨트롤러가 응답하는 HttpResponse를 가로채는 역할을 한다.
+
+
+#RESTful
+
+###open api 개방형 api
+프로그래밍에서 사용할 수 있는 개방되어 있는 상태의 인터페이스
+
+###rest representational safe tranfer
+
+https://www.youtube.com/watch?v=pKT4OTFjFcA&list=PL9mhQYIlKEhfYqQ-UkO2pe2suSx9IoFT2&index=24
+
+http uri + http method
+http uri를 통해 제어할 자원 resource를 명시,
+http method (get, post, put, delete)를
+통해 해당 자원을 제어하는 명령을 내리는 방식의 아키텍쳐
+
+| http method | CRUD |
+|:--------|:--------|
+| POST | create(insert) |
+| GET | read(select) |
+| PUT | update |
+| DELETE | delete |
+
+rest의 원리를 따르는 시스템을 restful 용어 사용
+ex
+GET /list.do? no=510&name=java (query string)
+----> GET /bbs/java/510
+GET /delete.do?no=510&name=java
+----> DELETE /bbs/java/510
+GET과 POST만으로 자원에 대한 CRUD를 처리, uri는 액션을 나타내는 기존의 상태에서
+4가지 메서드를 사용하여 CRUD처리, uri는 제어하려는 자원 나타내도록
+
+RESTful과 JSON/xml
+
+json은 경량(lightweight)의 data교환 형식
+javascript에서 객체를 만들때 사용하는 표현식
+특정 언어에 종속되지 않는다.
+```json
+{
+	"string1": "value1",
+	"string2": "value2",
+	"string3": ["value3", "value4"]
+}
+```
+
+json 라이브러리 jackson
+json을 java객체로 java를 json형태로 변환해주는 json라이브러리
+
+xml extensible markup language
+데이터 저장 전달 위한 언어
+
+xml과 html
+data전달하는 것에 포커스 - data를 표현하는 것에 포커스
+사용자가 마음대로 tag정의 가능 - 미리 정의된 tag만 사용 가능
+```xml
+<?xml version = "1.0" encoding = "UTF-8"?>
+<customer>
+	<name>김형희</name>
+	<addr>진안</addr>
+	<phone>01000000000</phone>
+</customer>
+```
+
+
+##spring mvc 기반 restful 웹서비스 환경 설정, 구현
+pom.xml
+jackson mapper
+```xml
+<!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
+<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-mapper-asl</artifactId>
+    <version>1.9.13</version>
+</dependency>
+```
+
+root-context.xml
+`<mvc:annotation-driven />`
+`<mvc:default-servlet-handler/>`서버에 내부적으로 정의된 /무시
+
+구현
+1. RESTful 웹 서비스 처리할 RESTfulController클래서 작성, Spring Bean등록
+2. 요청 처리할 메서드에 @RequestMapping, @ReqeustBody(json ->java)와 @ResponseBody(java->json)어노테이션 선언
+3. REST Client Tool(Postman)을 사용하여 각각의 메서드 테스트
+4. Ajax통신을 하여 RESTful 웹서비스 호출하는 HTML페이지 작성
+
+Postman 설치 (RESTAPI 테스트 하는 Chrome 확장 프로그램)
+
+* 사용자관리
+
+| Action | Resource URI | HTTP Method |
+|:--------|:--------|:--------|
+| 사용자 목록 | /users | GET |
+| 사용자 보기 | /users/{id} | GET |
+| 사용자 등록 | /users | POST |
+| 사용자 수정 | /users | PUT |
+| 사용자 삭제 | /users/{id} | DELETE |
+
+@RequestBody : HTTP Request Body를 java 객체로 전달받을 수 있다.
+@ResponseBody : Java객체를 HTTP Response Body로 전송할 수 있다.
+
+
+오류
+
+`org.springframework.http.converter.HttpMessageNotWritableException: No converter found for return value of type: class com.spring.elderlycare.dto.MemberDTO`
+controller에서 객체 반환시 json으로 변환되지 않음.
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>2.10.0</version>
+</dependency>
+		    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.10.0</version>
+</dependency>
+```
+
+```xml
+<mvc:annotation-driven>
+		<mvc:message-converters>
+		<bean class = "org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+```
+
+###session
+클라이언트가 서버 접속하는 순간 생성
+default 유지시간 30분(서버에 접속 후 요청 하지 않는 최대 시간)
+
+web.xml파일에서 직접 설정 가능
+
+```xml
+<session-config>
+	<session-timeout>30</session-timeout>
+</session-config>
+```
+
+@SessionAttributes 파라미터 지정된 이름이 model에 저장 되면 session에도 저장됨.
+
+
+###USER기능
+
+| 동작 | 요청 | Method | 기능 |
+|:-------|:-------|:-------|:-------|
+| 로그인 화면 | /users/login | GET | 로그인 화면을 띄운다 |
+| 회원가입 화면 | /users/join | GET | 회원가입 화면을 띄운다 |
+| 로그인 체크 | /users/login | POST | 로그인 시도 시 아이디 비밀번호 체크하고 로그인 한다 |
+| 회원가입 하기 | /users/join | POST | 회원가입 한다 |
+| 로그아웃 | /users/logout | GET | 로그하웃 한다 |
+| 내 정보 | /users/{id} | GET | 로그인 된 아이디의 정보를 띄운다 |
+| 내 정보 수정 | /users/{id} | PUT | 로그인 된 아이디의 정보를 수정한다 |
+| 내 정보 삭제 | /users/{id} | DELETE | 로그인 된 아이디 정보를 삭제한다(탈퇴) |
+| 가입 승인(보류) | /users/{b_id} | PUT | 보호자의 가입을 담당자가 승인한다 |

@@ -22,7 +22,7 @@
 	<delete id = "deleteMember" parameterType = "com.spring.elderlycare.dto.MemberDTO">
 	DELETE FROM membe WHERE m_id=#{m_id} AND m_pwd = #{m_pwd};
 	</delete>
-	<select id = "selectOne" parameterType = "String">
+	<select id = "selectOne" parameterType = "String" resultType = "com.spring.elderlycare.dto.MemberDTO">
 	SELECT * FROM membe WHERE m_id = #{value};
 	</select>
 

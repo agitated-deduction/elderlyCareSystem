@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h1>JOIN</h1>
-	<form action ="memberJoin" method = "POST">
+	<form action ="join" method = "POST">
 	<div>
 	<label for = "inp_m_id">id: </label>
 	<input type = "text" name = "inp_m_id" id = "inp_m_id">

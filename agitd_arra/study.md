@@ -165,66 +165,27 @@ target : 빌드 결과물<br>
 pom.xml : maven에서 참조하는 설정파일<br>
 
 
-###log4j -> logback
-개발시 오류 확인, 처리를 위해 사용되는 logging.
-logging사용시 에러 발생 관련 정보를 제공받을 수 있어서 유용하다.
-logback은 log4j를 기반으로 만든 logging 라이브러리. logback 사용 시에 log4j보다 장점이 많다.
-https://www.lesstif.com/java/logback-spring-framework-log-19365998.html
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="30 seconds">
- 
-<property name="LOG_HOME" value="logs" />
- 	<property name="LOG_PATTERN" value="%logger{36} %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
-	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_HOME}/test-web-app.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!-- daily rollover -->
-			<fileNamePattern>${LOG_HOME}/test-web-app.log.%d{yyyy-MM-dd}.log</fileNamePattern>
-			<!-- keep 30 days' worth of history -->
-			<maxHistory>30</maxHistory>
-		</rollingPolicy>
-		<encoder>
-			<pattern>${LOG_PATTERN}</pattern>
-		</encoder>
-	</appender>
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>
-				${LOG_PATTERN}
-			</pattern>
-		</encoder>
-	</appender>
-	<logger name="org.springframework" level="DEBUG" >
-		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
-	</logger>
- 	
-	<!-- turn OFF all logging (children can override) -->
-	<root level="INFO">
-		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
-	</root>
-</configuration>
-```
+### mybatis
+개발자가 지정한 SQL, 저장 프로시저 그리고 몇가지 고급 매핑을 지원하는 퍼시스턴스 프레임워크 
+https://mybatis.org/mybatis-3/ko/index.html
 
 ### interceptor
 컨트롤러에서 들어오는 HttpRequest와 컨트롤러가 응답하는 HttpResponse를 가로채는 역할을 한다.
 
 
-#RESTful
+# RESTful
 
-###open api 개방형 api
+### open api 개방형 api
 프로그래밍에서 사용할 수 있는 개방되어 있는 상태의 인터페이스
 
-###rest representational safe tranfer
+### rest representational safe tranfer
 
 https://www.youtube.com/watch?v=pKT4OTFjFcA&list=PL9mhQYIlKEhfYqQ-UkO2pe2suSx9IoFT2&index=24
 
 http uri + http method
 http uri를 통해 제어할 자원 resource를 명시,
 http method (get, post, put, delete)를
-통해 해당 자원을 제어하는 명령을 내리는 방식의 아키텍쳐
+통해 해당 자원을 제어하는 명령을 내리는 방식의 ^아키텍쳐^
 
 | http method | CRUD |
 |:--------|:--------|
@@ -274,7 +235,7 @@ data전달하는 것에 포커스 - data를 표현하는 것에 포커스
 ```
 
 
-##spring mvc 기반 restful 웹서비스 환경 설정, 구현
+## spring mvc 기반 restful 웹서비스 환경 설정, 구현
 pom.xml
 jackson mapper
 ```xml
@@ -338,7 +299,7 @@ controller에서 객체 반환시 json으로 변환되지 않음.
 	</mvc:annotation-driven>
 ```
 
-###session
+### session
 클라이언트가 서버 접속하는 순간 생성
 default 유지시간 30분(서버에 접속 후 요청 하지 않는 최대 시간)
 
@@ -353,7 +314,7 @@ web.xml파일에서 직접 설정 가능
 @SessionAttributes 파라미터 지정된 이름이 model에 저장 되면 session에도 저장됨.
 
 
-###USER기능
+### USER기능
 
 | 동작 | 요청 | Method | 기능 |
 |:-------|:-------|:-------|:-------|
@@ -366,3 +327,28 @@ web.xml파일에서 직접 설정 가능
 | 내 정보 수정 | /users/{id} | PUT | 로그인 된 아이디의 정보를 수정한다 |
 | 내 정보 삭제 | /users/{id} | DELETE | 로그인 된 아이디 정보를 삭제한다(탈퇴) |
 | 가입 승인(보류) | /users/{b_id} | PUT | 보호자의 가입을 담당자가 승인한다 |
+
+
+
+### Spring AOP
+Aspect Oriented Programming 관점 지향 프로그래밍
+* Aspect: 흩어진 관심사들을 모듈화 한 것. 주로 부가기능을 모듈화 한 것.
+* Target: Aspect를 적용하는 곳(클래스, 메서드 등)
+* Advice: 실질적으로 어떤 일을 해야 할 지에 대한 것, 실질적 부가기능을 담은 구현체
+* JointPoint: Advice가 적용될 위치, 끼어들 수 있는 지점. 메서드 진입 지점, 생성자 호출 시점, 필드에서 값을 꺼내올 때 등 다양한 시점에 적용 가능
+* PointCut: JointPoint의 상세 스페ㄱ 정의. ex A라는 메서드의 진입 시점에 호출 <-처럼 더 구체적으로 advice 실행 지점 정할 수 있음
+
+aspect실행 시점 annotation
+
+* @Before (이전) : 어드바이스 타겟 메소드가 호출되기 전에 어드바이스 기능을 수행
+* @After (이후) : 타겟 메소드의 결과에 관계없이(즉 성공, 예외 관계없이) 타겟 메소드가 완료 되면 어드바이스 기능을 수행
+* @AfterReturning (정상적 반환 이후)타겟 메소드가 성공적으로 결과값을 반환 후에 어드바이스 기능을 수행
+* @AfterThrowing (예외 발생 이후) : 타겟 메소드가 수행 중 예외를 던지게 되면 어드바이스 기능을 수행
+* @Around (메소드 실행 전후) : 어드바이스가 타겟 메소드를 감싸서 타겟 메소드 호출전과 후에 어드바이스 기능을 수행
+
+
+출처: https://engkimbs.tistory.com/746 [새로비]
+
+
+
+https://docs.spring.io/spring-integration/docs/5.3.0.RC1/reference/html/mqtt.html

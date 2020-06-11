@@ -83,3 +83,41 @@ https://developer-kylee.tistory.com/8<br>
     static final String PASSWORD = "hm1234";
 
 ```
+
+
+
+
+### DB수정
+20200611
+```sql
+create table `user`(
+    uid varchar(32) NOT NULL,
+    upwd varchar(32) NOT NULL,
+    uname varchar(16) NOT NULL, 
+    utel varchar(16) NOT NULL,
+    uemail varchar(32) NOT NULL,    
+    urole char(1) NOT NULL,             #-1:승인되지 않은 가입자 0:승인된 가입자 1:담당자
+    PRIMARY KEY(uid)
+);
+
+create table deviceUser(
+    dkey int NOT NULL AUTO_INCREMENT,
+    dname varchar(32) NOT NULL,
+    dbirth date NOT NULL,
+    dtel varchar(16),
+    daddr varchar(64),
+    PRIMARY KEY(dkey)
+);
+
+create table device(
+    dkey int,
+    staff varchar(32),
+    relative varchar(32),
+    FOREIGN KEY (devuser) REFERENCES device(dkey),
+    FOREIGN KEY (staff) REFERENCES `user`(uid),
+    FOREIGN KEY (guardian) REFERENCES `user`(uid),
+    homeIoT varchar(32),
+    bandIoT varchar(32),
+    PRIMARY KEY(dkey)
+);
+```

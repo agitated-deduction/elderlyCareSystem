@@ -1,49 +1,79 @@
 package com.spring.elderlycare.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.elderlycare.dto.MemberDTO;
 import com.spring.elderlycare.service.MemberService;
 
-@Controller
-@SessionAttributes("m_id")
+@SessionAttributes("uid")
+@RestController
+@RequestMapping("/users")
 public class MemberController {
 	
 	@Autowired private MemberService service;
 	@Autowired private MemberDTO mdto;
 	//private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	
-	@RequestMapping(value ="/memberLogin", method = RequestMethod.GET)
-	public String memberLogin(Model model) {
-		return "member/login";
+	@RequestMapping(value ="login", method = RequestMethod.GET)
+	public ModelAndView memberLogin(ModelAndView mav) {
+		mav.setViewName("member/login");
+		return mav;
 	}
-	@RequestMapping(value = "/memberLogin", method = RequestMethod.POST)
-	public String loginCheck(Model model,
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ModelAndView loginCheck(ModelAndView mav,
 			@RequestParam("inp_m_id")String m_id,
-			@RequestParam("inp_m_pwd")String m_pwd) {
+			@RequestParam("inp_m_pwd")String m_pwd,
+			HttpSession session) {
 		mdto.setM_id(m_id);
 		mdto.setM_pwd(m_pwd);
 		boolean isExist = service.loginCheck(mdto);
-		String path  = "member/login";
+		mav.setViewName("member/login");
+		//String path  = "member/login";
 		if(isExist) {
-			path = "redirect:/";
-			model.addAttribute("m_id", mdto.getM_id());
+			mav.setViewName("redirect:/");
+			//path = "redirect:/";
+			mav.addObject("uid", mdto.getM_id());
+			//session.setAttribute("m_id", mdto.getM_id());
 		}
-		return path;
+		return mav;
 	}
 	
-	@RequestMapping(value = "/memberJoin", method = RequestMethod.GET)
-	public String memberJoinForm(Model model){
-		return "member/join";
+	//화면에서 입력 폼 json으로 받기
+	@RequestMapping(value = "/login", method = RequestMethod.POST, 
+			headers= {"Content-type=application/json"})
+	@ResponseBody
+	public ModelAndView loginCheckTemp(ModelAndView mav, @RequestBody MemberDTO mdto) {
+		boolean isExist = service.loginCheck(mdto);
+		mav.setViewName("member/login");
+		//String path  = "member/login";
+		if(isExist) {
+			mav.setViewName("redirect:/");
+			//path = "redirect:/";
+			mav.addObject("uid", mdto.getM_id());
+			//session.setAttribute("m_id", mdto.getM_id());
+		}
+		return mav;
 	}
-	@RequestMapping(value = "/memberJoin", method = RequestMethod.POST)
+	
+	@RequestMapping(value = "/join", method = RequestMethod.GET)
+	public ModelAndView memberJoinForm(ModelAndView mav){
+		mav.setViewName("member/join");
+		return mav;
+	}
+	@RequestMapping(value = "/join", method = RequestMethod.POST)
 	public String memberJoin(Model model,
 			@RequestParam("inp_m_id")String m_id,
 			@RequestParam("inp_m_pwd")String m_pwd,
@@ -67,10 +97,17 @@ public class MemberController {
 		return path;
 	}
 	
-	@RequestMapping("/mypage")
-	public String myPage(Model model, @SessionAttribute("m_id") String m_id) {
+	@RequestMapping("/{uid}")
+	public MemberDTO myPage(Model model, @PathVariable("uid") String m_id) {
 		mdto = service.myPage(m_id);
-		model.addAttribute("mdto", mdto);
-		return "member/myPage";
+		System.out.println(m_id);
+		//model.addAttribute("mdto", mdto);
+		return mdto;
+	}
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public ModelAndView memberLogout(SessionStatus sessionStatus, ModelAndView mav) {
+		sessionStatus.setComplete();
+		mav.setViewName("redirect:/");
+		return mav;
 	}
 }

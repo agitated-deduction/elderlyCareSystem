@@ -1,30 +1,26 @@
-package com.example.elderlycaresystem;
+package com.example.elderlycaresystem.ui.main;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
+import com.example.elderlycaresystem.data.Elderly;
+import com.example.elderlycaresystem.R;
+import com.example.elderlycaresystem.ui.info.InfoActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ElderlyAdapter extends RecyclerView.Adapter<ElderlyAdapter.ViewHolder>{
-    ArrayList<Elderly> items = new ArrayList<Elderly>();
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
+    private List<Elderly> items = new ArrayList<Elderly>();
 
     @NonNull
     @Override
@@ -52,9 +48,12 @@ public class ElderlyAdapter extends RecyclerView.Adapter<ElderlyAdapter.ViewHold
 
     // TODO 외부에서 이 Adapter를 사용할 때 Elderly객체를 넣거나 가져갈 수 있도록 addItem(),setItems(),getItem(),setItem() 메서드 정의!!
     // addItem() : 들어온 item을 ArrayList<Elderly>에 추가!!
-    public void addItem(Elderly item){
-        items.add(item);
+    public void addItems(List<Elderly> items){
+        this.items.clear();
+        this.items.addAll(items);
     }
+
+
     // setItems{} : 들어온 ArrayList<Elderly> items을 해당 클래스의 items로 초기화!!
     public void setItems(ArrayList<Elderly> items){
         this.items = items;
@@ -89,10 +88,10 @@ public class ElderlyAdapter extends RecyclerView.Adapter<ElderlyAdapter.ViewHold
 
         public void setItem(final Elderly item){
             name.setText(item.getElderlyName());
-            stat.setText(item.getElderlyAddr());
+            stat.setText(item.getElderlyStat());
 
 
-            // TODO : 전화 & Info버튼 이벤트 등록
+            // 전화버튼 이벤트
             tell.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -103,7 +102,7 @@ public class ElderlyAdapter extends RecyclerView.Adapter<ElderlyAdapter.ViewHold
                 }
             });
 
-            // TODO : View객체 누르면 상세정보 엑티비티로 이동하기
+            // info버튼 이벤트
             info.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -112,12 +111,8 @@ public class ElderlyAdapter extends RecyclerView.Adapter<ElderlyAdapter.ViewHold
                     v.getContext().startActivity(intent);
                 }
             });
-
-
         }
-
     }
-
 }
 
 /*

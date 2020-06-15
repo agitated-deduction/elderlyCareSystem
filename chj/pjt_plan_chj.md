@@ -49,7 +49,7 @@
   
   ### 개발 환경
    OS : Windows 10 , Linux Raspbian  
-   Tool : Visual Studio code, gcc  
+   Tool : Visual Studio code, gcc , PyQt
    Language : C, Python
   
   ## <개발 일정>
@@ -78,11 +78,19 @@
   
   _[06/10]_   <br>
    [✔] 모듈 엑셀 파일로 정리해서 매니저님께 보내기   <br>
-   [✔] QThread 사용 -> 날씨, 온/습도, 시계 (완료)   <br>
-   [❌ ] OpenCv <br>
+   [✔] QThread 사용 -> 날씨, 온/습도, 시계    <br>
+   [❌] OpenCv <br>
    
    _[06/11]_   <br>
-   [] 카메라 모듈 공부 (어떻게 스트리밍 할지?) <br>
-   []  OpenCv 공부 <br>
+   [✔] 카메라 모듈 공부 (어떻게 스트리밍 할지?) <br>
+   [✔] 카메라 외부 접속 설정하기 <br>
+   [✔] 재부팅시 프로그램 자동시작하기 <br>
+   [✔]  QThread 사용 -> 날씨, 온/습도, 시계, 카메라 <br>
+   [❌] OpenCv 공부 <br>
+   
+   _[06/15]_   <br>
+   [] 서버에 어떻게 값 전달 할지?  <br>
+   [] OpenCv 공부 <br>
+   
    
   

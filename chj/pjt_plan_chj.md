@@ -89,8 +89,9 @@
    [❌] OpenCv 공부 <br>
    
    _[06/15]_   <br>
-   [] 서버에 어떻게 값 전달 할지?  <br>
-   [] OpenCv 공부 <br>
+   MQTT -> webserver✔  <br>
+   센서값 -> thingspeak✔   <br>
+   OpenCv 공부... ✔ <br>
    
    
   

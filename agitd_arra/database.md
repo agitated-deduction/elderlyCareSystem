@@ -96,7 +96,7 @@ create table `user`(
     uname varchar(16) NOT NULL, 
     utel varchar(16) NOT NULL,
     uemail varchar(32) NOT NULL,    
-    urole char(1) NOT NULL,             #-1:승인되지 않은 가입자 0:승인된 가입자 1:담당자
+    urole int NOT NULL,             #-1:승인되지 않은 가입자 0:승인된 가입자 1:담당자
     PRIMARY KEY(uid)
 );
 
@@ -108,14 +108,14 @@ create table deviceUser(
     daddr varchar(64),
     PRIMARY KEY(dkey)
 );
-
+drop table device;
 create table device(
     dkey int,
     staff varchar(32),
     relative varchar(32),
-    FOREIGN KEY (devuser) REFERENCES device(dkey),
+    FOREIGN KEY (dkey) REFERENCES deviceUser(dkey),
     FOREIGN KEY (staff) REFERENCES `user`(uid),
-    FOREIGN KEY (guardian) REFERENCES `user`(uid),
+    FOREIGN KEY (relative) REFERENCES `user`(uid),
     homeIoT varchar(32),
     bandIoT varchar(32),
     PRIMARY KEY(dkey)

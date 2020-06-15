@@ -1,5 +1,5 @@
 package com.spring.elderlycare.service;
 
-public interface DeviceUserService {
+public class DeviceServiceImpl {
 
 }

@@ -37,15 +37,15 @@ public class MemberController {
 			@RequestParam("inp_m_id")String m_id,
 			@RequestParam("inp_m_pwd")String m_pwd,
 			HttpSession session) {
-		mdto.setM_id(m_id);
-		mdto.setM_pwd(m_pwd);
+		mdto.setUid(m_id);
+		mdto.setUpwd(m_pwd);
 		boolean isExist = service.loginCheck(mdto);
 		mav.setViewName("member/login");
 		//String path  = "member/login";
 		if(isExist) {
 			mav.setViewName("redirect:/");
 			//path = "redirect:/";
-			mav.addObject("uid", mdto.getM_id());
+			mav.addObject("uid", mdto.getUid());
 			//session.setAttribute("m_id", mdto.getM_id());
 		}
 		return mav;
@@ -62,7 +62,7 @@ public class MemberController {
 		if(isExist) {
 			mav.setViewName("redirect:/");
 			//path = "redirect:/";
-			mav.addObject("uid", mdto.getM_id());
+			mav.addObject("uid", mdto.getUid());
 			//session.setAttribute("m_id", mdto.getM_id());
 		}
 		return mav;
@@ -82,11 +82,11 @@ public class MemberController {
 			@RequestParam("inp_m_email")String m_email) {
 		String path = "redirect:/";
 		
-		mdto.setM_id(m_id);
-		mdto.setM_pwd(m_pwd);
-		mdto.setM_name(m_name);
-		mdto.setM_tel(m_tel);
-		mdto.setM_email(m_email);
+		mdto.setUid(m_id);
+		mdto.setUpwd(m_pwd);
+		mdto.setUname(m_name);
+		mdto.setUtel(m_tel);
+		mdto.setUemail(m_email);
 		
 		int ret = service.join(mdto);
 		
@@ -108,6 +108,11 @@ public class MemberController {
 	public ModelAndView memberLogout(SessionStatus sessionStatus, ModelAndView mav) {
 		sessionStatus.setComplete();
 		mav.setViewName("redirect:/");
+		return mav;
+	}
+	@RequestMapping(value = "/devices", method = RequestMethod.GET)
+	public ModelAndView deviceList(ModelAndView mav) {
+		
 		return mav;
 	}
 }

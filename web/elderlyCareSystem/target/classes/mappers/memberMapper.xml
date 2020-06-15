@@ -5,25 +5,25 @@
 
 	<select id = "isExist" parameterType = "com.spring.elderlycare.dto.MemberDTO" resultType = "boolean">
 		SELECT EXISTS(
-			SELECT * FROM membe
-			WHERE m_id = #{m_id} AND m_pwd = #{m_pwd}
+			SELECT * FROM `user`
+			WHERE uid = #{uid} AND upwd = #{upwd}
 			);
 	</select>
 	<insert id = "insertMember" parameterType = "com.spring.elderlycare.dto.MemberDTO">
-	INSERT INTO membe(m_id, m_pwd, m_name, m_tel, m_email, m_role)
-	VALUES(#{m_id}, #{m_pwd}, #{m_name}, #{m_tel}, #{m_email}, -1);
+	INSERT INTO `user`(uid, upwd, uname, utel, uemail, urole)
+	VALUES(#{uid}, #{upwd}, #{uname}, #{utel}, #{uemail}, -1);
 	</insert>
 	<update id = "modifyMember" parameterType = "com.spring.elderlycare.dto.MemberDTO">
-	UPDATE membe SET m_name = #{m_name}, m_tel = #{m_tel}, m_email = #{m_email};
+	UPDATE `user` SET uname = #{uname}, utel = #{utel}, uemail = #{uemail};
 	</update>
 	<update id = "joinApproval" parameterType = "com.spring.elderlycare.dto.MemberDTO">
-	UPDATE membe SET m_role = 0;
+	UPDATE `user` SET urole = 0;
 	</update>
 	<delete id = "deleteMember" parameterType = "com.spring.elderlycare.dto.MemberDTO">
-	DELETE FROM membe WHERE m_id=#{m_id} AND m_pwd = #{m_pwd};
+	DELETE FROM `user` WHERE uid=#{uid} AND upwd = #{upwd};
 	</delete>
 	<select id = "selectOne" parameterType = "String" resultType = "com.spring.elderlycare.dto.MemberDTO">
-	SELECT * FROM membe WHERE m_id = #{value};
+	SELECT * FROM `user` WHERE uid = #{value};
 	</select>
 
 </mapper>

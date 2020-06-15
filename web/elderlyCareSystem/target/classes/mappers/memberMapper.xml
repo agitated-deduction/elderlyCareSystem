@@ -25,5 +25,9 @@
 	<select id = "selectOne" parameterType = "String" resultType = "com.spring.elderlycare.dto.MemberDTO">
 	SELECT * FROM `user` WHERE uid = #{value};
 	</select>
+	<select id = "selectDevices" parameterType = "String" resultType = "com.spring.elderlycare.dto.DeviceUserDTO">
+	SELECT dname, dtel, daddr FROM deviceUser
+	WHERE staff=#{value} OR relative=#{value};
+	</select>
 
 </mapper>

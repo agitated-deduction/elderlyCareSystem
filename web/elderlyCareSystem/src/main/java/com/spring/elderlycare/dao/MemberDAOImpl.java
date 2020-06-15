@@ -1,9 +1,12 @@
 package com.spring.elderlycare.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.elderlycare.dto.DeviceUserDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 
 @Repository("memberDAO")
@@ -38,5 +41,10 @@ public class MemberDAOImpl implements MemberDAO{
 //		
 //		return false;
 		return (boolean)sqlSession.selectOne(ns+"isExist", mdto);
+	}
+	@Override
+	public List<DeviceUserDTO> selectManageDevices(String id) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList(ns+"selectDevices", id);
 	}
 }

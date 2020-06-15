@@ -121,3 +121,59 @@ create table device(
     PRIMARY KEY(dkey)
 );
 ```
+{"uid":"staff101058","upwd":"staff101058","uname":"김영희","utel":"01011112222","uemail":"young@fakeemail.com","urole":1}
+
+db 합침
+```sql
+
+drop table device;
+drop table deviceUser;
+
+
+
+create table deviceUser(
+    dkey int NOT NULL AUTO_INCREMENT,
+    dname varchar(32) NOT NULL,
+    dbirth date NOT NULL,
+    dtel varchar(16),
+    daddr varchar(64),
+    staff varchar(32),
+    relative varchar(32),
+    FOREIGN KEY (staff) REFERENCES `user`(uid),
+    FOREIGN KEY (relative) REFERENCES `user`(uid),
+    homeIoT varchar(32),
+    bandIoT varchar(32),
+    PRIMARY KEY(dkey)
+);
+```
+
+test user input
+```sql
+insert into `user`(uid, upwd,uname, utel, uemail, urole)
+values("staff101058", "staff101058", "김영희", "01011112222", "young@fakeemail.com", "1");
+
+insert into `user`(uid, upwd, uname, utel, uemail, urole)
+values("staff101101", "staff101101", "최바둑", "01012342222", "alphago@fakeemail.com", "1");
+
+insert into `user`(uid, upwd, uname, utel, uemail, urole)
+values("staff101103", "staff101103", "고지식", "01000000000", "highknowledge@fakeemail.com", "1");
+```
+
+test deviceuser input
+```sql
+insert into deviceUser(dname, dbirth, dtel, daddr, staff, relative, homeIoT, bandIoT)
+values("테스트1", "1930-01-01", "0311111111", "경기도 수원시 팔달구 123412341234 ㅇㅇ", "staff101058", null, "0.0.0.0", "0.0.0.0");
+
+
+insert into deviceUser(dname, dbirth, dtel, daddr, staff, relative, homeIoT, bandIoT)
+values("테스트2", "1930-01-02", "0312222222", "경기도 수원시 장안구 123412341234 ㅇㅇ", "staff101058", null, "0.0.0.0", "0.0.0.0");
+
+insert into deviceUser(dname, dbirth, dtel, daddr, staff, relative, homeIoT, bandIoT)
+values("테스트3", "1930-01-03", "0313333333", "경기도 수원시 영통구 123412341234 ㅇㅇ", "staff101058",null, "0.0.0.0", "0.0.0.0");
+
+insert into deviceUser(dname, dbirth, dtel, daddr, staff, relative, homeIoT, bandIoT)
+values("테스트4", "1930-01-04", "0314444444", "경기도 수원시 팔달구 123412341234 ㅇㅇ", "staff101058", null, "0.0.0.0", "0.0.0.0");
+```
+
+/users/devices
+[{"dkey":0,"dname":"테스트1","dbirth":null,"dtel":"0311111111","daddr":"경기도 수원시 팔달구 123412341234 ㅇㅇ","staff":null,"relative":null,"homeIoT":null,"bandIoT":null},{"dkey":0,"dname":"테스트2","dbirth":null,"dtel":"0312222222","daddr":"경기도 수원시 장안구 123412341234 ㅇㅇ","staff":null,"relative":null,"homeIoT":null,"bandIoT":null},{"dkey":0,"dname":"테스트3","dbirth":null,"dtel":"0313333333","daddr":"경기도 수원시 영통구 123412341234 ㅇㅇ","staff":null,"relative":null,"homeIoT":null,"bandIoT":null},{"dkey":0,"dname":"테스트4","dbirth":null,"dtel":"0314444444","daddr":"경기도 수원시 팔달구 123412341234 ㅇㅇ","staff":null,"relative":null,"homeIoT":null,"bandIoT":null}]

@@ -314,19 +314,6 @@ web.xml파일에서 직접 설정 가능
 @SessionAttributes 파라미터 지정된 이름이 model에 저장 되면 session에도 저장됨.
 
 
-### USER기능
-
-| 동작 | 요청 | Method | 기능 |
-|:-------|:-------|:-------|:-------|
-| 로그인 화면 | /users/login | GET | 로그인 화면을 띄운다 |
-| 회원가입 화면 | /users/join | GET | 회원가입 화면을 띄운다 |
-| 로그인 체크 | /users/login | POST | 로그인 시도 시 아이디 비밀번호 체크하고 로그인 한다 |
-| 회원가입 하기 | /users/join | POST | 회원가입 한다 |
-| 로그아웃 | /users/logout | GET | 로그하웃 한다 |
-| 내 정보 | /users/{id} | GET | 로그인 된 아이디의 정보를 띄운다 |
-| 내 정보 수정 | /users/{id} | PUT | 로그인 된 아이디의 정보를 수정한다 |
-| 내 정보 삭제 | /users/{id} | DELETE | 로그인 된 아이디 정보를 삭제한다(탈퇴) |
-| 가입 승인(보류) | /users/{b_id} | PUT | 보호자의 가입을 담당자가 승인한다 |
 
 
 
@@ -352,3 +339,26 @@ aspect실행 시점 annotation
 
 
 https://docs.spring.io/spring-integration/docs/5.3.0.RC1/reference/html/mqtt.html
+
+
+### /users
+
+| 동작 | 요청 | Method | 기능 |
+|:-------|:-------|:-------|:-------|
+| 로그인 화면 | /users/login | GET | 로그인 화면을 띄운다 |
+| 회원가입 화면 | /users/join | GET | 회원가입 화면을 띄운다 |
+| 로그인 체크 | /users/login | POST | 로그인 시도 시 아이디 비밀번호 체크하고 로그인 한다 |
+| 회원가입 하기 | /users/join | POST | 회원가입 한다 |
+| 로그아웃 | /users/logout | GET | 로그하웃 한다 |
+| 내 정보 | /users/{id} | GET | 로그인 된 아이디의 정보를 띄운다 |
+| 내 정보 수정 | /users/{id} | PUT | 로그인 된 아이디의 정보를 수정한다 |
+| 내 정보 삭제 | /users/{id} | DELETE | 로그인 된 아이디 정보를 삭제한다(탈퇴) |
+| 가입 승인(보류) | /users/{b_id} | PUT | 보호자의 가입을 담당자가 승인한다 |
+
+
+### /devices
+
+| 동작 | 요청 | Method | 기능 |
+|:-------|:-------|:-------|:-------|
+| 기기 목록 | /devices | GET | 담당자가 관리하는 기기 목록을 띄운다 보호자인 경우 등록된 기기 하나를 띄운다 |
+| 기기 등록 | /devices/{id} | POST |  |

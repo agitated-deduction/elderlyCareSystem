@@ -1,5 +1,7 @@
 package com.spring.elderlycare.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.elderlycare.dto.DeviceUserDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 import com.spring.elderlycare.service.MemberService;
 
@@ -43,7 +47,7 @@ public class MemberController {
 		mav.setViewName("member/login");
 		//String path  = "member/login";
 		if(isExist) {
-			mav.setViewName("redirect:/");
+			mav.setViewName("redirect:/users/devices");
 			//path = "redirect:/";
 			mav.addObject("uid", mdto.getUid());
 			//session.setAttribute("m_id", mdto.getM_id());
@@ -111,8 +115,9 @@ public class MemberController {
 		return mav;
 	}
 	@RequestMapping(value = "/devices", method = RequestMethod.GET)
-	public ModelAndView deviceList(ModelAndView mav) {
+	public List<DeviceUserDTO> deviceList(Model model, @SessionAttribute("uid") String uid) {
+		List<DeviceUserDTO> list = service.devicesList(uid);
 		
-		return mav;
+		return list;
 	}
 }

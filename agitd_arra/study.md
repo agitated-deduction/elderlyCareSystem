@@ -362,3 +362,28 @@ https://docs.spring.io/spring-integration/docs/5.3.0.RC1/reference/html/mqtt.htm
 |:-------|:-------|:-------|:-------|
 | 기기 목록 | /devices | GET | 담당자가 관리하는 기기 목록을 띄운다 보호자인 경우 등록된 기기 하나를 띄운다 |
 | 기기 등록 | /devices/{id} | POST |  |
+
+
+GET /users/login : 로그인 화면
+POST /users/login : 로그인 처리, 아이디 비밀번호 체크
+GET /users/join : 회원가입 화면
+POST /users/join : 회원가입 처리
+GET /users/logout : 로그아웃 처리
+GET /users/{uid} : {uid}(로그인 된 사람)의 개인정보 즉 내정보
+----------------------------------------------------------20200615(오류처리x)
+PUT /users/{uid} : 내 정보 수정
+DELETE /users/{uid} : 회원 탈퇴 처리
+PUT /users/{bid} : {bid}(보호자) 가입 신청 승인 처리
+
+GET /devices : 관리하는 기기(노인정보 포함) 전체 리스트
+POST /devices : 기기 등록
+GET /devices/{num} : {num}기기 등록된 노인정보 상세정보 보기
+PUT /devices/{num} : {num}기기 등록된 노인정보 상세정보 수정
+DELETE /devices/{num} : {num}기기 삭제
+
+
+
+<select id = "selectDevices" parameterType = "String" resultType = "com.spring.elderlycare.dto.DeviceUserDTO">
+	SELECT dname, dtel, daddr FROM deviceUser
+	WHERE staff=#{value} OR relative=#{value};
+	</select>

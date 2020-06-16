@@ -10,6 +10,16 @@ public class MemberDTO {
 	private String utel;
 	private String uemail;
 	private int urole;
+	public MemberDTO() {
+		
+	}
+	public MemberDTO(String uid, String upwd, String uname, String utel, String uemail) {
+		this.uid = uid;
+		this.upwd = upwd;
+		this.uname = uname;
+		this.utel = utel;
+		this.uemail = uemail;
+	}
 	
 	public String getUid() {
 		return uid;

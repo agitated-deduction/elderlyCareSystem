@@ -1,3 +1,4 @@
+<!DOCTYPE html5>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
@@ -5,6 +6,11 @@
 <html>
 <head>
 	<title>Home</title>
+<script type="text/javascript"> 
+function onClick_regdev() { 
+document.location.href='./device/registration.jsp'; 
+} 
+</script> 
 </head>
 <body>
 <h1>
@@ -21,6 +27,7 @@
 <c:if test = "${not empty uid }">
 	<a href = "users/${uid }" class = "btn btn-default" role = "button">내 정보</a>
 	<a href = "users/logout" class = "btn btn-default" role = "button">로그아웃</a>
+	<input type=button onclick="onClick_regdev()" value='기기등록'>
 </c:if>
 
 </body>

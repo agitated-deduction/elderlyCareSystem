@@ -177,3 +177,44 @@ values("테스트4", "1930-01-04", "0314444444", "경기도 수원시 팔달구 
 
 /users/devices
 [{"dkey":0,"dname":"테스트1","dbirth":null,"dtel":"0311111111","daddr":"경기도 수원시 팔달구 123412341234 ㅇㅇ","staff":null,"relative":null,"homeIoT":null,"bandIoT":null},{"dkey":0,"dname":"테스트2","dbirth":null,"dtel":"0312222222","daddr":"경기도 수원시 장안구 123412341234 ㅇㅇ","staff":null,"relative":null,"homeIoT":null,"bandIoT":null},{"dkey":0,"dname":"테스트3","dbirth":null,"dtel":"0313333333","daddr":"경기도 수원시 영통구 123412341234 ㅇㅇ","staff":null,"relative":null,"homeIoT":null,"bandIoT":null},{"dkey":0,"dname":"테스트4","dbirth":null,"dtel":"0314444444","daddr":"경기도 수원시 팔달구 123412341234 ㅇㅇ","staff":null,"relative":null,"homeIoT":null,"bandIoT":null}]
+
+
+```sql
+create table `user`(
+    uid varchar(32) NOT NULL,
+    upwd varchar(32) NOT NULL,
+    uname varchar(16) NOT NULL, 
+    utel varchar(16) NOT NULL,
+    uemail varchar(32) NOT NULL,    
+    urole int NOT NULL,             #-1:승인되지 않은 가입자 0:승인된 가입자 1:담당자
+    PRIMARY KEY(uid)
+);
+
+create table elderly(
+    ekey int NOT NULL AUTO_INCREMENT,
+    ename varchar(32) NOT NULL,
+    ebirth date NOT NULL,
+    etel varchar(16),
+    eaddr varchar(64),
+    PRIMARY KEY(dkey)
+);
+
+create table manage(
+    elderly int NOT NULL,
+    staff varchar(32) NOT NULL,
+    relative varchar(32),
+    FOREIGN KEY (elderly) REFERENCES elderly(ekey),
+    FOREIGN KEY (staff) REFERENCES `user`(uid),
+    FOREIGN KEY (relative) REFERENCES `user`(uid),
+    PRIMARY KEY (elderly)
+);
+
+create table devices(
+    elderly int NOT NULL,
+    FOREIGN KEY(elderly) REFERENCES elderly(ekey),
+    homeIoT varchar(32),
+    bandIoT varchar(32),
+    PRIMARY KEY(elderly)
+);
+
+```

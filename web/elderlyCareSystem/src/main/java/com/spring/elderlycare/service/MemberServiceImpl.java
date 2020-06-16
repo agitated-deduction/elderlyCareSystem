@@ -1,12 +1,9 @@
 package com.spring.elderlycare.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.elderlycare.dao.MemberDAO;
-import com.spring.elderlycare.dto.DeviceUserDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 
 @Service
@@ -44,9 +41,9 @@ public class MemberServiceImpl implements MemberService{
 		mdto = mdao.selectOne(id);
 		return mdto;
 	}
-	@Override
+	/*@Override
 	public List<DeviceUserDTO>devicesList(String id){
 		return mdao.selectManageDevices(id);
 
-	}
+	}*/
 }

@@ -103,6 +103,7 @@
    
    _[06/16]_   <br>
    ✔ / MQTT 토픽 설정 <br>
-   ✔ / OpenCv 공부 <br>
+   ✔ / OpenCv : 배경 지우기 <br>
+   ✔ / OpenCv : 노이즈 제거  <br>
    
   

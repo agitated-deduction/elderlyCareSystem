@@ -33,9 +33,17 @@
   ReSpeaker 2-Mics Pi HAT <br>
   소형 스테레오 스피커 Stereo Enclosed Speaker - 3W 8Ω  <br>
   ~~NEO-7M 아두이노 GPS 수신모듈~~ <br>
-  WIFI 모듈  <br>
-  블루투스 모듈 
+  ~~WIFI 모듈~~  <br>
+  ~~블루투스 모듈~~  <br>
   
+  ### MQTT 토픽 설정
+  ```
+  온도 : home/temp   
+  습도 : home/humid   
+  유해가스 : home/gas  
+  움직임(밤): home/move  
+  고독사 : home/nonmove  
+  ```
   
   ### HW 기능(제어 방법)
   
@@ -48,8 +56,8 @@
   ### 프로그램 사용법 (interface 시나리오)
   
   ### 개발 환경
-   OS : Windows 10 , Linux Raspbian  
-   Tool : Visual Studio code, gcc , PyQt
+   OS : Windows 10 , Linux Raspbian  <br>
+   Tool : Visual Studio code, gcc , PyQt <br>
    Language : C, Python
   
   ## <개발 일정>
@@ -93,5 +101,8 @@
    ✔ / 센서값 -> thingspeak  <br>
    ✔ / OpenCv 공부...  <br>
    
+   _[06/16]_   <br>
+   ✔ / MQTT 토픽 설정 <br>
+   ✔ / OpenCv 공부 <br>
    
   

@@ -16,13 +16,15 @@ broker_port=1883
 client = mqtt.Client() #create new instance
 print("connecting to broker")
 client.connect(host=broker_address, port=broker_port)
-print("Subscribing to topic","temp/temp")
+print("Subscribing to topic","home/temp")
+print("Subscribing to topic","home/humid")
+
 # client.publish("temp/temp","HI~~~~")#publish
 
 while True:
        h,t = Adafruit_DHT.read_retry(sensor, pin)
-       client.publish("temp/temp", str(t))
-       client.publish("temp/temp", str(h))
+       client.publish("home/temp", str(t))  # home 의 온도 토픽
+       client.publish("home/humid", str(h)) # home 의 습도 토픽 
        print("Temperature = {0:0.1f}*C Humidity = {1:0.1f}%".format(t, h))
 
        time.sleep(15)

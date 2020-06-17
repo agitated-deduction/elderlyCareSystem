@@ -1,5 +1,8 @@
 package com.spring.elderlycare.dto;
 
+import org.springframework.stereotype.Component;
+
+@Component("DevicesDTO")
 public class DevicesDTO {
 	private int elderly;
 	private String homeIoT;

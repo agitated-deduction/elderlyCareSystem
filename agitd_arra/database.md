@@ -218,3 +218,14 @@ create table devices(
 );
 
 ```
+
+
+
+```sql
+
+alter table devices add constraint fk_constraint_1 foreign key(elderly) 
+references elderly(ekey) on delete cascade;
+alter table manage add constraint fk_constraint_2 foreign key(elderly) 
+references elderly(ekey) on delete cascade;
+```
+manage의 staff는?

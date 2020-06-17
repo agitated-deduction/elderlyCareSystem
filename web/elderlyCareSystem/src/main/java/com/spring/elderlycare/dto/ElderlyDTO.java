@@ -4,11 +4,11 @@ import java.sql.Date;
 
 import org.springframework.stereotype.Component;
 
-@Component("DeviceUserDTO")
+@Component("ElderlyDTO")
 public class ElderlyDTO {
 	private int ekey;
 	private String ename;
-	private Date ebirth;
+	private String ebirth;
 	private String etel;
 	private String eaddr;
 	
@@ -24,10 +24,10 @@ public class ElderlyDTO {
 	public void setEname(String ename) {
 		this.ename = ename;
 	}
-	public Date getEbirth() {
+	public String getEbirth() {
 		return ebirth;
 	}
-	public void setEbirth(Date ebirth) {
+	public void setEbirth(String ebirth) {
 		this.ebirth = ebirth;
 	}
 	public String getEtel() {

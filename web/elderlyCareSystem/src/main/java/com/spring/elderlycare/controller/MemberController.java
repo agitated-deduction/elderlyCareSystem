@@ -32,7 +32,7 @@ public class MemberController {
 		mav.setViewName("member/login");
 		return mav;
 	}
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	//@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ModelAndView loginCheck(ModelAndView mav,
 			@RequestParam("inp_m_id")String m_id,
 			@RequestParam("inp_m_pwd")String m_pwd,

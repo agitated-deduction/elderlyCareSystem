@@ -6,11 +6,7 @@
 <html>
 <head>
 	<title>Home</title>
-<script type="text/javascript"> 
-function onClick_regdev() { 
-document.location.href='./device/registration.jsp'; 
-} 
-</script> 
+
 </head>
 <body>
 <h1>
@@ -27,7 +23,7 @@ document.location.href='./device/registration.jsp';
 <c:if test = "${not empty uid }">
 	<a href = "users/${uid }" class = "btn btn-default" role = "button">내 정보</a>
 	<a href = "users/logout" class = "btn btn-default" role = "button">로그아웃</a>
-	<input type=button onclick="onClick_regdev()" value='기기등록'>
+	<a href = "devices/form" class = "btn btn-default" role = "button">기기등록</a>
 </c:if>
 
 </body>

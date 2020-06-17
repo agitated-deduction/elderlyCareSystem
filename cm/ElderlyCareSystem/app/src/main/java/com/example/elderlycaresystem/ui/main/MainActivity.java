@@ -2,6 +2,7 @@ package com.example.elderlycaresystem.ui.main;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    
     // TODO : 서버에서 사용자 List 가져오기
     private void getElderlyList() {
         // Server에서 MainActivity에 띄울 elderlyList를 받아와 Queue에 넣기

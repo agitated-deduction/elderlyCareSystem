@@ -103,6 +103,11 @@
    
    _[06/16]_   <br>
    ✔ / MQTT 토픽 설정 <br>
-   ✔ / OpenCv 공부 <br>
+   ✔ / OpenCv : 배경 지우기 <br>
+   ✔ / OpenCv : 노이즈 제거  <br>
    
+   _[06/17]_   <br>
+  ✔ / OpenCv : 윤곽선 검출 <br>
+  ✔ / OpenCv : 얼굴 감지 <br>
+  ✔ / OpenCv : 움직임 포착시 텍스트 띄우기 <br>
   

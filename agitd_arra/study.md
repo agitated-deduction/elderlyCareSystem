@@ -387,3 +387,258 @@ DELETE /devices/{num} : {num}기기 삭제
 	SELECT dname, dtel, daddr FROM deviceUser
 	WHERE staff=#{value} OR relative=#{value};
 	</select>
+
+
+
+
+# AJAX Asynchronous Javascript And Xml
+### javaScript를 사용한 비동기 통신, 클라이언트와 서버간의 XML데이터 주고받는 기술(개발 기법)
+
+https://coding-factory.tistory.com/143
+http://tcpschool.com/ajax/intro
+
+웹페이지 전체를 다시 로딩하는 대신 웹페이지의 일부분만 갱신
+json, xml, html, 텍스트 파일 등 다양한 데이터 주고받을 수 있다.
+
+장
+1. 웹페이지 속도 향상
+2. 서버의 처리 기다리지 않고 처리 가능
+3. 서버에서 data만 전송
+
+단
+1. 히스토리 관리 안 됨
+2. 연속 데이터 요청은 서버 부하 증가
+3. XMLHttpRequest를 통해 통신 시, 요청 완료 전에 사용자가 페이지 떠나거나 오작동 가능성
+
+ajax 프레임워크
+
+* prototype
+* script.aculo.us
+* dojo
+* jQuery
+ 등이 있다.
+
+
+기존의 웹은 브라우저에서 httpRequest를 서버에 보내고 html및 css데이터를 받아서 웹 페이지 전체를 다시 로딩했다면,
+ajax를 사용할때는 XMLHttpRequest를 보내고 서버에서는 ajax요청을 처리해서 HTML, XML, JSON데이터를 보내고 브라우저측에서 웹페이지의 일부분을 로딩한다.
+
+1. 사용자의 요청 이벤트 발생
+2. 요청 이벤트가 발생 시 이벤트 핸들러에 의해 자바스크립트 호출
+3. 자바스크립트는 XMLHttpRequest객체를 사용하여 서버로 요청을 보냄 (보낸 후 응답을 기다리지 않고 다른 작업을 할 수 있다.)
+4. 서버는 XMLHttpRequest를 받아서 Ajax요청을 처리
+5. 서버는 처리한 결과를 html, xml, json의 형태로 웹 브라우저에 전달
+6. 전달받은 데이터를 갱신하는 자바스크립트
+7. 일부분 다시 로딩됨
+
+XMLHttpRequest인스턴스 생성
+```js
+var httpRequest;
+
+function createRequest() {
+
+    if (window.XMLHttpRequest) { // 익스플로러 7과 그 이상의 버전, 크롬, 파이어폭스, 사파리, 오페라 등
+
+        return new XMLHttpRequest();
+
+    } else {                     // 익스플로러 6과 그 이하의 버전
+
+        return new ActiveXObject("Microsoft.XMLHTTP");
+
+    }
+
+}
+```
+
+익스플로러 6이하 버전 사용자 거의 없으므로 아래꺼 사용
+```js
+var httpRequest = new XMLHttpRequest();
+```
+
+open() ajax요청 형식
+```js
+open(전달방식, URL주소, 동기여부);
+```
+open의 세번제 인자를 true로 전달하면 비동기식 요청을 보낼 수 있다. 서버로부터 응답을 기다리는 동안 다른 일을 할 수 있게 되는 것이다.
+만약 false를 전달하면 서버로부터 응답이 올 때까지 어떤 다른 작업도 할 수 없다.
+
+send() 작성된 ajax요청 서버로 전달
+```js
+send();       // GET 방식
+send(문자열); // POST 방식
+```
+
+GET 요청
+```js
+httpRequest.open("GET", "/examples/media/request_ajax.php?city=Seoul&zipcode=06141", true);
+httpRequest.send();
+```
+
+서버상의 문서 존재 유무
+```js
+if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+
+    ...
+
+}
+```
+XMLHttpRequest.DONE : 서버에 요청한 데이터의 처리 완료, 응답 할 준비 됨
+status프로퍼티 값이 200 : 요청한 문서가 서버상에 존재
+
+POST 요청
+```js
+// POST 방식의 요청은 데이터를 Http 헤더에 포함시켜 전송함.
+
+httpRequest.open("POST", "/examples/media/request_ajax.php", true);
+httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+httpRequest.send("city=Seoul&zipcode=06141");
+```
+
+서버로부터 응답 대기, 프로퍼티들
+* readyState
+* status
+* onreadstatechange
+
+readyStatus
+1. UNSENT
+2. OPENED
+3. HEADERS_RECEIVED
+4. LOADING
+5. DONE
+
+status
+* 200 : 서버에 문서 존재
+* 404 : 서버에 문서 존재하지 않음
+
+onreadystatechange
+readyState프로퍼티의 값이 변할 때마다 자동으로 호출되는 함수 설정, 총 5번 호출
+
+```js
+switch (httpRequest.readyState) {
+
+    case XMLHttpRequest.UNSET:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 UNSET 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.OPENED:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 OPENED 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.HEADERS_RECIEVED:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 HEADERS_RECEIVED 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.LOADING:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 LOADING 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.DONE:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 DONE 입니다.<br>";
+
+        break;
+
+}
+
+document.getElementById("status").innerHTML = currentState;
+
+if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+
+    document.getElementById("text").innerHTML = httpRequest.responseText;
+
+}
+```
+
+
+### http header
+예제
+```
+Accept: */*
+
+Referer: http://codingsam.com/examples/tryit/tryhtml.php?filename=ajax_header_request_01
+
+Accept-Language: ko-KR
+
+Accept-Encoding: gzip, deflate
+
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+
+Host: codingsam.com
+
+DNT: 1
+
+Connection: Keep-Alive
+```
+
+`setRequestHeader()`메소드 사용하여 HTTP요청 헤더 작성
+```js
+XMLHttpRequest인스턴스.setRequestHeader(헤더이름, 헤더값);
+```
+
+예제
+```js
+var httpRequest = new XMLHttpRequest();
+
+httpRequest.onreadystatechange = function() {
+    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+        document.getElementById("text").innerHTML = httpRequest.responseText;
+    }
+};
+
+httpRequest.open("GET", "/examples/media/ajax_request_header.php", true);
+
+/************************/
+httpRequest.setRequestHeader("testheader", "123");
+/************************/
+
+httpRequest.send();
+```
+
+
+
+(생략)
+
+
+
+
+Ajax, JSON
+
+
+users/login
+성공 : {result: true, uid : (uid)}
+실패 : {result: false, uid : undefined}
+
+users/join
+성공 : true
+실패 : false
+
+devices/
+
+
+
+
+WARNING: An illegal reflective access operation has occurred
+
+WARNING: Illegal reflective access by org.apache.ibatis.reflection.Reflector (file:/D:/1elderlyproject/web/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/elderlyCareSystem/WEB-INF/lib/mybatis-3.4.6.jar) to field java.lang.Boolean.value
+
+WARNING: Please consider reporting this to the maintainers of org.apache.ibatis.reflection.Reflector
+
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+
+WARNING: All illegal access operations will be denied in a future release
+login
+
+
+
+6/19
+* ajax success error 함수 실행 안 됨
+* member delete member modify 만들기 일단 버튼은 홈 화면에.
+* 가입 승인 만들기
+* 서비스단 만들기

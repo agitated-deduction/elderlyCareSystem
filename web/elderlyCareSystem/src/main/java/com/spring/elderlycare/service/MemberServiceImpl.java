@@ -13,7 +13,7 @@ public class MemberServiceImpl implements MemberService{
 	
 	@Override
 	public int join(MemberDTO mdto) {
-		int ret = 0;
+		int ret = 1;
 		
 		mdao.insertMember(mdto);
 		

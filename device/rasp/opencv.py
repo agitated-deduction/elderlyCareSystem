@@ -9,7 +9,7 @@ cap = cv2.VideoCapture('http://192.168.1.34:8090/?action=stream')   # 스트리�
 # Background Subtraction 의 알고리즘 중 BackgroundSubtractorMOG2 적용해 본다.
 # BackgroundSubtractorMOG2
 fgbg = cv2.createBackgroundSubtractorMOG2()
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(4,4))  # 커널을 생성하고 형태 변환 중 Opening 기법을 적용
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))  # 커널을 생성
 # 얼굴 검출 
 faceCascade = cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
 
@@ -28,10 +28,11 @@ while(cap.isOpened()):
     if (ret):
         
         fgmask = fgbg.apply(frame)
-        fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)  # 침식
-        fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)    # 팽창
+        
+        fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)  # 형태 변환 중 Closing 기법을 적용
+        fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)    # 형태 변환 중 Opening 기법을 적용
 
-        # 물체 검출 
+        # 물체 검출 / 임계처리 (src, 임계값, 임계값 넘었을 때 , 처리 타입 )
         ret1, thr = cv2.threshold(fgmask, 70, 255, cv2.THRESH_BINARY)
         # 가장 바깥쪽 라인을 찾으며, 최소 point만 저장하여 메모리 절약 
         countors, hierarchy = cv2.findContours(thr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -57,23 +58,32 @@ while(cap.isOpened()):
         )
 
 
-        if( contour_box > 50):  # 컨투어의 면적이 크면 글자표시 
+        if( contour_box > 20):  # 컨투어의 면적이 크면 글자표시 
             cv2.putText(sub_frame,'Detected!', (10, 30),
             cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
             
         for(x, y, w, h) in faces:
             cv2.rectangle(sub_frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
+            if (x > 0) :  # 사각형이 존재한다면 , 얼굴이 인식된다면 
+                cv2.putText(sub_frame,'rectangle!', (10, 60),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+
+            if (x > 0) and ( contour_box > 20):
+                cv2.putText(sub_frame,'HUMAN Detected!', (10, 90),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+
+
 
         cv2.imshow('frame', fgmask)
         cv2.imshow("Found", sub_frame) 
 
         # out.write(fgmask)
    
-    if cv2.waitKey(1) & 0xFF == ord('q'):  # q로 종료 
+    if cv2.waitKey(10) & 0xFF == ord('q'):  # q로 종료 
         break
 
 
 cap.release()
-out.release()
+# out.release()
 cv2.destroyAllWindows()

@@ -160,12 +160,10 @@ class Thread3(QThread):   ## 타이머,카메라 쓰레드
         subprocess.call('sh ~/stream.sh', shell=True)  ## 카메라 스트리밍 
         # stream.sh 파일 없으면 만든다.  mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/"
 
-       
-
+        subprocess.call("python /home/pi/_GUI/opencv.py",shell=True)  ##-------- 움직임 감지 실행
 
 if __name__ == '__main__':
     
     app = QApplication(sys.argv)    
     w = mainGUI()
     sys.exit(app.exec_())
-    

@@ -1,5 +1,5 @@
 #-*- encoding:utf-8 -*-
-import time, random, sys, os
+import time, random, sys, os, urllib2
 import subprocess
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
@@ -28,6 +28,7 @@ class mainGUI(QDialog):
         self.th = Thread1()  # dht
         self.th2 = Thread2()  # weather
         self.th3 = Thread3() # timer
+        self.th4 = Thread4() # camera
         
 
         # 현재 날짜 세팅 
@@ -37,6 +38,7 @@ class mainGUI(QDialog):
         self.image()  # 이미지 함수 실행 
         self.dht() # 온도 센서 
         self.displayweather()  # 날씨 
+        self.th4.start() # 카메라 쓰레드 실행 
         
         
     def timer_(self):
@@ -50,7 +52,6 @@ class mainGUI(QDialog):
         # 업데이트 및 시작
         self.timer.timeout.connect(self.displayDateTime)
         self.timer.start(1000) # 1초다마 실행 
-
 
         #---- 날씨 
         self.Weathertimer = QtCore.QTimer()
@@ -85,7 +86,6 @@ class mainGUI(QDialog):
         self.ui.temIcon.setPixmap(self.temIcon)
         self.ui.humIcon.setPixmap(self.humIcon)
 
-
     def dht(self):  # 온습도 센서 
 
         self.th.start()  # 쓰레드 시작 
@@ -115,18 +115,17 @@ class Thread1(QThread):
 
     def __init__(self):
         QThread.__init__(self)
-        self.cond = QWaitCondition()
-        self.mutex = QMutex()
-        
-        self._status = True
-
+        # self.cond = QWaitCondition()
+        # self.mutex = QMutex()
+        # self._status = True
 
     def run(self):
         
-        
         while True:
             
-            h, t = Adafruit_DHT.read_retry(sensor, pin)         
+            h, t = Adafruit_DHT.read_retry(sensor, pin)  
+            html = urllib2.urlopen("https://api.thingspeak.com/update?api_key=KCKL36Q7DWG3F2OR&field1="+str(t)+"&field2="+str(h))       
+            # thingspeak 시각자료를 위한 센서값 보내기 : API사용
 
             self.change_value1.emit(t)
             self.change_value2.emit(h)
@@ -147,8 +146,11 @@ class Thread2(QThread):   ## weather.py  reload
         import weather  
         reload(weather)   # 날씨를 3 시간 마다 다시 읽기 위해서 
 
+    
+        # import publisher # 온습도 MQTT 전송
 
-class Thread3(QThread):   ## 타이머,카메라 쓰레드 
+
+class Thread3(QThread):   ## 타이머 
 
     def __init__(self):
         QThread.__init__(self)
@@ -157,13 +159,28 @@ class Thread3(QThread):   ## 타이머,카메라 쓰레드
             
         mainGUI.dateTimeVar = QDateTime.currentDateTime()  # 값 받아오기
 
-        subprocess.call('sh ~/stream.sh', shell=True)  ## 카메라 스트리밍 
-        # stream.sh 파일 없으면 만든다.  mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/"
 
-        subprocess.call("python /home/pi/_GUI/opencv.py",shell=True)  ##-------- 움직임 감지 실행
+
+class Thread4(QThread):   ## 카메라 쓰레드 
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        subprocess.call('sh ~/stream.sh', shell=True)  ##------------- 카메라 스트리밍 실행 
+        # stream.sh 파일 없으면 만든다.  mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/"
+        
+        subprocess.call("python /home/pi/_GUI/live_alone.py",shell=True)  ##-------- 독거노임: 움직임 감지 실행  
+        # subprocess.call("python /home/pi/_GUI/dementia.py",shell=True)  ##-------- 치매환자: 야간 이상행동 감지 실행  
+
+
+
+
+
 
 if __name__ == '__main__':
     
     app = QApplication(sys.argv)    
     w = mainGUI()
     sys.exit(app.exec_())
+    

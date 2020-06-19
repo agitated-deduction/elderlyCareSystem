@@ -19,8 +19,8 @@
 	<update id = "joinApproval" parameterType = "com.spring.elderlycare.dto.MemberDTO">
 	UPDATE `user` SET urole = 0;
 	</update>
-	<delete id = "deleteMember" parameterType = "com.spring.elderlycare.dto.MemberDTO">
-	DELETE FROM `user` WHERE uid=#{uid} AND upwd = #{upwd};
+	<delete id = "deleteMember" parameterType = "String">
+	DELETE FROM `user` WHERE uid=#{value}; <!--  AND upwd = #{upwd};-->
 	</delete>
 	<select id = "selectOne" parameterType = "String" resultType = "com.spring.elderlycare.dto.MemberDTO">
 	SELECT * FROM `user` WHERE uid = #{value};

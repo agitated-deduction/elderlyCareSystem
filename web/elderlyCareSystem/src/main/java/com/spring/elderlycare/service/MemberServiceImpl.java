@@ -13,9 +13,7 @@ public class MemberServiceImpl implements MemberService{
 	
 	@Override
 	public int join(MemberDTO mdto) {
-		int ret = 1;
-		
-		mdao.insertMember(mdto);
+		int ret =  mdao.insertMember(mdto);
 		
 		return ret;
 	}
@@ -25,14 +23,12 @@ public class MemberServiceImpl implements MemberService{
 	}
 	@Override
 	public int modify(MemberDTO mdto){
-		int ret = 0;
-		mdao.updateMember(mdto);
+		int ret = mdao.updateMember(mdto);
 		return ret;
 	}
 	@Override
-	public int delet(MemberDTO mdto){
-		int ret = 0;
-		mdao.deleteMember(mdto);
+	public int delet(String id){
+		int ret = mdao.deleteMember(id);
 		return ret;
 	}
 	@Override

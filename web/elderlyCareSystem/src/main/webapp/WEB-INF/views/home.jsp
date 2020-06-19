@@ -24,6 +24,13 @@
 	<a href = "users/${uid }" class = "btn btn-default" role = "button">내 정보</a>
 	<a href = "users/logout" class = "btn btn-default" role = "button">로그아웃</a>
 	<a href = "devices/form" class = "btn btn-default" role = "button">기기등록</a>
+	<br/>
+	<form class = 'delete-form' action = "users/${uid }" method = "post">
+	<input type = "hidden" name = "_method" value = "delete"/>
+	<button type = "submit">회원 탈퇴</button>
+	<a href = "users/mod-form" class = "btn btn-default" role = "button">정보 수정</a>
+	
+	</form>
 </c:if>
 
 </body>

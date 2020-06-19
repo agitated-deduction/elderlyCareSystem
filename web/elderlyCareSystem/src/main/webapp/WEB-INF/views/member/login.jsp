@@ -21,22 +21,16 @@ $(function(){
 				contentType : 'application/json',            
 				data : JSON.stringify(data),            
 				success : function(response){
-					alert(response.result+"!"+ response.uid+'님 환영합니다.');
+					alert(response.result+"!\n"+ response.uid+'님 환영합니다.');
 				},                      
 				error   : function(response){
-					alert(response.result+"!"+ response.uid);
+					alert(response.uid);
 				}
 		});
 	});
 });
 	
 
-
-//$(document.read(function(){
-//	$('#login').submit(function(){
-//		$
-//	}
-//})
 
 </script>
 </head>

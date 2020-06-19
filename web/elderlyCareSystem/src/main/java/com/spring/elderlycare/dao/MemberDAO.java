@@ -1,18 +1,15 @@
 package com.spring.elderlycare.dao;
 
-import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.spring.elderlycare.dto.ElderlyDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 
 @Component
 public interface MemberDAO {
-	public void insertMember(MemberDTO mdto);
-	public void updateMember(MemberDTO mdto);
-	public void deleteMember(MemberDTO mdto);
+	public int insertMember(MemberDTO mdto);
+	public int updateMember(MemberDTO mdto);
+	public int deleteMember(String id);
 	public MemberDTO selectOne(String id);
 	public boolean exist(MemberDTO mdto);
-	//public List<DeviceUserDTO>selectManageDevices(String id);
 }

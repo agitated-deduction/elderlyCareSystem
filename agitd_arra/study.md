@@ -642,3 +642,58 @@ login
 * member delete member modify 만들기 일단 버튼은 홈 화면에.
 * 가입 승인 만들기
 * 서비스단 만들기
+
+
+DELETE PUT 메소드 사용하기 위해 web.xml에 등록
+
+```xml
+<!-- HTTP Method Filter -->
+<filter>
+    <filter-name>httpMethodFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>httpMethodFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+1. 회원가입 : 관리자는 DB에 들어있다고 가정. 보호자 가입 기능. 노인의 번호를 입력해야 됨.
+	* 노인의 key를 입력해줄지, 이름과 생년월일을 입력할지.
+	* 가입승인은 관리자가 해줌. 가입승인 구현시 DB table에 저장하고 로그인 할 때, 받아와서 알려줘야 함
+	* DB에서는 user, manage를 갱신한다. manage rel에 이미 들어있는 값이 있다면? 처리방안
+
+2. 폼 (로그인, 회원가입, 기기등록, 정보수정) : 현재는 로그인폼도 컨트롤러에서 부름. 그렇게 구성하는 것이 맞는지.. 아닌거같음
+	* GET users/login -> x GET users
+	* POST users/login ->POST users/login
+	* GET users/join -> x GET users
+	* POST users/join -> POST users
+	* 위처럼 수정할 수 있을까?
+	* PUT users/{uid} 이거 위한 폼은?
+	* jsp 하나로 만든 담에 조건따라 include로 합치기? 조건 어떻게 확인?
+
+3. 기기 삭제 테스트 해봐야 됨
+	* delete cascade 조건 줬지만 테스트 안해봤음
+
+4. DB에 비밀번호 그대로 저장 노노
+
+
+## Transaction 트랜잭션
+
+https://www.youtube.com/watch?v=jSNrGgHk-ds
+https://goddaehee.tistory.com/167
+
+논리적 단위로 한 부분의 작업이 완료되었더라도 다른 부분의 작업이 완료되지 않을 경우 전체 취소되는 것. 작업 완료는 커밋(commit) 이라고 하고 작업 취소는 롤백(rollback)이라고 한다.
+
+* 원자성 : 한 트랜잭션 내에서 실행한 작업은 하나로 간주
+* 일관성 : 일관성있는 ㄷㅂ 상태 유지
+* 격리성 : 동시에 실행되는 트랜잭션 영향 미치지 않도록 관리
+* 지속성 : 트랜잭션 결과 저장
+
+@Transactional <<트랜잭션 기능이 적용된 프록시 객체 생성됨
+이 프록시 계체는 해당 어노테이션이 포함된 메소드 호출 시 `PlatformTransactionManager`를 사용하여 트랜잭션을 시작하고 정상여부에 따라 Commit또는 Rollback한다.
+
+
+
+`<aop:aspectj-autoproxy></aop:aspectj-autoproxy>`
+root-context.xml

@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.elderlycare.dto.DevicesDTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
 import com.spring.elderlycare.service.DeviceService;
 
+@SessionAttributes("uid")
 @RestController
 @RequestMapping("/devices")
 public class DeviceController {

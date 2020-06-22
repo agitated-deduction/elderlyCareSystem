@@ -5,6 +5,22 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+</head>
+<body>
+<h1>login page</h1>
+<form action = "login" id ="login-form" method = "POST">
+<div>
+	<label for = "uid">ID:</label>
+	<input id = "uid" type = "text" name = "uid" >
+	</div>
+	<div>
+	<label for = "upwd">PASSWORD:</label>
+	<input id = "upwd" type = "password" name = "upwd" >
+</div>
+<button type = "submit">로그인</button>
+</form>
+</body>
 <script type = "text/javascript" src = "/elderlycare/resources/jquery-3.5.1.js"></script>
 <script type = "text/javascript">
 $(function(){
@@ -33,19 +49,4 @@ $(function(){
 
 
 </script>
-</head>
-<body>
-<h1>login page</h1>
-<form action = "login" id ="login-form" method = "POST">
-<div>
-	<label for = "uid">ID:</label>
-	<input id = "uid" type = "text" name = "uid" >
-	</div>
-	<div>
-	<label for = "upwd">PASSWORD:</label>
-	<input id = "upwd" type = "password" name = "upwd" >
-</div>
-<button type = "submit">로그인</button>
-</form>
-</body>
 </html>

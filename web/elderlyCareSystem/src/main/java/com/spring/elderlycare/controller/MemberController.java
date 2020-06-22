@@ -3,6 +3,9 @@ package com.spring.elderlycare.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,6 @@ import com.spring.elderlycare.service.MemberService;
 @RestController
 @RequestMapping("/users")
 public class MemberController {
-	
 	@Autowired private MemberService service;
 	@Autowired private MemberDTO mdto;
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -39,7 +41,7 @@ public class MemberController {
 	//화면에서 입력 폼 json으로 받기
 	@RequestMapping(value = "/login", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
-	public @ResponseBody Map<String, Object> loginCheck(Model model,@RequestBody MemberDTO mdto) {
+	public @ResponseBody Map<String, Object> loginCheck(HttpSession httpSession,@RequestBody MemberDTO mdto) {
 		logger.info("++++++++++++login form+++++++++++++");
 		logger.info("++++++++++++"+mdto.getUid()+"+++++++++++++");
 		boolean isExist = service.loginCheck(mdto);
@@ -48,11 +50,12 @@ public class MemberController {
 		if(isExist) {
 			ret.put("result", true);
 			ret.put("uid", mdto.getUid());
-			//model.addAttribute("result", true);
-			model.addAttribute("uid", mdto.getUid());
-		}else //model.addAttribute("result", false); 
+			//model.addAttribute("uid", mdto.getUid());
+			httpSession.setAttribute("uid", mdto.getUid());
+			logger.info(httpSession.getId());
+			logger.info((String) httpSession.getAttribute("uid"));
+		}else
 			ret.put("result", false);
-		//return model;
 		return ret;
 	}
 	

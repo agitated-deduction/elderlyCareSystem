@@ -43,5 +43,16 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	<mvc:default-servlet-handler/>
+	
+	<bean id="clientFactory"
+        class="org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory">
+    <property name="connectionOptions">
+        <bean class="org.eclipse.paho.client.mqttv3.MqttConnectOptions">
+            <property name="userName" value="${mqtt.username}"/>
+            <property name="password" value="${mqtt.password}"/>
+        </bean>
+    </property>
+</bean>
+	
 </beans>
 

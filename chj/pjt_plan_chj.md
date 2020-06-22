@@ -42,7 +42,7 @@
   습도 : home/humid   
   유해가스 : home/gas  
   움직임(밤): home/move  
-  고독사 : home/nonmove  
+  고독사 : home/alone 
   ```
   
   ### HW 기능(제어 방법)

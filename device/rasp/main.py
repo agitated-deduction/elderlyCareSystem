@@ -10,7 +10,7 @@ from weather import *
 # from weather import NowTemp
 
 
-# -- 온습도 센서 모듈 
+#-- 온습도 센서 모듈 
 import Adafruit_DHT
 sensor = Adafruit_DHT.DHT11
 pin = 4  # 온습도 센서 핀 
@@ -25,10 +25,14 @@ class mainGUI(QDialog):
         # self.ui.showMaximized()
         self.setGeometry(0, 0, 800, 480)  # 화면 사이즈 
 
-        self.th = Thread1()  # dht
-        self.th2 = Thread2()  # weather
-        self.th3 = Thread3() # timer
-        self.th4 = Thread4() # camera
+        self.th = Thread_dht()  # dht
+        self.th2 = Thread_weather()  # weather
+        self.th3 = Thread_timer() # timer
+        self.th4 = Thread_stream() # camera stream
+        self.th5 = Thread_alone() # 독거노인
+        # self.th6 = Thread_dementia() # 치매환자
+
+
         
 
         # 현재 날짜 세팅 
@@ -38,7 +42,11 @@ class mainGUI(QDialog):
         self.image()  # 이미지 함수 실행 
         self.dht() # 온도 센서 
         self.displayweather()  # 날씨 
-        self.th4.start() # 카메라 쓰레드 실행 
+        self.th4.start() # 카메라 스트리밍 실행 
+        self.th5.start() # 독거노인 실행 
+        # self.th6.start() # 치매환자 실행 
+
+
         
         
     def timer_(self):
@@ -108,7 +116,7 @@ class mainGUI(QDialog):
 
 
 
-class Thread1(QThread):
+class Thread_dht(QThread):
     # 값이 변경되면 그 값을 change_value 시그널에 값을 emit 한다.
     change_value1 = pyqtSignal(int)
     change_value2 = pyqtSignal(int)
@@ -135,7 +143,7 @@ class Thread1(QThread):
             self.msleep(100)
 
 
-class Thread2(QThread):   ## weather.py  reload
+class Thread_weather(QThread):   ## weather.py  reload
 
     def __init__(self):
         QThread.__init__(self)
@@ -150,7 +158,7 @@ class Thread2(QThread):   ## weather.py  reload
         # import publisher # 온습도 MQTT 전송
 
 
-class Thread3(QThread):   ## 타이머 
+class Thread_timer(QThread):   ## 타이머 
 
     def __init__(self):
         QThread.__init__(self)
@@ -161,20 +169,48 @@ class Thread3(QThread):   ## 타이머
 
 
 
-class Thread4(QThread):   ## 카메라 쓰레드 
+class Thread_stream(QThread):   ## 카메라 스트리밍 실행 
+
+    def __init__(self):
+        QThread.__init__(self)
+        self.daemon = True
+
+    def run(self):
+        subprocess.call('sh ~/stream.sh', shell=True)  ##------------- 카메라 스트리밍 실행 
+        # stream.sh 파일 없으면 만든다.  mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/"
+
+                
+
+
+class Thread_alone(QThread):   ## 독거노인 
 
     def __init__(self):
         QThread.__init__(self)
 
     def run(self):
-        subprocess.call('sh ~/stream.sh', shell=True)  ##------------- 카메라 스트리밍 실행 
-        # stream.sh 파일 없으면 만든다.  mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/"
+            
+        subprocess.call("python /home/pi/_GUI/live_alone.py",shell=True)  ##-------- 독거노인: 움직임 감지 실행  
         
-        subprocess.call("python /home/pi/_GUI/live_alone.py",shell=True)  ##-------- 독거노임: 움직임 감지 실행  
-        # subprocess.call("python /home/pi/_GUI/dementia.py",shell=True)  ##-------- 치매환자: 야간 이상행동 감지 실행  
+
+# class Thread_dementia(QThread):   ##  치매환자
+
+#     def __init__(self):
+#         QThread.__init__(self)
+
+#     def run(self):
+        
+#         subprocess.call("python /home/pi/_GUI/dementia.py",shell=True)  ##-------- 치매환자: 야간 이상행동 감지 실행 
 
 
 
+# class Thread_MQTT(QThread):   ##-------- MQTT 
+
+#     def __init__(self):
+#         QThread.__init__(self)
+
+#     def run(self):
+        
+#         subprocess.call("python /home/pi/_GUI/publisher.py",shell=True)  
 
 
 

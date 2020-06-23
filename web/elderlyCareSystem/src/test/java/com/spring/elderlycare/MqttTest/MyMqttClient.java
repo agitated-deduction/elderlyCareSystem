@@ -120,7 +120,9 @@ public class MyMqttClient implements MqttCallback{
 	
     @Override
     public void connectionLost(Throwable arg0) {
+    	System.out.println("connectionLost");
         if(FNC2 != null){
+        	System.out.println("connectionLostif");
             HashMap<Object, Object> result = new HashMap<>();
             result.put("result", arg0);
             FNC2.accept(result);
@@ -130,7 +132,9 @@ public class MyMqttClient implements MqttCallback{
 	
     @Override
     public void deliveryComplete(IMqttDeliveryToken arg0) {
+    	System.out.println("deliveryComplete");
         if(FNC3 != null){
+        	System.out.println("deliveryCompleteif");
             HashMap<Object, Object> result = new HashMap<>();
             try {
                 result.put("result", arg0);
@@ -146,7 +150,9 @@ public class MyMqttClient implements MqttCallback{
     //메시지 도착
     @Override
     public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
+    	System.out.println("messageArrived");
         if(FNC != null){
+        	System.out.println("messageArrivedif");
             HashMap<Object, Object> result = new HashMap<>();
             result.put("topic", arg0);
             result.put("message", new String(arg1.getPayload(),"UTF-8"));

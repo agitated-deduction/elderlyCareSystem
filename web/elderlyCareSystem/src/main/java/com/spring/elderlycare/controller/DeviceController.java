@@ -2,14 +2,17 @@ package com.spring.elderlycare.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,36 +27,62 @@ public class DeviceController {
 	@Autowired private DeviceService service;
 	@Autowired private ElderlyDTO edto;
 	@Autowired private DevicesDTO ddto;
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public List<ElderlyDTO> deviceList(Model model, @SessionAttribute("uid") String uid) {
-		List<ElderlyDTO> list = service.devicesList(uid);
+	private final Logger logger = LoggerFactory.getLogger(DeviceController.class);
+
+	/*
+	 * 
+	 * 
+	 * devices 부분입니다.
+	public List<ElderlyDTO> deviceList(HttpSession httpSession, @CookieValue(value="Cookie",required=false) Cookie cookie) {
 		
+		logger.info("++++++++++++"+"DeviceList"+"+++++++++++++"); 
+		logger.info(httpSession.getId()); //요청한 사람의 쿠키 확인
+		logger.info(httpSession.getAttribute("uid")); //세션 내 uid 확인
+		List<ElderlyDTO> list = service.devicesList(httpSession.getAttribute("uid").toString());//
+			return list;
+	} 
+	// 어노테이션 @CookieValue로 쿠키를 받아오려 했으나 null값 확인됩니다. -> HttpSession값을 통해 쿠키를 확인하였습니다.
+	// 웹에서 /devices 요청시 : <session 내 uid & 쿠키>, <해당 uid의 devices list return>까지 확인하였습니다.
+	// 앱에서 /devices 요청시 : <getAttribute("uid")> -> nullpoint error & <empty body return>
+	  				   + <앱에서 return받은 응답의 header에 새로운 쿠키 생성됨> 확인하였습니다.
+	 * 
+	 * 
+	 * 
+	 * */
+	@RequestMapping(method = RequestMethod.GET)
+	public List<ElderlyDTO> deviceList(HttpSession httpSession) {
+		List<ElderlyDTO> list = service.devicesList((String)httpSession.getAttribute("uid"));
+				
 		return list;
 	}
-	@RequestMapping(value = "/form", method = RequestMethod.POST)
-	public ModelAndView form(ModelAndView mav,
+	/*********************************/
+	/*********************************/
+	@RequestMapping(value = "/form", method = RequestMethod.POST,
+			headers= {"Content-type=application/json"})
+	/*public ModelAndView form(ModelAndView mav,
 			@RequestParam("inp_e_name")String ename,
 			@RequestParam("inp_e_birth")String ebirth,
 			@RequestParam("inp_e_tel")String etel,
 			@RequestParam("inp_e_addr")String eaddr,
 			@RequestParam("inp_homeiot")String homeIoT,
 			@RequestParam("inp_bandiot")String bandIoT, 
-			@SessionAttribute("uid")String uid) {
-		mav.setViewName("redirect:/devices");
-		
-		edto.setEname(ename);
+			@SessionAttribute("uid")String uid) {*/
+		//mav.setViewName("redirect:/devices");
+	public boolean form(HttpSession httpSession, @RequestBody ElderlyDTO edto, @RequestBody DevicesDTO ddtd) {
+		/*edto.setEname(ename);
 		edto.setEbirth(ebirth);
 		edto.setEaddr(eaddr);
 		edto.setEtel(etel);
 		
 		ddto.setHomeIoT(homeIoT);
 		ddto.setBandIoT(bandIoT);
+		*/
+		logger.info(edto.getEname());
+		logger.info(ddto.getBandIoT());
 		
-		//BundleDTO bdto = new BundleDTO(ddto, edto);
-		service.deviceRegistration(edto, ddto, uid);
+		service.deviceRegistration(edto, ddto, (String)httpSession.getAttribute("uid"));
 		
-		return mav;
+		return true;
 	}
 	
 	@RequestMapping(value = "/form", method = RequestMethod.GET)

@@ -1,4 +1,4 @@
-package com.spring.elderlycare.MqttTest;
+package com.spring.elderlycare.util;
 
 
 /*https://www.monirthought.com/2017/11/eclipse-paho-java-client-mqtt-client.html*/

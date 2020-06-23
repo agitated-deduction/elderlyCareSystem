@@ -25,7 +25,7 @@
 <script type = "text/javascript">
 $(function(){
 	$('#login-form').submit(function(event){
-		//event.preventDefault();
+		event.preventDefault();
 		
 		//var data = {"uid": "staff101058", "upwd": "staff101058"};
 		var data = {uid: $("#uid").val(), upwd: $('#upwd').val()};

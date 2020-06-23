@@ -8,36 +8,62 @@
 </head>
 <body>
 	<h1>기기 등록</h1>
-	<form action ="form" method = "POST">
+	<form id = "registration-form" action ="form" method = "POST">
 	<h3>노인정보</h3>
 	<div>
-	<label for = "inp_e_name">name: </label>
-	<input type = "text" name = "inp_e_name" id = "inp_e_name">
+	<label for = "ename">name: </label>
+	<input type = "text" name = "ename" id = "ename">
 	</div>
 	<div>
-	<label for = "inp_e_birth">birth: </label>
-	<input type = "date" name = "inp_e_birth" id = "inp_e_birth">
+	<label for = "ebirth">birth: </label>
+	<input type = "date" name = "ebirth" id = "ebirth">
 	</div>
 	<div>
-	<label for = "inp_e_tel">tel: </label>
-	<input type = "text" name = "inp_e_tel" id = "inp_e_tel">
+	<label for = "etel">tel: </label>
+	<input type = "text" name = "etel" id = "etel">
 	</div>
 	<div>
-	<label for = "inp_e_addr">address: </label>
-	<input type = "text" name = "inp_e_addr" id = "inp_e_addr">
+	<label for = "eaddr">address: </label>
+	<input type = "text" name = "eaddr" id = "eaddr">
 	</div>
 	<h3>기기정보</h3>
 	<div>
-	<label for = "inp_homeiot">homeiot: </label>
-	<input type = "text" name = "inp_homeiot" id = "inp_homeiot">
+	<label for = "homeiot">homeiot: </label>
+	<input type = "text" name = "homeiot" id = "homeiot">
 	</div>
 	<div>
-	<label for = "inp_bandiot">bandiot: </label>
-	<input type = "text" name = "inp_bandiot" id = "inp_bandiot">
+	<label for = "bandiot">bandiot: </label>
+	<input type = "text" name = "bandiot" id = "bandiot">
 	</div>
 	<div>
 	<button type = "submit" class = "btn btn-default">기기등록</button>
 	</div>
 	</form>
 </body>
+
+<script type = "text/javascript" src = "/elderlycare/resources/jquery-3.5.1.js"></script>
+<script type = "text/javascript">
+$(function(){
+	$('#registration-form').submit(function(event){
+		event.preventDefault();
+		var data = [{ename:$('#ename').val(),
+					ebirth:$('#ebirth').val(),
+					etel:$('#etel').val(),
+					eaddr:$('#eaddr').val()},
+					{homeIoT:$('#homeiot').val(),
+					bandIoT:$('#bandiot').val()
+					}];
+	$.ajax({
+			type: 'POST',
+			url: 'form',
+			dataType: 'json',
+			contentType: 'application/json',
+			data:JSON.stringify(data),
+			success : function(){
+				alert("가입 성공");
+			}
+		});
+	});
+});
+</script>
 </html>

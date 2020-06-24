@@ -697,3 +697,35 @@ https://goddaehee.tistory.com/167
 
 `<aop:aspectj-autoproxy></aop:aspectj-autoproxy>`
 root-context.xml
+
+웹에서 데이터 처리
+
+김대업. "Client/Server 기반 원격 제어를 위한 실시간 모니터링 시스템 설계 및 구현." 국내석사학위논문 부경대학교대학원, 2002. 부산
+
+길영준. "다중 생체신호를 이용한 혈압 추정 모델 및 IPv6 기반의 실시간 모니터링 시스템 개발." 국내박사학위논문 부산대학교, 2013. 부산
+
+조덕연. "임베디드 리눅스를 이용한 산업용 제어기의 웹 모니터링." 국내석사학위논문 선문대학교, 2002. 충청남도
+
+박제창. "만성 당뇨 환자의 자가 혈당 관리를 위한 지능형 헬스케어 시스템." 국내석사학위논문 강원대학교 일반대학원, 2019. 강원도
+
+최정민. "작물 생육 환경 모니터링을 위한 비동기 IoT 브로커 설계 및 구현." 국내석사학위논문 인천대학교 정보기술대학원, 2017. 인천
+
+
+## 시계열 DB?
+mysql + redis
+mysql + mongodb
+mysql + influxdb
+influxdb
+mongodb
+
+일단은 그냥 mysql로 구현하고 시간이 남으면 다른 db로도 테스트 해보기
+
+
+```sql
+create table realtimedata(
+	measuredtime timestamp default current_timestamp on update current_timestamp,
+    humid float,
+    temp float,
+    gas boolean
+    );
+    ```

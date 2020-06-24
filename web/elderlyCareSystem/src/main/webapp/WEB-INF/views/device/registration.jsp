@@ -46,13 +46,13 @@
 $(function(){
 	$('#registration-form').submit(function(event){
 		event.preventDefault();
-		var data = [{ename:$('#ename').val(),
+		var data = {ename:$('#ename').val(),
 					ebirth:$('#ebirth').val(),
 					etel:$('#etel').val(),
-					eaddr:$('#eaddr').val()},
-					{homeIoT:$('#homeiot').val(),
+					eaddr:$('#eaddr').val(),
+					homeIoT:$('#homeiot').val(),
 					bandIoT:$('#bandiot').val()
-					}];
+					};
 	$.ajax({
 			type: 'POST',
 			url: 'form',
@@ -60,7 +60,7 @@ $(function(){
 			contentType: 'application/json',
 			data:JSON.stringify(data),
 			success : function(){
-				alert("가입 성공");
+				alert("등록 성공");
 			}
 		});
 	});

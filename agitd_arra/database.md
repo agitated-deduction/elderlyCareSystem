@@ -229,3 +229,15 @@ alter table manage add constraint fk_constraint_2 foreign key(elderly)
 references elderly(ekey) on delete cascade;
 ```
 manage의 staff는?
+
+
+
+
+```sql
+create table realtimedata(
+    measuredtime timestamp default current_timestamp on update current_timestamp,
+    humid float,
+    temp float,
+    gas boolean
+    );
+```

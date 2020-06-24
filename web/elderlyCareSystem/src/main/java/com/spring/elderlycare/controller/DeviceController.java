@@ -1,6 +1,7 @@
 package com.spring.elderlycare.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -59,24 +60,16 @@ public class DeviceController {
 	/*********************************/
 	@RequestMapping(value = "/form", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
-	/*public ModelAndView form(ModelAndView mav,
-			@RequestParam("inp_e_name")String ename,
-			@RequestParam("inp_e_birth")String ebirth,
-			@RequestParam("inp_e_tel")String etel,
-			@RequestParam("inp_e_addr")String eaddr,
-			@RequestParam("inp_homeiot")String homeIoT,
-			@RequestParam("inp_bandiot")String bandIoT, 
-			@SessionAttribute("uid")String uid) {*/
-		//mav.setViewName("redirect:/devices");
-	public boolean form(HttpSession httpSession, @RequestBody ElderlyDTO edto, @RequestBody DevicesDTO ddtd) {
-		/*edto.setEname(ename);
-		edto.setEbirth(ebirth);
-		edto.setEaddr(eaddr);
-		edto.setEtel(etel);
+	public boolean form(HttpSession httpSession, @RequestBody Map<String, String> json) {
+		logger.info(json.toString());
+		edto.setEname(json.get("ename"));
+		edto.setEbirth(json.get("ebirth"));
+		edto.setEaddr(json.get("eaddr"));
+		edto.setEtel(json.get("etel"));
 		
-		ddto.setHomeIoT(homeIoT);
-		ddto.setBandIoT(bandIoT);
-		*/
+		ddto.setHomeIoT(json.get("homeIoT"));
+		ddto.setBandIoT(json.get("bandIoT"));
+		
 		logger.info(edto.getEname());
 		logger.info(ddto.getBandIoT());
 		
@@ -84,7 +77,6 @@ public class DeviceController {
 		
 		return true;
 	}
-	
 	@RequestMapping(value = "/form", method = RequestMethod.GET)
 	public ModelAndView deviceRegistration(ModelAndView mav) {
 		mav.setViewName("device/registration");

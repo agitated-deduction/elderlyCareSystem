@@ -30,7 +30,7 @@ class mainGUI(QDialog):
         self.th3 = Thread_timer() # timer
         self.th4 = Thread_stream() # camera stream
         self.th5 = Thread_alone() # 독거노인
-        # self.th6 = Thread_dementia() # 치매환자
+        self.th6 = Thread_dementia() # 치매환자
 
 
         
@@ -44,10 +44,9 @@ class mainGUI(QDialog):
         self.displayweather()  # 날씨 
         self.th4.start() # 카메라 스트리밍 실행 
         self.th5.start() # 독거노인 실행 
-        # self.th6.start() # 치매환자 실행 
+        self.th6.start() # 치매환자 실행 
 
 
-        
         
     def timer_(self):
 
@@ -173,7 +172,7 @@ class Thread_stream(QThread):   ## 카메라 스트리밍 실행
 
     def __init__(self):
         QThread.__init__(self)
-        self.daemon = True
+        # self.daemon = True
 
     def run(self):
         subprocess.call('sh ~/stream.sh', shell=True)  ##------------- 카메라 스트리밍 실행 
@@ -189,19 +188,20 @@ class Thread_alone(QThread):   ## 독거노인
 
     def run(self):
             
-        subprocess.call("python /home/pi/_GUI/live_alone.py",shell=True)  ##-------- 독거노인: 움직임 감지 실행  
+        subprocess.call("python /home/pi/_GUI/live_alone.py", shell=True)  ##-------- 독거노인: 움직임 감지 실행  
+        
         
 
-# class Thread_dementia(QThread):   ##  치매환자
+class Thread_dementia(QThread):   ##  치매환자
 
-#     def __init__(self):
-#         QThread.__init__(self)
+    def __init__(self):
+        QThread.__init__(self)
 
-#     def run(self):
+    def run(self):
         
-#         subprocess.call("python /home/pi/_GUI/dementia.py",shell=True)  ##-------- 치매환자: 야간 이상행동 감지 실행 
-
-
+        subprocess.call("python /home/pi/_GUI/dementia.py", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  ##-------- 치매환자: 야간 이상행동 감지 실행 
+        
+        
 
 # class Thread_MQTT(QThread):   ##-------- MQTT 
 

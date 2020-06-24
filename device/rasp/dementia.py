@@ -6,7 +6,7 @@ import sys, time, datetime
 from datetime import timedelta, time, datetime
 from time import sleep
 
-#----> 이 파일은 main.py에 의해 1분 ~ 3분마다 불러올 것이다.
+#----> 이 파일은 main.py에 의해 불러올 것이다.
 
 
 def dem():
@@ -19,20 +19,9 @@ def dem():
     # 얼굴 검출 
     faceCascade = cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
 
-
-    #----- 파일 저장 설정 
-    # frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
-    # fourcc = cv2.VideoWriter_fourcc(*'DIVX') # 디지털 포맷 코드 - 인코딩 방식 설정 
-    # filename = 'move({}).avi'.format(datetime.now())
-    # out = cv2.VideoWriter(filename, fourcc, frame_rate, (frame_width, frame_height)) # 캡쳐 동영상 저장
-
     StartRec = datetime.today() # 시작 시간 
     NowRec =  datetime.now() 
     EndRec = StartRec + timedelta(seconds=30)  # 30초 뒤  
-
-    # print(NowRec)
-    # print(EndRec)
-
 
     cnt = 0
     contour_box = None 
@@ -53,13 +42,12 @@ def dem():
         #----- 파일 저장 설정  
         frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
         fourcc = cv2.VideoWriter_fourcc(*'DIVX') # 디지털 포맷 코드 - 인코딩 방식 설정 
-        filename = 'move({}).avi'.format(datetime.now())
+        filename = '/home/pi/_GUI/Move/move({}).avi'.format(datetime.now())
         out = cv2.VideoWriter(filename, fourcc, frame_rate, (frame_width, frame_height)) # 캡쳐 동영상 저장
 
 
     while(nightcamera):
-        print(end_time)
-        print(Now_time)
+        
         Now_time = datetime.now().time()   # 현재 시간
         NowRec =  datetime.now() 
 
@@ -88,7 +76,7 @@ def dem():
                 hull=cv2.convexHull(cnt)  # 대략적인 다각형 그리기 
                 cv2.drawContours(sub_frame,[hull], -1, (0, 255, 0), 1)
                 area=int(cv2.contourArea(cnt))
-                print(area)
+                # print(area)
 
             except:
                 pass
@@ -123,12 +111,11 @@ def dem():
             cv2.imshow("Found", sub_frame) 
 
         if(Hflag == 1):
-            
+            print("~~~~HUMAN Detected!~~~~")
             print("EndRec: ", EndRec.second)
             print("NowRec:",NowRec.second)
-            print("~~~~HUMAN Detected!~~~~")
-
-            out.write(subframe)  # 녹화 시작 /home/pi/_GUI 에 저장된다.
+            
+            out.write(subframe)   # 녹화 시작 /home/pi/_GUI/Move/ 에 저장된다.
       
             if(NowRec.second == EndRec.second): # 초가 지났으면 
                 print("~~~~out release~~~~")
@@ -143,7 +130,7 @@ def dem():
 
     try:        
         cap.release()
-        # out.release()
+        out.release()
         cv2.destroyAllWindows()
     except:
         pass

@@ -13,27 +13,22 @@ public class MemberServiceImpl implements MemberService{
 	
 	@Override
 	public int join(MemberDTO mdto) {
-		int ret = 0;
-		
-		mdao.insertMember(mdto);
+		int ret =  mdao.insertMember(mdto);
 		
 		return ret;
 	}
 	@Override
 	public boolean loginCheck(MemberDTO mdto){
-		boolean isExist = mdao.exist(mdto);
-		return isExist;
+		return mdao.exist(mdto);
 	}
 	@Override
 	public int modify(MemberDTO mdto){
-		int ret = 0;
-		mdao.updateMember(mdto);
+		int ret = mdao.updateMember(mdto);
 		return ret;
 	}
 	@Override
 	public int delet(String id){
-		int ret = 0;
-		mdao.deleteMember(id);
+		int ret = mdao.deleteMember(id);
 		return ret;
 	}
 	@Override
@@ -42,4 +37,9 @@ public class MemberServiceImpl implements MemberService{
 		mdto = mdao.selectOne(id);
 		return mdto;
 	}
+	/*@Override
+	public List<DeviceUserDTO>devicesList(String id){
+		return mdao.selectManageDevices(id);
+
+	}*/
 }

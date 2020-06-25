@@ -165,48 +165,643 @@ target : 빌드 결과물<br>
 pom.xml : maven에서 참조하는 설정파일<br>
 
 
-###log4j -> logback
-개발시 오류 확인, 처리를 위해 사용되는 logging.
-logging사용시 에러 발생 관련 정보를 제공받을 수 있어서 유용하다.
-logback은 log4j를 기반으로 만든 logging 라이브러리. logback 사용 시에 log4j보다 장점이 많다.
-https://www.lesstif.com/java/logback-spring-framework-log-19365998.html
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="30 seconds">
- 
-<property name="LOG_HOME" value="logs" />
- 	<property name="LOG_PATTERN" value="%logger{36} %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
-	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_HOME}/test-web-app.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!-- daily rollover -->
-			<fileNamePattern>${LOG_HOME}/test-web-app.log.%d{yyyy-MM-dd}.log</fileNamePattern>
-			<!-- keep 30 days' worth of history -->
-			<maxHistory>30</maxHistory>
-		</rollingPolicy>
-		<encoder>
-			<pattern>${LOG_PATTERN}</pattern>
-		</encoder>
-	</appender>
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>
-				${LOG_PATTERN}
-			</pattern>
-		</encoder>
-	</appender>
-	<logger name="org.springframework" level="DEBUG" >
-		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
-	</logger>
- 	
-	<!-- turn OFF all logging (children can override) -->
-	<root level="INFO">
-		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
-	</root>
-</configuration>
-```
+### mybatis
+개발자가 지정한 SQL, 저장 프로시저 그리고 몇가지 고급 매핑을 지원하는 퍼시스턴스 프레임워크 
+https://mybatis.org/mybatis-3/ko/index.html
 
 ### interceptor
 컨트롤러에서 들어오는 HttpRequest와 컨트롤러가 응답하는 HttpResponse를 가로채는 역할을 한다.
+
+
+# RESTful
+
+### open api 개방형 api
+프로그래밍에서 사용할 수 있는 개방되어 있는 상태의 인터페이스
+
+### rest representational safe tranfer
+
+https://www.youtube.com/watch?v=pKT4OTFjFcA&list=PL9mhQYIlKEhfYqQ-UkO2pe2suSx9IoFT2&index=24
+
+http uri + http method
+http uri를 통해 제어할 자원 resource를 명시,
+http method (get, post, put, delete)를
+통해 해당 자원을 제어하는 명령을 내리는 방식의 ^아키텍쳐^
+
+| http method | CRUD |
+|:--------|:--------|
+| POST | create(insert) |
+| GET | read(select) |
+| PUT | update |
+| DELETE | delete |
+
+rest의 원리를 따르는 시스템을 restful 용어 사용
+ex
+GET /list.do? no=510&name=java (query string)
+----> GET /bbs/java/510
+GET /delete.do?no=510&name=java
+----> DELETE /bbs/java/510
+GET과 POST만으로 자원에 대한 CRUD를 처리, uri는 액션을 나타내는 기존의 상태에서
+4가지 메서드를 사용하여 CRUD처리, uri는 제어하려는 자원 나타내도록
+
+RESTful과 JSON/xml
+
+json은 경량(lightweight)의 data교환 형식
+javascript에서 객체를 만들때 사용하는 표현식
+특정 언어에 종속되지 않는다.
+```json
+{
+	"string1": "value1",
+	"string2": "value2",
+	"string3": ["value3", "value4"]
+}
+```
+
+json 라이브러리 jackson
+json을 java객체로 java를 json형태로 변환해주는 json라이브러리
+
+xml extensible markup language
+데이터 저장 전달 위한 언어
+
+xml과 html
+data전달하는 것에 포커스 - data를 표현하는 것에 포커스
+사용자가 마음대로 tag정의 가능 - 미리 정의된 tag만 사용 가능
+```xml
+<?xml version = "1.0" encoding = "UTF-8"?>
+<customer>
+	<name>김형희</name>
+	<addr>진안</addr>
+	<phone>01000000000</phone>
+</customer>
+```
+
+
+## spring mvc 기반 restful 웹서비스 환경 설정, 구현
+pom.xml
+jackson mapper
+```xml
+<!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
+<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-mapper-asl</artifactId>
+    <version>1.9.13</version>
+</dependency>
+```
+
+root-context.xml
+`<mvc:annotation-driven />`
+`<mvc:default-servlet-handler/>`서버에 내부적으로 정의된 /무시
+
+구현
+1. RESTful 웹 서비스 처리할 RESTfulController클래서 작성, Spring Bean등록
+2. 요청 처리할 메서드에 @RequestMapping, @ReqeustBody(json ->java)와 @ResponseBody(java->json)어노테이션 선언
+3. REST Client Tool(Postman)을 사용하여 각각의 메서드 테스트
+4. Ajax통신을 하여 RESTful 웹서비스 호출하는 HTML페이지 작성
+
+Postman 설치 (RESTAPI 테스트 하는 Chrome 확장 프로그램)
+
+* 사용자관리
+
+| Action | Resource URI | HTTP Method |
+|:--------|:--------|:--------|
+| 사용자 목록 | /users | GET |
+| 사용자 보기 | /users/{id} | GET |
+| 사용자 등록 | /users | POST |
+| 사용자 수정 | /users | PUT |
+| 사용자 삭제 | /users/{id} | DELETE |
+
+@RequestBody : HTTP Request Body를 java 객체로 전달받을 수 있다.
+@ResponseBody : Java객체를 HTTP Response Body로 전송할 수 있다.
+
+
+오류
+
+`org.springframework.http.converter.HttpMessageNotWritableException: No converter found for return value of type: class com.spring.elderlycare.dto.MemberDTO`
+controller에서 객체 반환시 json으로 변환되지 않음.
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>2.10.0</version>
+</dependency>
+		    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.10.0</version>
+</dependency>
+```
+
+```xml
+<mvc:annotation-driven>
+		<mvc:message-converters>
+		<bean class = "org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+```
+
+### session
+클라이언트가 서버 접속하는 순간 생성
+default 유지시간 30분(서버에 접속 후 요청 하지 않는 최대 시간)
+
+web.xml파일에서 직접 설정 가능
+
+```xml
+<session-config>
+	<session-timeout>30</session-timeout>
+</session-config>
+```
+
+@SessionAttributes 파라미터 지정된 이름이 model에 저장 되면 session에도 저장됨.
+
+
+
+
+
+### Spring AOP
+Aspect Oriented Programming 관점 지향 프로그래밍
+* Aspect: 흩어진 관심사들을 모듈화 한 것. 주로 부가기능을 모듈화 한 것.
+* Target: Aspect를 적용하는 곳(클래스, 메서드 등)
+* Advice: 실질적으로 어떤 일을 해야 할 지에 대한 것, 실질적 부가기능을 담은 구현체
+* JointPoint: Advice가 적용될 위치, 끼어들 수 있는 지점. 메서드 진입 지점, 생성자 호출 시점, 필드에서 값을 꺼내올 때 등 다양한 시점에 적용 가능
+* PointCut: JointPoint의 상세 스페ㄱ 정의. ex A라는 메서드의 진입 시점에 호출 <-처럼 더 구체적으로 advice 실행 지점 정할 수 있음
+
+aspect실행 시점 annotation
+
+* @Before (이전) : 어드바이스 타겟 메소드가 호출되기 전에 어드바이스 기능을 수행
+* @After (이후) : 타겟 메소드의 결과에 관계없이(즉 성공, 예외 관계없이) 타겟 메소드가 완료 되면 어드바이스 기능을 수행
+* @AfterReturning (정상적 반환 이후)타겟 메소드가 성공적으로 결과값을 반환 후에 어드바이스 기능을 수행
+* @AfterThrowing (예외 발생 이후) : 타겟 메소드가 수행 중 예외를 던지게 되면 어드바이스 기능을 수행
+* @Around (메소드 실행 전후) : 어드바이스가 타겟 메소드를 감싸서 타겟 메소드 호출전과 후에 어드바이스 기능을 수행
+
+
+출처: https://engkimbs.tistory.com/746 [새로비]
+
+
+
+https://docs.spring.io/spring-integration/docs/5.3.0.RC1/reference/html/mqtt.html
+
+
+### /users
+
+| 동작 | 요청 | Method | 기능 |
+|:-------|:-------|:-------|:-------|
+| 로그인 화면 | /users/login | GET | 로그인 화면을 띄운다 |
+| 회원가입 화면 | /users/join | GET | 회원가입 화면을 띄운다 |
+| 로그인 체크 | /users/login | POST | 로그인 시도 시 아이디 비밀번호 체크하고 로그인 한다 |
+| 회원가입 하기 | /users/join | POST | 회원가입 한다 |
+| 로그아웃 | /users/logout | GET | 로그하웃 한다 |
+| 내 정보 | /users/{id} | GET | 로그인 된 아이디의 정보를 띄운다 |
+| 내 정보 수정 | /users/{id} | PUT | 로그인 된 아이디의 정보를 수정한다 |
+| 내 정보 삭제 | /users/{id} | DELETE | 로그인 된 아이디 정보를 삭제한다(탈퇴) |
+| 가입 승인(보류) | /users/{b_id} | PUT | 보호자의 가입을 담당자가 승인한다 |
+
+
+### /devices
+
+| 동작 | 요청 | Method | 기능 |
+|:-------|:-------|:-------|:-------|
+| 기기 목록 | /devices | GET | 담당자가 관리하는 기기 목록을 띄운다 보호자인 경우 등록된 기기 하나를 띄운다 |
+| 기기 등록 | /devices/{id} | POST |  |
+
+
+GET /users/login : 로그인 화면
+POST /users/login : 로그인 처리, 아이디 비밀번호 체크
+GET /users/join : 회원가입 화면
+POST /users/join : 회원가입 처리
+GET /users/logout : 로그아웃 처리
+GET /users/{uid} : {uid}(로그인 된 사람)의 개인정보 즉 내정보
+----------------------------------------------------------20200615(오류처리x)
+PUT /users/{uid} : 내 정보 수정
+DELETE /users/{uid} : 회원 탈퇴 처리
+PUT /users/{bid} : {bid}(보호자) 가입 신청 승인 처리
+
+GET /devices : 관리하는 기기(노인정보 포함) 전체 리스트
+POST /devices : 기기 등록
+GET /devices/{num} : {num}기기 등록된 노인정보 상세정보 보기
+PUT /devices/{num} : {num}기기 등록된 노인정보 상세정보 수정
+DELETE /devices/{num} : {num}기기 삭제
+
+
+
+<select id = "selectDevices" parameterType = "String" resultType = "com.spring.elderlycare.dto.DeviceUserDTO">
+	SELECT dname, dtel, daddr FROM deviceUser
+	WHERE staff=#{value} OR relative=#{value};
+	</select>
+
+
+
+
+# AJAX Asynchronous Javascript And Xml
+### javaScript를 사용한 비동기 통신, 클라이언트와 서버간의 XML데이터 주고받는 기술(개발 기법)
+
+https://coding-factory.tistory.com/143
+http://tcpschool.com/ajax/intro
+
+웹페이지 전체를 다시 로딩하는 대신 웹페이지의 일부분만 갱신
+json, xml, html, 텍스트 파일 등 다양한 데이터 주고받을 수 있다.
+
+장
+1. 웹페이지 속도 향상
+2. 서버의 처리 기다리지 않고 처리 가능
+3. 서버에서 data만 전송
+
+단
+1. 히스토리 관리 안 됨
+2. 연속 데이터 요청은 서버 부하 증가
+3. XMLHttpRequest를 통해 통신 시, 요청 완료 전에 사용자가 페이지 떠나거나 오작동 가능성
+
+ajax 프레임워크
+
+* prototype
+* script.aculo.us
+* dojo
+* jQuery
+ 등이 있다.
+
+
+기존의 웹은 브라우저에서 httpRequest를 서버에 보내고 html및 css데이터를 받아서 웹 페이지 전체를 다시 로딩했다면,
+ajax를 사용할때는 XMLHttpRequest를 보내고 서버에서는 ajax요청을 처리해서 HTML, XML, JSON데이터를 보내고 브라우저측에서 웹페이지의 일부분을 로딩한다.
+
+1. 사용자의 요청 이벤트 발생
+2. 요청 이벤트가 발생 시 이벤트 핸들러에 의해 자바스크립트 호출
+3. 자바스크립트는 XMLHttpRequest객체를 사용하여 서버로 요청을 보냄 (보낸 후 응답을 기다리지 않고 다른 작업을 할 수 있다.)
+4. 서버는 XMLHttpRequest를 받아서 Ajax요청을 처리
+5. 서버는 처리한 결과를 html, xml, json의 형태로 웹 브라우저에 전달
+6. 전달받은 데이터를 갱신하는 자바스크립트
+7. 일부분 다시 로딩됨
+
+XMLHttpRequest인스턴스 생성
+```js
+var httpRequest;
+
+function createRequest() {
+
+    if (window.XMLHttpRequest) { // 익스플로러 7과 그 이상의 버전, 크롬, 파이어폭스, 사파리, 오페라 등
+
+        return new XMLHttpRequest();
+
+    } else {                     // 익스플로러 6과 그 이하의 버전
+
+        return new ActiveXObject("Microsoft.XMLHTTP");
+
+    }
+
+}
+```
+
+익스플로러 6이하 버전 사용자 거의 없으므로 아래꺼 사용
+```js
+var httpRequest = new XMLHttpRequest();
+```
+
+open() ajax요청 형식
+```js
+open(전달방식, URL주소, 동기여부);
+```
+open의 세번제 인자를 true로 전달하면 비동기식 요청을 보낼 수 있다. 서버로부터 응답을 기다리는 동안 다른 일을 할 수 있게 되는 것이다.
+만약 false를 전달하면 서버로부터 응답이 올 때까지 어떤 다른 작업도 할 수 없다.
+
+send() 작성된 ajax요청 서버로 전달
+```js
+send();       // GET 방식
+send(문자열); // POST 방식
+```
+
+GET 요청
+```js
+httpRequest.open("GET", "/examples/media/request_ajax.php?city=Seoul&zipcode=06141", true);
+httpRequest.send();
+```
+
+서버상의 문서 존재 유무
+```js
+if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+
+    ...
+
+}
+```
+XMLHttpRequest.DONE : 서버에 요청한 데이터의 처리 완료, 응답 할 준비 됨
+status프로퍼티 값이 200 : 요청한 문서가 서버상에 존재
+
+POST 요청
+```js
+// POST 방식의 요청은 데이터를 Http 헤더에 포함시켜 전송함.
+
+httpRequest.open("POST", "/examples/media/request_ajax.php", true);
+httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+httpRequest.send("city=Seoul&zipcode=06141");
+```
+
+서버로부터 응답 대기, 프로퍼티들
+* readyState
+* status
+* onreadstatechange
+
+readyStatus
+1. UNSENT
+2. OPENED
+3. HEADERS_RECEIVED
+4. LOADING
+5. DONE
+
+status
+* 200 : 서버에 문서 존재
+* 404 : 서버에 문서 존재하지 않음
+
+onreadystatechange
+readyState프로퍼티의 값이 변할 때마다 자동으로 호출되는 함수 설정, 총 5번 호출
+
+```js
+switch (httpRequest.readyState) {
+
+    case XMLHttpRequest.UNSET:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 UNSET 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.OPENED:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 OPENED 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.HEADERS_RECIEVED:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 HEADERS_RECEIVED 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.LOADING:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 LOADING 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.DONE:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 DONE 입니다.<br>";
+
+        break;
+
+}
+
+document.getElementById("status").innerHTML = currentState;
+
+if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+
+    document.getElementById("text").innerHTML = httpRequest.responseText;
+
+}
+```
+
+
+### http header
+예제
+```
+Accept: */*
+
+Referer: http://codingsam.com/examples/tryit/tryhtml.php?filename=ajax_header_request_01
+
+Accept-Language: ko-KR
+
+Accept-Encoding: gzip, deflate
+
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+
+Host: codingsam.com
+
+DNT: 1
+
+Connection: Keep-Alive
+```
+
+`setRequestHeader()`메소드 사용하여 HTTP요청 헤더 작성
+```js
+XMLHttpRequest인스턴스.setRequestHeader(헤더이름, 헤더값);
+```
+
+예제
+```js
+var httpRequest = new XMLHttpRequest();
+
+httpRequest.onreadystatechange = function() {
+    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+        document.getElementById("text").innerHTML = httpRequest.responseText;
+    }
+};
+
+httpRequest.open("GET", "/examples/media/ajax_request_header.php", true);
+
+/************************/
+httpRequest.setRequestHeader("testheader", "123");
+/************************/
+
+httpRequest.send();
+```
+
+
+
+(생략)
+
+
+
+
+Ajax, JSON
+
+
+users/login
+성공 : {result: true, uid : (uid)}
+실패 : {result: false, uid : undefined}
+
+users/join
+성공 : true
+실패 : false
+
+devices/
+
+
+
+
+WARNING: An illegal reflective access operation has occurred
+
+WARNING: Illegal reflective access by org.apache.ibatis.reflection.Reflector (file:/D:/1elderlyproject/web/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/elderlyCareSystem/WEB-INF/lib/mybatis-3.4.6.jar) to field java.lang.Boolean.value
+
+WARNING: Please consider reporting this to the maintainers of org.apache.ibatis.reflection.Reflector
+
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+
+WARNING: All illegal access operations will be denied in a future release
+login
+
+
+
+6/19
+* ajax success error 함수 실행 안 됨
+* member delete member modify 만들기 일단 버튼은 홈 화면에.
+* 가입 승인 만들기
+* 서비스단 만들기
+
+
+DELETE PUT 메소드 사용하기 위해 web.xml에 등록
+
+```xml
+<!-- HTTP Method Filter -->
+<filter>
+    <filter-name>httpMethodFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>httpMethodFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+1. 회원가입 : 관리자는 DB에 들어있다고 가정. 보호자 가입 기능. 노인의 번호를 입력해야 됨.
+	* 노인의 key를 입력해줄지, 이름과 생년월일을 입력할지.
+	* 가입승인은 관리자가 해줌. 가입승인 구현시 DB table에 저장하고 로그인 할 때, 받아와서 알려줘야 함
+	* DB에서는 user, manage를 갱신한다. manage rel에 이미 들어있는 값이 있다면? 처리방안
+
+2. 폼 (로그인, 회원가입, 기기등록, 정보수정) : 현재는 로그인폼도 컨트롤러에서 부름. 그렇게 구성하는 것이 맞는지.. 아닌거같음
+	* GET users/login -> x GET users
+	* POST users/login ->POST users/login
+	* GET users/join -> x GET users
+	* POST users/join -> POST users
+	* 위처럼 수정할 수 있을까?
+	* PUT users/{uid} 이거 위한 폼은?
+	* jsp 하나로 만든 담에 조건따라 include로 합치기? 조건 어떻게 확인?
+
+3. 기기 삭제 테스트 해봐야 됨
+	* delete cascade 조건 줬지만 테스트 안해봤음
+
+4. DB에 비밀번호 그대로 저장 노노
+
+
+## Transaction 트랜잭션
+
+https://www.youtube.com/watch?v=jSNrGgHk-ds
+https://goddaehee.tistory.com/167
+
+논리적 단위로 한 부분의 작업이 완료되었더라도 다른 부분의 작업이 완료되지 않을 경우 전체 취소되는 것. 작업 완료는 커밋(commit) 이라고 하고 작업 취소는 롤백(rollback)이라고 한다.
+
+* 원자성 : 한 트랜잭션 내에서 실행한 작업은 하나로 간주
+* 일관성 : 일관성있는 ㄷㅂ 상태 유지
+* 격리성 : 동시에 실행되는 트랜잭션 영향 미치지 않도록 관리
+* 지속성 : 트랜잭션 결과 저장
+
+@Transactional <<트랜잭션 기능이 적용된 프록시 객체 생성됨
+이 프록시 계체는 해당 어노테이션이 포함된 메소드 호출 시 `PlatformTransactionManager`를 사용하여 트랜잭션을 시작하고 정상여부에 따라 Commit또는 Rollback한다.
+
+
+
+`<aop:aspectj-autoproxy></aop:aspectj-autoproxy>`
+root-context.xml
+
+웹에서 데이터 처리
+
+김대업. "Client/Server 기반 원격 제어를 위한 실시간 모니터링 시스템 설계 및 구현." 국내석사학위논문 부경대학교대학원, 2002. 부산
+
+길영준. "다중 생체신호를 이용한 혈압 추정 모델 및 IPv6 기반의 실시간 모니터링 시스템 개발." 국내박사학위논문 부산대학교, 2013. 부산
+
+조덕연. "임베디드 리눅스를 이용한 산업용 제어기의 웹 모니터링." 국내석사학위논문 선문대학교, 2002. 충청남도
+
+박제창. "만성 당뇨 환자의 자가 혈당 관리를 위한 지능형 헬스케어 시스템." 국내석사학위논문 강원대학교 일반대학원, 2019. 강원도
+
+최정민. "작물 생육 환경 모니터링을 위한 비동기 IoT 브로커 설계 및 구현." 국내석사학위논문 인천대학교 정보기술대학원, 2017. 인천
+
+
+## 시계열 DB?
+mysql + redis
+mysql + mongodb
+mysql + influxdb
+influxdb
+mongodb
+
+일단은 그냥 mysql로 구현하고 시간이 남으면 다른 db로도 테스트 해보기
+
+
+```sql
+create table realtimedata(
+	measuredtime timestamp default current_timestamp on update current_timestamp,
+    humid float,
+    temp float,
+    gas boolean
+    );
+    ```
+
+
+
+# MQTT
+
+1. 웹 서버에서 계속 돌아야 한다. (서버 시작부터 서버 실행중에는 계속)
+2. 여러개 필요( 기기 수 만큼)
+
+
+https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#spring-core
+
+The `org.springframework.context.ApplicationContext` interface represents the Spring IoC container and is responsible for instantiating, configuring, and assembling the beans. The container gets its instructions on what objects to instantiate, configure, and assemble by reading configuration metadata. The configuration metadata is represented in XML, Java annotations, or Java code. It lets you express the objects that compose your application and the rich interdependencies between those objects.
+
+Several implementations of the `ApplicationContext` interface are supplied with Spring. In stand-alone applications, it is common to create an instance of `ClassPathXmlApplicationContext` or `FileSystemXmlApplicationContext`. While XML has been the traditional format for defining configuration metadata, you can instruct the container to use Java annotations or code as the metadata format by providing a small amount of XML configuration to declaratively enable support for these additional metadata formats.
+
+...
+
+	XML-based metadata is not the only allowed form of configuration metadata. The Spring IoC container itself is totally decoupled from the format in which this configuration metadata is actually written. These days, many developers choose Java-based configuration for their Spring applications.
+
+## Java-based Container Configuration
+https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-java
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public MyService myService() {
+        return new MyServiceImpl();
+    }
+}
+```
+```xml
+<beans>
+    <bean id="myService" class="com.acme.services.MyServiceImpl"/>
+</beans>
+```
+같은 코드.
+
+Spring xml파일을 입력으로 사용하는 것과 거의 같은 방식으로 클래스를 인스턴스화 할 때 `ClassPathXmlApplicationContext`를 사용할 수 있다.
+`@Configuration` `AnnotationConfigApplicationContext` 
+```java
+public static void main(String[] args) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+    MyService myService = ctx.getBean(MyService.class);
+    myService.doStuff();
+}
+```
+
+
+https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
+
+The Spring Framework provides abstractions for the asynchronous execution and scheduling of tasks with the `TaskExecutor` and `TaskScheduler` interfaces, respectively.
+
+
+
+
+20200625
+
+INFO : org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'appServlet'
+INFO : org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'executor' of type [org.springframework.core.task.SimpleAsyncTaskExecutor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+INFO : org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'appConfig' of type [com.spring.elderlycare.util.AppConfig$$EnhancerBySpringCGLIB$$c330023] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+WARN : org.springframework.web.context.support.XmlWebApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcContentNegotiationManager': Initialization of bean failed; nested exception is java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+ERROR: org.springframework.web.servlet.DispatcherServlet - Context initialization failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcContentNegotiationManager': Initialization of bean failed; nested exception is java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+
+
+월 25, 2020 7:20:00 오후 org.apache.catalina.core.ApplicationContext log
+SEVERE: StandardWrapper.Throwable
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcContentNegotiationManager': Initialization of bean failed; nested exception is java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+
+
+
+6월 25, 2020 7:20:00 오후 org.apache.catalina.core.StandardContext loadOnStartup
+SEVERE: 웹 애플리케이션 [/elderlycare] 내의 서블릿 [appServlet]이(가) load() 예외를 발생시켰습니다.
+java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'

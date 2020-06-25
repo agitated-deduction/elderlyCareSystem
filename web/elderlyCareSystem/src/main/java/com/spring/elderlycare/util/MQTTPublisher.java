@@ -104,7 +104,7 @@ public class MQTTPublisher extends MQTTConfig implements MqttCallback{
 		 }
 
 	 @Override
-	 protected void config() {
+	 /*protected*/public void config() {
 
 	  this.brokerURL = this.TCP + this.broker + colon + this.port;
 	  this.persistence = new MemoryPersistence();
@@ -127,7 +127,7 @@ public class MQTTPublisher extends MQTTConfig implements MqttCallback{
 	  * java.lang.String, java.lang.Integer, java.lang.Boolean, java.lang.Boolean)
 	  */
 	 @Override
-	 protected void config(String broker, Integer port, Boolean ssl, Boolean withUserNamePass) {
+	 /*protected*/public void config(String broker, Integer port, Boolean ssl, Boolean withUserNamePass) {
 
 	  String protocal = this.TCP;
 	  if (true == ssl) {

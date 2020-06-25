@@ -12,7 +12,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.spring.elderlycare.util.MQTTConfig;
 
 /*
  * ref

@@ -12,14 +12,14 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.spring.elderlycare.util.MQTTConfig;
+import org.springframework.stereotype.Component;
 
 /*
  * ref
  * https://www.monirthought.com/2017/11/eclipse-paho-java-client-mqtt-client.html
  * 
  */
+@Component
 public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 	
 	private String brokerURL = null;
@@ -82,7 +82,7 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 		 }
 
 	@Override
-	protected void config(String broker, Integer port, Boolean ssl, Boolean withUserNamePass) {
+	/*protected*/public void config(String broker, Integer port, Boolean ssl, Boolean withUserNamePass) {
 		// TODO Auto-generated method stub
 		String protocol = ssl?this.SSL:this.TCP;
 		this.brokerURL = protocol+broker+colon+port;
@@ -105,7 +105,7 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 	}
 
 	@Override
-	protected void config() {
+	/*protected*/public void config() {
 		logger.info("config()");
 		// TODO Auto-generated method stub
 		this.brokerURL = this.TCP+this.broker+colon+this.port;

@@ -71,7 +71,7 @@ public class MQTTPublisher extends MQTTConfig implements MqttCallback,  MQTTPubl
   * com.bjitgroup.jasmysp.mqtt.publisher.MQTTPublisherBase#configurePublisher()
   */
  @Override
- protected void config() {
+ /*protected*/public void config() {
 
   this.brokerUrl = this.TCP + this.broker + colon + this.port;
   this.persistence = new MemoryPersistence();
@@ -94,7 +94,7 @@ public class MQTTPublisher extends MQTTConfig implements MqttCallback,  MQTTPubl
   * java.lang.String, java.lang.Integer, java.lang.Boolean, java.lang.Boolean)
   */
  @Override
- protected void config(String broker, Integer port, Boolean ssl, Boolean withUserNamePass) {
+ /*protected*/public void config(String broker, Integer port, Boolean ssl, Boolean withUserNamePass) {
 
   String protocal = this.TCP;
   if (true == ssl) {

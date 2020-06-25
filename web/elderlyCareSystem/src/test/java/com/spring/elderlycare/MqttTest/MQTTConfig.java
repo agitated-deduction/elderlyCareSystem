@@ -1,4 +1,4 @@
-package com.spring.elderlycare.util;
+package com.spring.elderlycare.MqttTest;
 
 import org.springframework.stereotype.Component;
 
@@ -23,10 +23,10 @@ public abstract class MQTTConfig {
 	  * @param ssl
 	  * @param withUserNamePass
 	  */
-	 /*protected*/public abstract void config(String broker, Integer port, Boolean ssl, Boolean withUserNamePass);
+	 protected abstract void config(String broker, Integer port, Boolean ssl, Boolean withUserNamePass);
 
 	 /**
 	  * Default Configuration
 	  */
-	 /*protected*/public abstract void config();
+	 protected abstract void config();
 	}

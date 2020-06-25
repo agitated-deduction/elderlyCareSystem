@@ -3,10 +3,11 @@
 import cv2
 import numpy as np
 import sys, time, datetime
+import subprocess
 from datetime import timedelta, time, datetime
 from time import sleep
 
-#----> 이 파일은 main.py에 의해 불러올 것이다.
+#----> 이 파일은 main.py에 의해 1분 ~ 3분마다 불러올 것이다.
 
 
 def dem():
@@ -19,6 +20,13 @@ def dem():
     # 얼굴 검출 
     faceCascade = cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
 
+
+    #----- 파일 저장 설정 
+    # frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
+    # fourcc = cv2.VideoWriter_fourcc(*'DIVX') # 디지털 포맷 코드 - 인코딩 방식 설정 
+    # filename = 'move({}).avi'.format(datetime.now())
+    # out = cv2.VideoWriter(filename, fourcc, frame_rate, (frame_width, frame_height)) # 캡쳐 동영상 저장
+
     StartRec = datetime.today() # 시작 시간 
     NowRec =  datetime.now() 
     EndRec = StartRec + timedelta(seconds=30)  # 30초 뒤  
@@ -29,12 +37,16 @@ def dem():
     #---- 이 파일이 켜질 시간 설정
     global Hflag 
     Hflag = 0              # 사람이 인식 되었는지 0=안됨  1=됨
-    start_time = time(17,35)  # 밤 11시 ~ 새벽 4시
-    end_time =  time(17,40)
+    start_time = time(9,19)  # 밤 11시 ~ 새벽 4시
+    end_time =  time(18,21)
     Now_time = datetime.now().time()   # 현재 시간
 
-
     nightcamera = 0
+
+
+    basename = "move"
+    suffix = datetime.now().strftime("%y%m%d_%H%M%S")
+    filenameis = "_".join([basename, suffix])  #move_200625_1535
 
     if (start_time <= Now_time and end_time > Now_time):  # 시간되면 카메라 켜진다. 
         nightcamera = 1
@@ -42,12 +54,15 @@ def dem():
         #----- 파일 저장 설정  
         frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
         fourcc = cv2.VideoWriter_fourcc(*'DIVX') # 디지털 포맷 코드 - 인코딩 방식 설정 
-        filename = '/home/pi/_GUI/Move/move({}).avi'.format(datetime.now())
+        # filename = '/home/pi/_GUI/Move/move({}).avi'.format(datetime.now())
+        filename = '/home/pi/_GUI/Move/%s.avi'%filenameis
+
         out = cv2.VideoWriter(filename, fourcc, frame_rate, (frame_width, frame_height)) # 캡쳐 동영상 저장
 
 
     while(nightcamera):
-        
+        # print(end_time)
+        # print(Now_time)
         Now_time = datetime.now().time()   # 현재 시간
         NowRec =  datetime.now() 
 
@@ -108,18 +123,17 @@ def dem():
                 #--- 알림 전송 해야 한다.
 
 
-            cv2.imshow("Found", sub_frame) 
+            cv2.imshow("denmentia", sub_frame) 
 
         if(Hflag == 1):
             print("~~~~HUMAN Detected!~~~~")
             print("EndRec: ", EndRec.second)
-            print("NowRec:",NowRec.second)
+            print("NowRec:", NowRec.second)
             
-            out.write(subframe)   # 녹화 시작 /home/pi/_GUI/Move/ 에 저장된다.
+            out.write(subframe)  # 녹화 시작 /home/pi/_GUI/Move/ 에 저장된다.
       
             if(NowRec.second == EndRec.second): # 초가 지났으면 
-                print("~~~~out release~~~~")
-                 
+                print("~~~~out release~~~~")              
                   
                 break  # ----> 영상촬영 끝나면 dementia.py를 종료한다.
                 # Hflag = 0            
@@ -135,6 +149,7 @@ def dem():
     except:
         pass
 
+    subprocess.call("find /home/pi/_GUI/Move -type f -size -10k -delete", shell=True)  #아무것도 찍히지 않은 잉여 파일들 자동 삭제 
     dem() # 영상 녹화 완료 후  재 실행 
 
 

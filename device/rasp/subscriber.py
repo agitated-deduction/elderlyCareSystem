@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*- 
 import paho.mqtt.client as mqtt
-import time
+import sys, time, datetime
 #---- 받기 
+basename = "video"
+suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+filename = "_".join([basename, suffix])
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -12,6 +15,10 @@ def on_subscribe(client, userdata, mid, granted_qos):
     
 def on_message(client, userdata, msg):
     print(str(msg.payload.decode("utf-8")))
+    
+    with open('%s.txt' %filename,'wb') as fd:
+        fd.write(msg.payload)
+
     
 
 client = mqtt.Client() #client 오브젝트 생성

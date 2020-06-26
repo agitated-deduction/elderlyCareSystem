@@ -10,8 +10,8 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@Configuration
-@EnableAsync
+//@Configuration
+//@EnableAsync
 public class AppConfig implements AsyncConfigurer{
 	
 	@Resource(name= "executor")

@@ -10,7 +10,7 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
 //@SpringBootApplication
-@Configuration /*@EnableAutoConfiguration*/ @ComponentScan 
+//@Configuration /*@EnableAutoConfiguration*/ @ComponentScan 
 public class Application {
 	//@Autowired
 	static

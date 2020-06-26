@@ -12,7 +12,12 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.spring.elderlycare.dao.DatasDAO;
+import com.spring.elderlycare.dto.DatasDTO;
+import com.spring.elderlycare.dto.DevicesDTO;
 
 /*
  * ref
@@ -32,6 +37,9 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 	
 	private static final Logger logger = LoggerFactory.getLogger(MQTTSubscriber.class);
 	
+	//@Autowired DatasDAO dao;
+	//@Autowired DatasDTO dto;
+	
 	public MQTTSubscriber() {
 		logger.info("init");
 		//this.config();
@@ -48,25 +56,32 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 		// TODO Auto-generated method stub
 		String time = new Timestamp(System.currentTimeMillis()).toString();
 		System.out.println();
-		System.out.println("***********************************************************************");
+		System.out.println("------------------------------------------------------------------------");
 		System.out.println("Message Arrived at Time: " + time + "  Topic: " + topic + "  Message: "
 		  + new String(message.getPayload()));
 		System.out.println("***********************************************************************");
 		System.out.println();
+		//dto.setGas(false);
+		//float data = Float.parseFloat(message.toString());
+		//if (topic.equals("home/humid")) 
+		//	dto.setHumid(data);
+		//else if(topic.equals("home/temp"))
+		//	dto.setTemp(data);
 		
+		//dao.insertDataEvent(dto);
 	}
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token) {
 		// TODO Auto-generated method stub
-		logger.info("delivery complete");
 		
 	}
 	
-	public void subscribeMessage(String topic) {
+	public void subscribeMessage(String topic, int elderly) {
 		 logger.info("subscribe Message");
 	  try {
 	   this.mqttClient.subscribe(topic, this.qos);
+	   //dto.setElderly(elderly);
 	  } catch (MqttException me) {
 	   me.printStackTrace();
 	  }

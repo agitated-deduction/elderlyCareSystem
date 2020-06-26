@@ -22,10 +22,10 @@ import com.spring.elderlycare.util.AppConfig;
 @Controller
 public class HomeController {
 	
-	@Resource(name="mqttTaskService")
-	private MqttTaskService mqttTaskService;
-	@Resource(name="appConfig")
-	private AppConfig appConfig;
+	//@Resource(name="mqttTaskService")
+	//private MqttTaskService mqttTaskService;
+	//@Resource(name="appConfig")
+	//private AppConfig appConfig;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -36,7 +36,7 @@ public class HomeController {
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		mqttTaskService.runningBackground("test");
+		//mqttTaskService.runningBackground("test");
 		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);

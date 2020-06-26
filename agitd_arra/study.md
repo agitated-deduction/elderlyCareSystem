@@ -805,3 +805,16 @@ org.springframework.beans.factory.BeanCreationException: Error creating bean wit
 6월 25, 2020 7:20:00 오후 org.apache.catalina.core.StandardContext loadOnStartup
 SEVERE: 웹 애플리케이션 [/elderlycare] 내의 서블릿 [appServlet]이(가) load() 예외를 발생시켰습니다.
 java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+
+
+
+일단 mqtt는 직접 활성화 시킨다! 버튼을 만든다!
+근데 만약에 서버를 재시작하는 경우
+서버에서 알아서 전부 세팅해줘야 하는데 그건 나중에 구혀ㅛㄴ
+
+
+mqtt connection lost.
+localhost로는 정상 작동
+
+
+테스트용. 스레드 엑스 20200626

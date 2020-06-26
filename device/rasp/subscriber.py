@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*- 
 import paho.mqtt.client as mqtt
 import sys, time, datetime
+import base64
 #---- 받기 
 basename = "video"
 suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
@@ -14,12 +15,12 @@ def on_subscribe(client, userdata, mid, granted_qos):
     print("subscribed: " + str(mid) + " " + str(granted_qos))
     
 def on_message(client, userdata, msg):
-    print(str(msg.payload.decode("utf-8")))
+    # print(str(msg.payload.decode("utf-8")))
     
-    with open('%s.txt' %filename,'wb') as fd:
-        fd.write(msg.payload)
+    with open('%s.avi' %filename,'wb') as fd:
+        fd.write(base64.b64decode(msg.payload))
+        fd.close()
 
-    
 
 client = mqtt.Client() #client 오브젝트 생성
 client.on_connect = on_connect #콜백설정

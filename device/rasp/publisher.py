@@ -21,6 +21,8 @@ client.connect(host=broker_address, port=broker_port)
 print("Subscribing to topic","home/temp")
 print("Subscribing to topic","home/humid")
 print("Subscribing to topic","home/alone")
+print("Subscribing to topic","home/dem")
+print("Subscribing to topic","home/vid")
 
 #---- 동영상 인코딩해서 전송한다.
 # f  = open('/home/pi/_GUI/Move/move2.avi')

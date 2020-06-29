@@ -3,9 +3,16 @@ import cv2
 import numpy as np
 import sys, time, datetime
 from datetime import timedelta
+import paho.mqtt.client as mqtt
 
 cap = cv2.VideoCapture('http://192.168.1.34:8090/?action=stream')   # 스트리밍 영상 가져오기 
 
+
+##---- MQTT
+broker_address="localhost" 
+broker_port=1883
+client = mqtt.Client() #create new instance
+client.connect(host=broker_address, port=broker_port)
 
 # Background Subtraction 의 알고리즘 중 BackgroundSubtractorMOG2 적용해 본다.
 # BackgroundSubtractorMOG2
@@ -56,7 +63,7 @@ while(cap.isOpened()):
             hull=cv2.convexHull(cnt)  # 대략적인 다각형 그리기 
             cv2.drawContours(sub_frame,[hull], -1, (0, 255, 0), 1)
             area=int(cv2.contourArea(cnt))
-            print(area)
+            # print(area)
 
         except:
             pass
@@ -103,13 +110,18 @@ while(cap.isOpened()):
 
         if(NowDay.second == DDay.second):  # 10초 동안 움직이지 않았다.
             print("119~~~~~~~~~~~~~\n")
+            
             cv2.putText(sub_frame,'119~~!!', (30, 120),
             cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
+
+            client.publish("home/alone", "2")    ##---- 녹화 끝나면 MQTT메시지 보내기 
+            print("home/alone: ", "2") 
             Hflag = 1  # 알리고 다시 세팅 
+           
 
     
         cv2.imshow('frame', fgmask)
-        cv2.imshow("Found", sub_frame) 
+        cv2.imshow("alone", sub_frame) 
 
         # out.write(fgmask)
    

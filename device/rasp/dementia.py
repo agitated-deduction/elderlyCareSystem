@@ -6,9 +6,15 @@ import sys, time, datetime
 import subprocess
 from datetime import timedelta, time, datetime
 from time import sleep
+import paho.mqtt.client as mqtt
 
-#----> 이 파일은 main.py에 의해 1분 ~ 3분마다 불러올 것이다.
+#----> 이 파일은 main.py에 의해  불러올 것이다.
 
+##---- MQTT
+broker_address="localhost" 
+broker_port=1883
+client = mqtt.Client() #create new instance
+client.connect(host=broker_address, port=broker_port)
 
 def dem():
     cap = cv2.VideoCapture('http://192.168.1.34:8090/?action=stream')   # 스트리밍 영상 가져오기 
@@ -37,11 +43,14 @@ def dem():
     #---- 이 파일이 켜질 시간 설정
     global Hflag 
     Hflag = 0              # 사람이 인식 되었는지 0=안됨  1=됨
+   
+
     start_time = time(9,19)  # 밤 11시 ~ 새벽 4시
     end_time =  time(18,21)
     Now_time = datetime.now().time()   # 현재 시간
 
     nightcamera = 0
+    
 
 
     basename = "move"
@@ -125,7 +134,8 @@ def dem():
 
             cv2.imshow("denmentia", sub_frame) 
 
-        if(Hflag == 1):
+        if(Hflag == 1):  #--- 이상 움직임 감지 
+            
             print("~~~~HUMAN Detected!~~~~")
             print("EndRec: ", EndRec.second)
             print("NowRec:", NowRec.second)
@@ -133,14 +143,13 @@ def dem():
             out.write(subframe)  # 녹화 시작 /home/pi/_GUI/Move/ 에 저장된다.
       
             if(NowRec.second == EndRec.second): # 초가 지났으면 
-                print("~~~~out release~~~~")              
-                  
+                print("~~~~out release~~~~")       
+                client.publish("home/dem", "1")    ##---- 녹화 끝나면 MQTT메시지 보내기 
+                print("home/dem: ", "1")       
                 break  # ----> 영상촬영 끝나면 dementia.py를 종료한다.
-                # Hflag = 0            
-
         
         if cv2.waitKey(1) & 0xFF == ord('q'):  # q로 종료 
-            break
+            quit()
 
     try:        
         cap.release()

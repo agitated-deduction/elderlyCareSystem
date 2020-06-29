@@ -43,6 +43,8 @@
   유해가스 : home/gas  
   움직임(밤): home/move  
   고독사 : home/alone 
+  치매 : home/dem
+  동영상전송: home/vid
   ```
   
   ### HW 기능(제어 방법)

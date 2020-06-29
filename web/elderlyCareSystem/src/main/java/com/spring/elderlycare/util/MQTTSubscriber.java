@@ -50,6 +50,18 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 		// TODO Auto-generated method stub
 		logger.info("connection lost");
 	}
+	
+	public void publishMessage(String topic, String message) {
+		 logger.info("publish Message");
+	  try {
+		  MqttMessage mqttmessage = new MqttMessage(message.getBytes());
+		  mqttmessage.setQos(this.qos);
+	   this.mqttClient.publish(topic, mqttmessage);
+	  } catch (MqttException me) {
+	   me.printStackTrace();
+	  }
+	 }
+	
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -70,11 +82,12 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 		
 		//dao.insertDataEvent(dto);
 	}
+	
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token) {
 		// TODO Auto-generated method stub
-		
+		logger.info("delivery completed");
 	}
 	
 	public void subscribeMessage(String topic, int elderly) {
@@ -135,5 +148,7 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 			  me.printStackTrace();
 		  }
 	}
+	
+	
 
 }

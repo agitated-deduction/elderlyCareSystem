@@ -18,7 +18,7 @@
 	
 	<properties>
 
-		<java-version>1.6</java-version>
+		<java-version>11</java-version>
 		<org.springframework-version>5.2.7.RELEASE</org.springframework-version>
 
 		<org.aspectj-version>1.6.10</org.aspectj-version>
@@ -209,7 +209,7 @@
  <dependency>
    <groupId>org.eclipse.paho</groupId>
    <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-   <version>1.0.2</version>
+   <version>1.2.4</version>
   </dependency>      
     	       <dependency>
 

@@ -818,3 +818,97 @@ localhost로는 정상 작동
 
 
 테스트용. 스레드 엑스 20200626
+
+
+
+publish 성공/ 라즈베리 파이
+
+INFO : com.spring.elderlycare.controller.DeviceController - mqtt-thread : 0.0.0.0
+INFO : com.spring.elderlycare.util.MQTTSubscriber - tcp://222.106.22.114:1883
+======mqtt async test========
+INFO : com.spring.elderlycare.util.MQTTSubscriber - connection lost
+INFO : com.spring.elderlycare.util.MQTTSubscriber - publish Message
+INFO : com.spring.elderlycare.util.MQTTSubscriber - delivery completed
+근데 왜 connection lost?
+
+publish 성공/ localhost
+
+INFO : com.spring.elderlycare.controller.DeviceController - mqtt-thread : 0.0.0.0
+INFO : com.spring.elderlycare.util.MQTTSubscriber - tcp://127.0.0.1:1883
+======mqtt async test========
+INFO : com.spring.elderlycare.util.MQTTSubscriber - publish Message
+INFO : com.spring.elderlycare.util.MQTTSubscriber - delivery completed
+
+
+
+
+Turns out, there was an EOFException that was being caused by our multiple clients having the same Client ID.
+
+MQTT Brokers prematurely close any connections that are open with a Client ID if another connection with the same Client ID comes in.
+
+
+https://github.com/eclipse/paho.mqtt.java/issues/207
+
+https://github.com/eclipse/paho.mqtt.java/blob/master/org.eclipse.paho.client.mqttv3/src/main/java/org/eclipse/paho/client/mqttv3/MqttAsyncClient.java#L1266
+
+MqttAsyncClient 사용
+https://gist.github.com/benedekh/697b3507e0b3f890f105
+```java
+package mqtt.demo;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+public class MqttSubscribeSample implements MqttCallback {
+
+    public static void main(String[] args) {
+        String topic = "MQTT Examples";
+        int qos = 2;
+        String broker = "tcp://localhost:1883";
+        String clientId = "JavaAsyncSample";
+        MemoryPersistence persistence = new MemoryPersistence();
+
+        try {
+            MqttAsyncClient sampleClient = new MqttAsyncClient(broker, clientId, persistence);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            sampleClient.setCallback(new MqttSubscribeSample());
+            System.out.println("Connecting to broker: " + broker);
+            sampleClient.connect(connOpts);
+            System.out.println("Connected");
+            Thread.sleep(1000);
+            sampleClient.subscribe(topic, qos);
+            System.out.println("Subscribed");
+        } catch (Exception me) {
+            if (me instanceof MqttException) {
+                System.out.println("reason " + ((MqttException) me).getReasonCode());
+            }
+            System.out.println("msg " + me.getMessage());
+            System.out.println("loc " + me.getLocalizedMessage());
+            System.out.println("cause " + me.getCause());
+            System.out.println("excep " + me);
+            me.printStackTrace();
+        }
+    }
+
+    public void connectionLost(Throwable arg0) {
+        System.err.println("connection lost");
+
+    }
+
+    public void deliveryComplete(IMqttDeliveryToken arg0) {
+        System.err.println("delivery complete");
+    }
+
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        System.out.println("topic: " + topic);
+        System.out.println("message: " + new String(message.getPayload()));
+    }
+    
+}
+```

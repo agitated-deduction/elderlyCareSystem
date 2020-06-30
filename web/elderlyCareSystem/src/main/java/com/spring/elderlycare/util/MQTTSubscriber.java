@@ -12,12 +12,12 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.spring.elderlycare.dao.DatasDAO;
-import com.spring.elderlycare.dto.DatasDTO;
-import com.spring.elderlycare.dto.DevicesDTO;
+//import com.spring.elderlycare.dao.DatasDAO;
+//import com.spring.elderlycare.dto.DatasDTO;
+//import com.spring.elderlycare.dto.DevicesDTO;
 
 /*
  * ref

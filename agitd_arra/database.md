@@ -241,3 +241,9 @@ create table realtimedata(
     gas boolean
     );
 ```
+
+
+
+```sql
+alter table realtimedata drop gas;
+```

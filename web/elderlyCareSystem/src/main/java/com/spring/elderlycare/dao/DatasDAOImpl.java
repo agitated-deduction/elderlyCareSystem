@@ -17,4 +17,5 @@ public class DatasDAOImpl implements DatasDAO{
 	public void insertDataEvent(DatasDTO datasdto) {
 		sqlSession.insert(ns+"log", datasdto);
 	}
+	
 }

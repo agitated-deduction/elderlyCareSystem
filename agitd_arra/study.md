@@ -912,3 +912,67 @@ public class MqttSubscribeSample implements MqttCallback {
     
 }
 ```
+
+
+
+reason 32104
+msg 클라이언트가 연결되지 않음
+INFO : com.spring.elderlycare.util.MqttSubscriber2 - connection lost
+loc 클라이언트가 연결되지 않음
+cause null
+excep 클라이언트가 연결되지 않음 (32104)
+클라이언트가 연결되지 않음 (32104)
+	at org.eclipse.paho.client.mqttv3.internal.ExceptionHelper.createMqttException(ExceptionHelper.java:31)
+
+
+단순 mqtt 코드를 이용하였을 때, localhost에서는 오류가 없었으나 외부 네트워크의 broker로 접근 할 때, connection lost 발생. 검색해보니 deadlock이 원인이라는 말도 있음. 비동기 mqtt 객체가 있다고 하여 소스코드 확인 후 해당 객체로 구현. 제대로 동작함.
+callback함수인 messagearrived내부에 dto에 접근하는 코드 넣으면 또 connection lost 발생
+MqttException (0) - java.lang.NullPointerException
+오류 발생.
+
+INFO : com.spring.elderlycare.util.MqttSubscriber2 - MqttException (0) - java.lang.NullPointerException
+MqttException (0) - java.lang.NullPointerException
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:176)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+Caused by: java.lang.NullPointerException
+	at com.spring.elderlycare.util.MqttSubscriber2.messageProcessing(MqttSubscriber2.java:93)
+	at com.spring.elderlycare.util.MqttSubscriber2.messageArrived(MqttSubscriber2.java:81)
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.handleMessage(CommsCallback.java:354)
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:162)
+	... 1 more
+
+
+MqttException (0) - java.lang.NullPointerException
+at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:176)
+
+
+```java
+	public void run() {
+		final String methodName = "run";
+		callbackThread = Thread.currentThread();
+		callbackThread.setName(threadName);
+		
+		synchronized (lifecycle) {
+			current_state = State.RUNNING;
+		}
+
+		while (isRunning()) {
+			try {
+				// If no work is currently available, then wait until there is some...
+				try {
+					synchronized (workAvailable) { //<<<<오류 나는 부분... 왜?
+						if (isRunning() && messageQueue.isEmpty()
+								&& completeQueue.isEmpty()) {
+							// @TRACE 704=wait for workAvailable
+							log.fine(CLASS_NAME, methodName, "704");
+							workAvailable.wait();
+						}
+					}
+				} catch (InterruptedException e) {
+				}
+				(생략)
+```
+```java
+if (mqttCallback != null || callbacks.size() > 0) {
+```
+여기가ㅏ 오류 나는 부분인 것 같음 mqttCallback이 null이 되ㄴ는듯

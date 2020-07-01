@@ -1,26 +1,15 @@
-package com.spring.elderlycare.util;
+package asyncMqttService;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.ibatis.session.SqlSession;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import com.sun.org.slf4j.internal.Logger;
+import com.sun.org.slf4j.internal.LoggerFactory;
 
-@Repository
-public class MqttSubscriber2 implements MqttCallback{
+
+public class MqttSubscriber implements MqttCallback{
 	private String brokerURL = "";
 	private String clientId = "AsyncTest";
 	private MemoryPersistence persistence = new MemoryPersistence();
@@ -28,8 +17,7 @@ public class MqttSubscriber2 implements MqttCallback{
 	MqttAsyncClient client = null;
 	MqttConnectOptions options = null;
 	
-	int eld = 10;
-	@Autowired
+	int eld = 0;
 	private SqlSession sqlSession;
 	
 	private static final String ns = "com.spring.elderlycare.util.MqttSubscriber2.";

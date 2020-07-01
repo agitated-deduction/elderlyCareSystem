@@ -4,7 +4,7 @@
 
 <mapper namespace = "com.spring.elderlycare.dao.DatasDAOImpl">
 
-<insert id = "log" parameterType = "com.spring.elderlycare.dto.DatasDTO">
+<insert id = "log" parameterType = "hashmap">
 	INSERT INTO realtimedata (elderly, humid, temp)
 	VALUES(#{elderly}, #{humid}, #{temp});
 </insert>

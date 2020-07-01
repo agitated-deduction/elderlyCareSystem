@@ -976,3 +976,29 @@ at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:
 if (mqttCallback != null || callbacks.size() > 0) {
 ```
 여기가ㅏ 오류 나는 부분인 것 같음 mqttCallback이 null이 되ㄴ는듯
+
+20200701
+```java
+private void insertData(String topic, MqttMessage message) {
+		try { 
+			String tmp = topic.split("/")[1];
+			
+			if(tmp.equals("humid")||tmp.equals("temp")) {
+				Map<String, Object> obj = new HashMap<String, Object>();
+				float data = Float.parseFloat(message.toString()); 
+				obj.put("elderly", eld);
+				obj.put(tmp, data);
+				sqlSession.insert(ns+"log", obj);
+			}else
+				alertToApp(tmp);
+			
+			
+		  }catch(NumberFormatException e) { 
+			  //"home/vid"
+			  
+		  }
+	}
+```
+바로 db에 접근하도록 코드를 수정해보았다.
+`sqlSession.insert(ns+"log", obj);`부분에서 같은 오류 발생.
+

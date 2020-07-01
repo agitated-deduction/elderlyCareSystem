@@ -1,11 +1,15 @@
-package com.spring.elderlycare.util;
-
+package com.maven.mqtt.asyncmqtt;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
@@ -14,13 +18,9 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class MqttSubscriber2 implements MqttCallback{
+
+public class MqttSubscriber implements MqttCallback{
 	private String brokerURL = "";
 	private String clientId = "AsyncTest";
 	private MemoryPersistence persistence = new MemoryPersistence();
@@ -28,28 +28,39 @@ public class MqttSubscriber2 implements MqttCallback{
 	MqttAsyncClient client = null;
 	MqttConnectOptions options = null;
 	
-	int eld = 10;
-	@Autowired
-	private SqlSession sqlSession;
+	//private int eld = 0;
 	
-	private static final String ns = "com.spring.elderlycare.util.MqttSubscriber2.";
+	private SqlSession sqlSession = null;
 	
-	Lock lock = new ReentrantLock();
+	private static final String ns = "mqttSubscriber.";
 	
-	private Logger logger = LoggerFactory.getLogger(MqttSubscriber2.class);
+	public MqttSubscriber() {
+		String resource = "com/maven/mqtt/sql/mybatis-config.xml";
+		try {
+			InputStream inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = 
+					new SqlSessionFactoryBuilder().build(inputStream);
+			
+			sqlSession = sqlSessionFactory.openSession(true);
+		}catch(IOException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
 	
 	public void mqttSubscribe(String broker, int port, String topic, int elderly) {
 		this.brokerURL = "tcp://"+broker+":"+port;
 		try {
-			eld = elderly;
+			//this.eld = elderly;
 			client = new MqttAsyncClient(brokerURL, clientId, persistence);
 			options = new MqttConnectOptions();
 			options.setCleanSession(true);
 			
-			IMqttToken token = client.connect(options);
-			token.waitForCompletion();
-			
-			client.setCallback(new MqttSubscriber2());
+			//IMqttToken token = 
+			client.connect(options);
+			//token.waitForCompletion();
+			Thread.sleep(1000);
+			client.setCallback(new MqttSubscriber());
 			client.subscribe(topic, 2);
 		}catch(Exception me){
 			if(me instanceof MqttException) {
@@ -62,50 +73,43 @@ public class MqttSubscriber2 implements MqttCallback{
             me.printStackTrace();
 		}
 	}
-	
-	@Override
+
+
 	public void connectionLost(Throwable cause) {
-		logger.info("connection lost");
-		logger.info(cause.toString());
+		// TODO Auto-generated method stub
+		System.out.println("connection lost");
 		cause.printStackTrace();
-		//disconnect하고 reconnect
-		/*try {
-			client.reconnect();
-		} catch (MqttException e) {
-			e.printStackTrace();
-		}*/
 	}
 
-	@Override
+
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		System.out.println("topic: " + topic);
         System.out.println("message: " + new String(message.getPayload()));
         
         insertData(topic, message);
-
-		/*
-		 * lock.lock(); service.eventProcessing(topic, message.toString());
-		 * lock.unlock();
-		 */
+		
 	}
 
-	@Override
+
 	public void deliveryComplete(IMqttDeliveryToken token) {
-		logger.info("delivery complete");
+		// TODO Auto-generated method stub
+		System.out.println("deliveryComplete");
+		
 	}
-	
 	private void insertData(String topic, MqttMessage message) {
 		try { 
-			String tmp = topic.split("/")[1];
-			
-			if(tmp.equals("humid")||tmp.equals("temp")) {
+			String[] tp = topic.split("/");
+			for(String i: tp) {
+				System.out.println(i);
+			}
+			if(tp[2].equals("humid")||tp[2].equals("temp")) {
 				Map<String, Object> obj = new HashMap<String, Object>();
 				float data = Float.parseFloat(message.toString()); 
-				obj.put("elderly", eld);
-				obj.put(tmp, data);
+				obj.put("elderly", Integer.parseInt(tp[1]));
+				obj.put(tp[2], data);
 				sqlSession.insert(ns+"log", obj);
 			}else
-				alertToApp(tmp);
+				alertToApp(tp[2]);
 			
 			
 		  }catch(NumberFormatException e) { 
@@ -127,6 +131,8 @@ public class MqttSubscriber2 implements MqttCallback{
 		        	e.printStackTrace(System.out);
 		        }
 		        }*/
+		  }catch(Exception e) {
+			  //home vid?? 왜?
 		  }
 	}
 	private void alertToApp(String tp) {
@@ -138,5 +144,5 @@ public class MqttSubscriber2 implements MqttCallback{
 		*4. 이상 가스 검출 시
 		*/
 	}
-	
 }
+	

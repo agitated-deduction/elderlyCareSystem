@@ -28,8 +28,9 @@ print("Subscribing to topic","home/vid")
 # f  = open('/home/pi/_GUI/Move/move2.avi')
 
 # encoded = base64.b64encode(f.read())
-# client.publish("home/vid", encoded ,0, True)
-# print("sending video....")
+# client.publish("home/11/vid", encoded ,0, True)
+# # client.publish("home/11/vid", encoded ,0, True)
+# print("..... video....")
 # f.close()
 
 #---- 반복적으로 받아올 센서를 전송한다. 

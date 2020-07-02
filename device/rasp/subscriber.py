@@ -30,8 +30,9 @@ client.on_connect = on_connect #콜백설정
 client.on_subscribe = on_subscribe
 client.on_message = on_message #콜백설정
 
-# client.connect('192.168.1.34', 1883)   # 라즈베리파이 아이피
-client.connect('222.106.22.114', 1883)   # 외부 통신용 아이피 
+# client.connect('192.168.1.19', 1883)   # 라즈베리파이 아이피
+# client.connect('222.106.22.114', 1883)   # 외부 통신용
+client.connect('121.138.83.121', 1883)   # 외부 통신용
 
 client.subscribe('home/11/#', 0)  # home 아래의 모든 토픽을 구독한다.
 client.loop_forever()

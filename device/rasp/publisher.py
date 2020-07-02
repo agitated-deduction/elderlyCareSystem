@@ -11,7 +11,7 @@ sensor = Adafruit_DHT.DHT11
 pin = 4
 #---- 보내기
 
-# broker_address="192.168.1.42" 
+# broker_address="192.168.1.19" 
 broker_address="localhost" 
 
 broker_port=1883

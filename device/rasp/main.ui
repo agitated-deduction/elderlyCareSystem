@@ -44,16 +44,6 @@
      <string> 현재날짜출력</string>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="img_med">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>420</y>
-      <width>101</width>
-      <height>91</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="clockIcon">
     <property name="geometry">
      <rect>
@@ -110,16 +100,6 @@
     </property>
     <property name="format">
      <string>%p *C</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="img_med_3">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>420</y>
-      <width>101</width>
-      <height>91</height>
-     </rect>
     </property>
    </widget>
    <widget class="QProgressBar" name="progressBar_2">
@@ -291,20 +271,22 @@
      <string>현재날씨상태</string>
     </property>
    </widget>
-   <zorder>label_time</zorder>
-   <zorder>img_med</zorder>
-   <zorder>clockIcon</zorder>
-   <zorder>temIcon</zorder>
-   <zorder>humIcon</zorder>
-   <zorder>img_med_3</zorder>
-   <zorder>progressBar</zorder>
-   <zorder>progressBar_2</zorder>
-   <zorder>label_weather</zorder>
-   <zorder>label_weather_2</zorder>
-   <zorder>label_weather_3</zorder>
-   <zorder>label_weather_4</zorder>
-   <zorder>label_weather_5</zorder>
-   <zorder>label_weather_6</zorder>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>440</y>
+      <width>691</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 28pt &quot;PibotoLt&quot;;</string>
+    </property>
+    <property name="text">
+     <string>나랑 같이 이야기 해요 ^_^</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

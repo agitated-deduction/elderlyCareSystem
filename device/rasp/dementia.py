@@ -17,7 +17,7 @@ client = mqtt.Client() #create new instance
 client.connect(host=broker_address, port=broker_port)
 
 def dem():
-    cap = cv2.VideoCapture('http://192.168.1.34:8090/?action=stream')   # 스트리밍 영상 가져오기 
+    cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # 스트리밍 영상 가져오기 
 
     # Background Subtraction 의 알고리즘 중 BackgroundSubtractorMOG2 적용해 본다.
     # BackgroundSubtractorMOG2

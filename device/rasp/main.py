@@ -138,11 +138,11 @@ class Thread_dht(QThread):
             self.change_value1.emit(t)
             self.change_value2.emit(h)
 
-            client.publish("home/temp", str(t))  # home 의 온도 토픽
+            client.publish("home/11/temp", str(t))  # home 의 온도 토픽
             print("Temperature = {0:0.1f}*C".format(t))
             time.sleep(15) # 30초 마다 전송 
             
-            client.publish("home/humid", str(h)) # home 의 습도 토픽 
+            client.publish("home/11/humid", str(h)) # home 의 습도 토픽 
             print("Humidity = {}%".format(h))
             time.sleep(15) # 30초 마다 전송 
             

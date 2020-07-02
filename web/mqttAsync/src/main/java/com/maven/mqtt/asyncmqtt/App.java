@@ -25,8 +25,8 @@ public class App
 		//for(Map<String,Object> m : list) {
 		
 			//mqttSubscribe((String)m.get("homeIoT"), 1883, "home/#", Integer.parseInt(m.get("elderly").toString()));
-			client.mqttSubscribe("222.106.22.114", 1883, "home/#", 11);
-			client.mqttSubscribe("127.0.0.1", 1883, "home/#", 10);
+			client.mqttSubscribe("121.138.83.121", 1883, "home/#", 13);
+			//client.mqttSubscribe("127.0.0.1", 1883, "home/#", 10);
 		//}
     }
 }

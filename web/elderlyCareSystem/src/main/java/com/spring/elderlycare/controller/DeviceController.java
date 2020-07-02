@@ -1,5 +1,6 @@
 package com.spring.elderlycare.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,19 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.elderlycare.dto.DatasDTO;
 import com.spring.elderlycare.dto.DevicesDTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
+import com.spring.elderlycare.service.DataService;
 import com.spring.elderlycare.service.DeviceService;
-import com.spring.elderlycare.service.MqttTaskService;
 
 @SessionAttributes("uid")
 @RestController
 @RequestMapping("/devices")
 public class DeviceController {
 	@Autowired private DeviceService service;
-	@Autowired private MqttTaskService mqtt;
+	@Autowired private DataService dataservice;
+	//@Autowired private MqttTaskService mqtt;
 	@Autowired private ElderlyDTO edto;
 	@Autowired private DevicesDTO ddto;
+	@Autowired private DatasDTO datadto;
 	private final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
 	/*
@@ -103,9 +107,8 @@ public class DeviceController {
 	/*
 	 *MQTT 통신 activate, 직접 버튼 클릭하도록 일단 구현. 서버 재시작시 알아서 전부 세팅되도록 수정하고싶음. 
 	 */
-	@RequestMapping(value = "/{num}/mqtt-thread")
+	/*@RequestMapping(value = "/{num}/mqtt-thread")
 	public ModelAndView activateMQTTThread(ModelAndView mav, @PathVariable("num") int dnum) {
-		/*num으로 devicesDTO에서 정보 받아와서 devicesDTO 통째로 보낼까? timestamp찍으려면 그게 좋을 것 같기도 한데 근데 필요 없을 것 같기도 하고 일단 생각.*/
 		ddto = service.deviceInfo(dnum);
 		logger.info("mqtt-thread : "+ddto.getHomeIoT());
 		
@@ -114,5 +117,12 @@ public class DeviceController {
 		mav.setViewName("redirect:/");
 		
 		return mav;
+	}*/
+	@RequestMapping("/{num}/data")
+	public Map<String, Object> viewData(Model model, @PathVariable("num") int num) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map = dataservice.getHumTemp(num);
+		//맥박, 걸음 수, gps가져와서 put
+		return map;
 	}
 }

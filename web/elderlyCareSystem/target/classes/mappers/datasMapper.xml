@@ -4,8 +4,12 @@
 
 <mapper namespace = "com.spring.elderlycare.dao.DatasDAOImpl">
 
-<insert id = "log" parameterType = "hashmap">
-	INSERT INTO realtimedata (elderly, humid, temp)
-	VALUES(#{elderly}, #{humid}, #{temp});
-</insert>
+<select id = "selectHumids" parameterType = "int" resultType = "com.spring.elderlycare.dto.DatasDTO">
+	SELECT measuredtime, humid FROM realtimedata 
+	WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW()) AND humid is not NULL;
+</select>
+<select id = "selectTemps" parameterType = "int" resultType = "com.spring.elderlycare.dto.DatasDTO">
+	SELECT measuredtime, temp FROM realtimedata 
+	WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW()) AND temp is not NULL;
+</select>
 </mapper>

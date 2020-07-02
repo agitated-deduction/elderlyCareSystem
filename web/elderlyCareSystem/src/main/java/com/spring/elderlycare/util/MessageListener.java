@@ -1,9 +1,6 @@
 package com.spring.elderlycare.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-@Component
+//@Component
 public class MessageListener implements Runnable{
 	//@Autowired
 	//MQTTSubscriber subscriber;

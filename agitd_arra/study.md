@@ -1002,3 +1002,27 @@ private void insertData(String topic, MqttMessage message) {
 바로 db에 접근하도록 코드를 수정해보았다.
 `sqlSession.insert(ns+"log", obj);`부분에서 같은 오류 발생.
 
+
+20200702
+시계열 데이터 분석 라이브러리
+https://github.com/signaflo/java-timeseries
+
+1. 웹, MQTT-외부 프로젝트로 따로 구현함- 붙이기. 웹 서버 실행시 MQTT프로그램 실행되도록.
+2. 시계열 데이터 처리. 시각화
+	* 일주일치 데이터 단위로 시각화.
+	* 매주 일요일 통계 처리. -> 평균값. 이상데이터 횟수.
+3. 비밀번호 SHA256암호화 코드 (하루 이내 예상)
+4. 프론트엔드 전체
+5. rest api data async polling
+6. 비디오 받고 decoding, storage저장, db에는 파일이름 등으로 저장
+7. 이상상황 push 알림
+
+
+dto 스트링으로
+home/vid는 새벽 4시에 옴.
+마지막거 하나
+message비어있으면 없는거
+
+그래프는 프론트에서 해야되는 것 같음
+내일 웹 mqtt붙이기 해야될듯. 비밀번호 암호화도
+그 담에 프론트 시작

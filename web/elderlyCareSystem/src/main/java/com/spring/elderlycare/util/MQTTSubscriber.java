@@ -12,8 +12,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 //import com.spring.elderlycare.dao.DatasDAO;
 //import com.spring.elderlycare.dto.DatasDTO;
@@ -24,7 +22,7 @@ import org.springframework.stereotype.Component;
  * https://www.monirthought.com/2017/11/eclipse-paho-java-client-mqtt-client.html
  * 
  */
-@Component
+//@Component
 public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 	
 	private String brokerURL = null;

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;com.spring.elderlycare.mqtt&apos; to &apos;com.maven.mqtt.asyncmqtt&apos;&#x0D;&#x0A;- Original project: &apos;mqttAsync&apos;&#x0D;&#x0A;- Original element: &apos;mqttAsync/src/main/java/com.spring.elderlycare.mqtt&apos;&#x0D;&#x0A;- Renamed element: &apos;mqttAsync/src/main/java/com.maven.mqtt.asyncmqtt&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;com.spring.elderlycare.mqtt&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src\/main\/java&lt;com.spring.elderlycare.mqtt" name="com.maven.mqtt.asyncmqtt" qualified="false" references="true" stamp="1593583743351" textual="false" version="1.0"/>
+</session>

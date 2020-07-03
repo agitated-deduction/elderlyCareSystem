@@ -1,0 +1,13 @@
+package com.spring.elderlycare.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.spring.elderlycare.dao.DatasDAO;
+
+@Service
+public class DataServiceImpl {
+	@Autowired DatasDAO dao;
+	
+	
+}

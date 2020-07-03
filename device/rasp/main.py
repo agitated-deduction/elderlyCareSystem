@@ -1,6 +1,7 @@
 #-*- encoding:utf-8 -*-
 import time, random, sys, os, urllib2
 import subprocess
+import keyboard
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4 import *
@@ -31,6 +32,7 @@ class mainGUI(QDialog):
         # self.ui.showMaximized()
         self.setGeometry(0, 0, 800, 480)  # 화면 사이즈 
 
+
         ##--- 쓰레드 선언 
         self.th = Thread_dht()  # dht
         self.th2 = Thread_weather()  # weather
@@ -38,6 +40,7 @@ class mainGUI(QDialog):
         self.th4 = Thread_stream() # camera stream
         self.th5 = Thread_alone() # 독거노인
         self.th6 = Thread_dementia() # 치매환자
+        self.th7 = Thread_talk() # 구글 
 
 
         ##--- 현재 날짜 세팅 , 함수 실행 , 쓰레드 실행 
@@ -50,6 +53,18 @@ class mainGUI(QDialog):
         self.th4.start() # 카메라 스트리밍 실행 
         self.th5.start() # 독거노인 실행 
         self.th6.start() # 치매환자 실행 
+        self.th7.start() # 구글 톡
+
+        self.ui.pushButton.clicked.connect(self.google_talk)
+
+
+    def google_talk(self):
+
+        # 버튼이 눌렸을 때 대화 시작 
+        # keyboard.is_pressed('enter')
+        print('')
+        
+    
 
 
     def timer_(self):
@@ -204,7 +219,17 @@ class Thread_dementia(QThread):   ##  치매환자
          ##-------- 치매환자: 야간 이상행동 감지 실행 
         subprocess.Popen(['lxterminal -e python dementia.py'], cwd='/home/pi/_GUI/', shell=True,  stdout=subprocess.PIPE)
 
-    
+class Thread_talk(QThread):   ## 구글 어시스턴트 실행 
+
+    def __init__(self):
+        QThread.__init__(self)
+        
+
+    def run(self):
+        ##-------------
+        # subprocess.call(['lxterminal -e ./googletalk.sh'], cwd='/home/pi/', shell=True)
+        subprocess.call('~/googletalk.sh', shell=True)
+        # os.system('./googletalk.sh')
 
 if __name__ == '__main__':
     

@@ -9,7 +9,7 @@ import com.spring.elderlycare.dto.MemberDTO;
 public interface MemberService {
 	
 	public int join(MemberDTO mdto);
-	public boolean loginCheck(MemberDTO mdto);
+	public int loginCheck(MemberDTO mdto);
 	public int modify(MemberDTO mdto);
 	public int delet(String id);
 	public MemberDTO myPage(String id);

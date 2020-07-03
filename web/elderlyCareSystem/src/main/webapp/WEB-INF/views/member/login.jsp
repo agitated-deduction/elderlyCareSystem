@@ -8,6 +8,7 @@
 
 </head>
 <body>
+<%@ include file="../header.jsp" %>
 <h1>login page</h1>
 <form action = "login" id ="login-form" method = "POST">
 <div>
@@ -37,7 +38,11 @@ $(function(){
 				contentType : 'application/json',            
 				data : JSON.stringify(data),            
 				success : function(response){
-					alert(response.result+"!\n"+ response.uid+'님 환영합니다.');
+					if(response.result){
+						alert(response.uid+'님 환영합니다.');
+						$(location).attr("href", "${contextPath}/");
+					}else
+						alert("아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다.");
 				},                      
 				error   : function(response){
 					alert(response.uid);

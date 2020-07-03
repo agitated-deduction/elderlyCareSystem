@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<%@ include file="../header.jsp" %>
 	<h1>기기 등록</h1>
 	<form id = "registration-form" action ="form" method = "POST">
 	<h3>노인정보</h3>

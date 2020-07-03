@@ -1026,3 +1026,105 @@ message비어있으면 없는거
 그래프는 프론트에서 해야되는 것 같음
 내일 웹 mqtt붙이기 해야될듯. 비밀번호 암호화도
 그 담에 프론트 시작
+
+20200703
+
+## json and ajax
+https://www.youtube.com/watch?v=rJesac0_Ftw
+
+```js
+var ourRequest = new XMLHttpReqeust();
+ourRequest.open('GET','json경로');
+ourRequest.onload = function(){
+	//data가 load됐을때 무엇을 할 것인가.
+	var ourData = JSON.parse(ourRequest.responseText);
+	console.log(ourData[0]);
+}; 
+ourRequest.send();
+```
+
+Asynchronous (in the background, not required page re?)
+JavaScript
+And
+XML (JSON)
+
+`XMLHttpRequest`
+
+
+
+
+`<button id = "btn">`
+
+```js
+var container = document.getElementById("info");
+var btn = document.getElementById("btn");
+var pageCounter = 1; //바뀌는 값.
+
+btn.addEventListener("click", function(){
+	var ourRequest = new XMLHttpReqeust();
+	ourRequest.open('GET','json경로'+ pageCounter+'.json');
+	ourRequest.onload = function(){
+		//data가 load됐을때 무엇을 할 것인가.
+		var ourData = JSON.parse(ourRequest.responseText);
+		//console.log(ourData[0]);
+		renderHTML(ourData);
+		pageCounter++;
+		if(pageCounter>3)
+			btn.classList.add("hide-me");
+	}; 
+ourRequest.send();
+});
+
+function renderHTML(data){
+	var htmlString = "";
+
+	for(i = 0; i < data.length; i++){
+		htmlString +="<p>"+data[i].name +" is a "+ data[i].species+".</p>"
+	}
+
+	container.insertAdjacentHTML("beforeend", htmlString);
+}
+```
+
+
+
+생활코딩
+https://opentutorials.org/course/53/50
+```
+${'.info'}.html('test');//??
+```
+```js
+//(생략)
+function clickHandler(event){
+	var nav = document.getElementById('naviation');
+	for(var i = 0; i < nav.childNodes.length; i++){
+		if(child.nodeType == 3)
+			continue;
+		child.className ='';
+	}
+	event.target.className = 'selected';
+}
+
+addEvent(window, 'load', function(eventObj){
+	var nav = document.getElementById('navigation');
+	for(var i = 0; i < nav.childNodes.length; i++){
+		var child = nev.childNodes[i];
+		if(child.nodeType == 3)
+			continue;
+		addEvent(child, 'click', clickHandler);
+	}
+});
+//생략
+```
+--------->
+```js
+${'#navigation li'}.live('click', function(){
+	${'#navigation li'}.removeClass("selected");
+	$(this).addClass("selected");
+})
+```
+
+### 오늘 한 일
+* 비밀번호 암호화
+* 로그인 시 권한 받아서 세션에 저장
+* 프론트 공부 조금

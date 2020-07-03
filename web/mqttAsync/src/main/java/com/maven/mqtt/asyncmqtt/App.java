@@ -1,5 +1,8 @@
 package com.maven.mqtt.asyncmqtt;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Hello world!
  *
@@ -20,13 +23,13 @@ public class App
 			e.printStackTrace();
 			return;
 		}*/
-		//List<Map<String, Object>> list = sqlSession.selectList("selectDevices");
+		List<Map<String, Object>> list = client.getIoTList();
 		
-		//for(Map<String,Object> m : list) {
+		for(Map<String,Object> m : list) {
 		
-			//mqttSubscribe((String)m.get("homeIoT"), 1883, "home/#", Integer.parseInt(m.get("elderly").toString()));
-			client.mqttSubscribe("121.138.83.121", 1883, "home/#", 13);
+			client.mqttSubscribe((String)m.get("homeIoT"), 1883, "home/#", Integer.parseInt(m.get("elderly").toString()));
+			//client.mqttSubscribe("121.138.83.121", 1883, "home/#", 13);
 			//client.mqttSubscribe("127.0.0.1", 1883, "home/#", 10);
-		//}
+		}
     }
 }

@@ -2,6 +2,7 @@ package com.maven.mqtt.asyncmqtt;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
@@ -140,6 +141,9 @@ public class MqttSubscriber implements MqttCallback{
 		*3. 3일 이상 움직임이 없을 시
 		*4. 이상 가스 검출 시
 		*/
+	}
+	public List<Map<String, Object>> getIoTList() {
+		return sqlSession.selectList("selectDevices");
 	}
 }
 	

@@ -8,6 +8,7 @@
 
 </head>
 <body>
+<%@ include file="../header.jsp" %>
 	<h1>JOIN</h1>
 	<form id = "join-form" action ="join" method = "POST">
 	<div>
@@ -40,7 +41,7 @@
 <script type = "text/javascript">
 $(function(){
 	$('#join-form').submit(function(event){
-		//event.preventDefault();
+		event.preventDefault();
 		
 		//var data = {"uid": "staff101058", "upwd": "staff101058"};
 		var data = {uid: $("#uid").val(),
@@ -55,13 +56,16 @@ $(function(){
 				contentType : 'application/json',            
 				data : JSON.stringify(data),            
 				success : function(response){///이거 안됨 왜 안됨ㅜㅜㅜ  
-					alert(response);
+					$(location).attr("href", "${contextPath}/");
 				},                      
 				error   : function(response){
 					alert(response);
 				}
 		});
+		
 	});
+	
+	
 });
 
 </script>

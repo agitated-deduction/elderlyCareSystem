@@ -3,7 +3,6 @@ package com.spring.elderlycare.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.elderlycare.dto.MemberDTO;
 import com.spring.elderlycare.service.MemberService;
 
-@SessionAttributes("uid")
+@SessionAttributes({"uid", "auth"})
 @RestController
 @RequestMapping("/users")
 public class MemberController {
@@ -44,14 +42,15 @@ public class MemberController {
 	public @ResponseBody Map<String, Object> loginCheck(HttpSession httpSession,@RequestBody MemberDTO mdto) {
 		logger.info("++++++++++++login form+++++++++++++");
 		logger.info("++++++++++++"+mdto.getUid()+"+++++++++++++");
-		boolean isExist = service.loginCheck(mdto);
+		int isExist = service.loginCheck(mdto);
 		Map<String, Object> ret = new HashMap<String, Object>();
 		//ret.put("result", false);
-		if(isExist) {
+		if(isExist!=-2) {
 			ret.put("result", true);
 			ret.put("uid", mdto.getUid());
 			//model.addAttribute("uid", mdto.getUid());
 			httpSession.setAttribute("uid", mdto.getUid());
+			httpSession.setAttribute("auth", isExist);
 			logger.info(httpSession.getId());
 			logger.info((String) httpSession.getAttribute("uid"));
 		}else
@@ -86,24 +85,25 @@ public class MemberController {
 	
 	@RequestMapping(value = "/join", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
-	public @ResponseBody /*Map<String,Object>*/Boolean memberJoin(@RequestBody MemberDTO mdto) {
+	public @ResponseBody Map<String,Object>/*Boolean*/ memberJoin(@RequestBody MemberDTO mdto) {
 		logger.info("++++++++++++join process+++++++++++++");
 		Map<String, Object> ret = new HashMap<String, Object>();
 		ret.put("result", false);
 		
 		if(service.join(mdto)>0) { //서비스단 아래로 수정 필요 성공시 0보다 큰 값, 실패시 0
 			ret.put("result", true);
-			return true;
+			return ret;
 		}
 		
 		//return ret;
-		return false;
+		return ret;
 	}
 	
-	@RequestMapping("/{uid}")
-	public MemberDTO myPage(Model model, @PathVariable("uid") String m_id) {
-		mdto = service.myPage(m_id);
-		System.out.println(m_id);
+	@RequestMapping("/info")
+	public MemberDTO myPage(Model model, /*@PathVariable("uid") String m_id*/HttpSession session) {
+		String uid = (String) session.getAttribute("uid");
+		mdto = service.myPage(uid);
+		System.out.println(uid);
 		return mdto;
 	}
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -111,18 +111,18 @@ public class MemberController {
 		sessionStatus.setComplete();
 		return true;
 	}
-	@DeleteMapping("/{uid}")
-	public @ResponseBody Boolean memberDelete(SessionStatus sessionStatus, @PathVariable("uid") String uid) {
-		logger.info("++++++++++delete+++++++++");
+	@DeleteMapping("/info")
+	public @ResponseBody Boolean memberDelete(SessionStatus sessionStatus, /*@PathVariable("uid") String m_id*/HttpSession session) {
+		String uid = (String) session.getAttribute("uid");
 		if(service.delet(uid)>0) {
 			sessionStatus.setComplete();
 			return true;
 		}
 		return false;
 	}
-	@PutMapping("/{uid}")
-	public @ResponseBody Boolean memberModify(MemberDTO mdto, @PathVariable("uid") String uid) {
-		logger.info("++++++++++modify++++++++++");
+	@PutMapping("/info")
+	public @ResponseBody Boolean memberModify(MemberDTO mdto  /*@PathVariable("uid") String m_id*/) {
+		
 		if(service.modify(mdto)>0) {
 			return true;
 		}

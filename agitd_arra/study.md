@@ -1128,3 +1128,62 @@ ${'#navigation li'}.live('click', function(){
 * 프론트 공부 조금
 =======
 >>>>>>> cab01cc4f124b3604d6fb363582c4ab9fcde2ae0
+
+
+
+20200706
+
+@EventListener
+
+```java
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StartupHousekeeper {
+
+  @EventListener(ContextRefreshedEvent.class)
+  public void contextRefreshedEvent() {
+    // do whatever you need here 
+  }
+}
+```
+https://www.it-swarm.dev/ko/java/spring-%EC%8B%9C%EC%9E%91%EC%8B%9C-%EB%A9%94%EC%86%8C%EB%93%9C-%EC%8B%A4%ED%96%89/968099933/
+
+https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/event/EventListener.html
+
+가장 나은 방법 사용
+
+* init-method = "..." 사용
+
+* InitializingBean 인터페이스 구현 -> ApplicationContext에 배포되면 bean 생성 시 afterPropertiesSet() 메서드 호출
+
+* @PostConstruct Bean에 메소드에 주석 달기. Bean 작성 시 주석 달린 메소드 호출
+
+* Spring 라이프사이클에 묶일 인프라 Bean이 많으면 ApplicationListener<ContextRefreshedEvent>를 구현.
+onApplicationEvent(..)메소드는 Spring 시작되는 동안 호출
+
+<bean name = "starter" init-mehtod = "start" class = "com.example.StartBean" lazy = "false" />
+
+https://www.it-swarm.dev/ko/java/spring-mvc%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EC%95%A0%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98-%EC%8B%9C%EC%9E%91%EC%8B%9C-java-%ED%81%B4%EB%9E%98%EC%8A%A4-%EC%8B%A4%ED%96%89/972322251/
+
+빈에 등록하는 방법 써봤는데 여전히 sqlSession.어쩌구 호출부에서 Nullpointerexception오류 남. 외부 실행 프로젝트로 만들어서 불러오는 방법 써봐야지
+코드 먼저 다듬기
+
+외부 실행파일 실행하는법
+Runtime
+
+
+바로 db에 입력이 안 되고 \
+
+
+데이터는 10초마다 주는데 몰아서 들어감.
+
+
+WARN : org.springframework.web.servlet.PageNotFound - No mapping for GET /elderlycare/resource/jquery-3.5.1.js
+WARN : org.springframework.web.servlet.PageNotFound - No mapping for GET /elderlycare/jquery-3.5.1.js
+
+The method getContextpath() is undefined for the type HttpServletRequest
+
+<script type = "text/javascript" src = "${pageContext.request.contextpath}/resources/jquery-3.5.1.js"></script>

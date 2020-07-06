@@ -1,15 +1,16 @@
 package com.spring.elderlycare.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
 import com.spring.elderlycare.dto.DevicesDTO;
-import com.spring.elderlycare.util.MqttSubscriber2;
 
-@Service
+//@Service
 public class MqttTaskServiceImpl implements MqttTaskService{
-	
+
+	@Override
+	public void runningBackground(DevicesDTO ddto) {
+		// TODO Auto-generated method stub
+		
+	}
+	/*
 	//@Autowired MQTTSubscriber subscriber;
 	@Autowired MqttSubscriber2 subscriber;
 	//@Autowired DatasDAO dao;
@@ -27,7 +28,7 @@ public class MqttTaskServiceImpl implements MqttTaskService{
 		//subscriber.mqttSubscribe("222.106.22.114", 1883, "home/#", ddto.getElderly());
 		subscriber.mqttSubscribe(ddto.getHomeIoT(), 1883, "home/#", ddto.getElderly());
 	}
-	
+	*/
 	/*
 	 * 받아온 데이터 timestamp 찍기. util에서 직접 바로 해야되나?
 	 */

@@ -56,5 +56,6 @@
 	<bean id = "taskExecutor" class = "org.springframework.core.task.SimpleAsyncTaskExecutor">
 	
 	</bean>
+	<bean name = "MqttStarter" init-method = "mqttstart" class = "com.spring.elderlycare.util.MqttStarter"  />
 </beans>
 

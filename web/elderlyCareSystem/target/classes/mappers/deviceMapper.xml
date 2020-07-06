@@ -4,7 +4,7 @@
 
 <mapper namespace = "com.spring.elderlycare.dao.DeviceDAOImpl">
 
-
+	
 	<insert id = "insertElderly" parameterType = "com.spring.elderlycare.dto.ElderlyDTO" 
 	useGeneratedKeys="true" keyProperty="ekey">
 	INSERT INTO elderly(ename, ebirth, eaddr, etel)

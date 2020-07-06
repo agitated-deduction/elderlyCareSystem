@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="org.springframework.core.task.TaskExecutor"/>
     <fullyQualifiedTypeName name="org.springframework.core.task.SimpleAsyncTaskExecutor"/>
     <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
     <fullyQualifiedTypeName name="java.util.function.Consumer"/>
@@ -48,7 +47,6 @@
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.IMqttToken"/>
     <fullyQualifiedTypeName name="java.util.Base64"/>
     <fullyQualifiedTypeName name="java.util.Base64.Decoder"/>
-    <fullyQualifiedTypeName name="java.io.File"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.MqttMessage"/>
     <fullyQualifiedTypeName name="com.spring.elderlycare.service.MqttTaskService"/>
     <fullyQualifiedTypeName name="com.spring.elderlycare.dao.DatasDAOImpl"/>
@@ -58,6 +56,8 @@
     <fullyQualifiedTypeName name="java.util.Iterator"/>
     <fullyQualifiedTypeName name="org.apache.ibatis.session.SqlSession"/>
     <fullyQualifiedTypeName name="java.security.MessageDigest"/>
-    <fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
     <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
+    <fullyQualifiedTypeName name="java.io.File"/>
+    <fullyQualifiedTypeName name="org.apache.ibatis.annotations.Flush"/>
 </qualifiedTypeNameHistroy>

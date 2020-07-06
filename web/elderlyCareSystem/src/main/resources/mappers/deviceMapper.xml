@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.spring.elderlycare.dao.DeviceDAOImpl">
+
+
+	<insert id = "insertElderly" parameterType = "com.spring.elderlycare.dto.ElderlyDTO" 
+	useGeneratedKeys="true" keyProperty="ekey">
+	INSERT INTO elderly(ename, ebirth, eaddr, etel)
+	VALUES(#{ename}, #{ebirth}, #{eaddr}, #{etel});
+
+
+	</insert>
+	<insert id = "insertDevice" parameterType = "com.spring.elderlycare.dto.DevicesDTO">
+	INSERT INTO devices(elderly, homeIoT, bandIoT)
+	VALUES(#{elderly}, #{homeIoT}, #{bandIoT});
+	</insert>
+	<insert id = "manage" parameterType = "HashMap">
+	INSERT INTO manage(staff, elderly)
+	VALUES(#{staff}, #{elderly});
+	</insert>
+	<select id = "selectDevices" parameterType = "String" resultType = "com.spring.elderlycare.dto.ElderlyDTO">
+		SELECT * FROM elderly LEFT JOIN manage ON manage.elderly =ekey
+WHERE staff = #{value};
+	</select>
+	<select id = "selectDevice" parameterType = "int" resultType = "com.spring.elderlycare.dto.ElderlyDTO">
+		SELECT * FROM elderly WHERE ekey = #{value};
+	</select>
+	<select id = "selectDeviceOne" parameterType = "int" resultType = "com.spring.elderlycare.dto.DevicesDTO">
+		SELECT * FROM devices WHERE elderly = #{value};
+	</select>
+	<delete id="deleteDeivce" parameterType = "int">
+	DELETE FROM elderly WHERE ekey = #{value};
+	</delete>
+</mapper>

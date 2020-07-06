@@ -1,0 +1,43 @@
+package com.maven.mqtt.asyncmqtt;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
+    public static void main( String[] args )
+    {
+    	String resource = "com/maven/mqtt/sql/mybatis-config.xml";
+		
+    	SqlSession sqlSession = null;
+    	MqttSubscriber client = null;
+    	String ns = "mqttSubscriber.";
+		try {
+			InputStream inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = 
+					new SqlSessionFactoryBuilder().build(inputStream);
+			
+			sqlSession = sqlSessionFactory.openSession(true);
+		}catch(IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		//List<Map<String, Object>> list = sqlSession.selectList("selectDevices");
+		
+		//for(Map<String,Object> m : list) {
+		
+			//mqttSubscribe((String)m.get("homeIoT"), 1883, "home/#", Integer.parseInt(m.get("elderly").toString()));
+			//mqttSubscribe("222.106.22.114", 1883, "home/#", 11);
+			client.mqttSubscribe("127.0.0.1", 1883, "home/#", 10);
+		//}
+    }
+}

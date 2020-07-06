@@ -7,6 +7,7 @@ public class DevicesDTO {
 	private int elderly;
 	private String homeIoT;
 	private String bandIoT;
+	
 	public int getElderly() {
 		return elderly;
 	}

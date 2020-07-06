@@ -7,14 +7,15 @@ public class TestMqttMainMethod {
 		System.out.println("=============mqtt test===========");
 		
 		/*subscribe*/
-		/*
-		MyMqtt myMqtt = new MyMqtt();
+		
+		MQTTSubscriber myMqtt = new MQTTSubscriber();
 		//myMqtt.config("127.0.0.1", 1883, false, false);
 		myMqtt.config("222.106.22.114", 1883, false, false);
 		myMqtt.subscribeMessage("home/#");
-		*/
-		MyMqtt myMqtt = MyMqtt.getInstance("127.0.0.1", 1883, false, false);
-		myMqtt.publishMessage("test/hi", "hi i'm web server!");
+		
+		
+		//MyMqtt myMqtt = MyMqtt.getInstance("127.0.0.1", 1883, false, false);
+		//myMqtt.publishMessage("test/hi", "hi i'm web server!");
 		
 		
 		new Thread( ()->{

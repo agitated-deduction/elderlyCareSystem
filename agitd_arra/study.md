@@ -805,3 +805,326 @@ org.springframework.beans.factory.BeanCreationException: Error creating bean wit
 6월 25, 2020 7:20:00 오후 org.apache.catalina.core.StandardContext loadOnStartup
 SEVERE: 웹 애플리케이션 [/elderlycare] 내의 서블릿 [appServlet]이(가) load() 예외를 발생시켰습니다.
 java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+
+
+
+일단 mqtt는 직접 활성화 시킨다! 버튼을 만든다!
+근데 만약에 서버를 재시작하는 경우
+서버에서 알아서 전부 세팅해줘야 하는데 그건 나중에 구혀ㅛㄴ
+
+
+mqtt connection lost.
+localhost로는 정상 작동
+
+
+테스트용. 스레드 엑스 20200626
+
+
+
+publish 성공/ 라즈베리 파이
+
+INFO : com.spring.elderlycare.controller.DeviceController - mqtt-thread : 0.0.0.0
+INFO : com.spring.elderlycare.util.MQTTSubscriber - tcp://222.106.22.114:1883
+======mqtt async test========
+INFO : com.spring.elderlycare.util.MQTTSubscriber - connection lost
+INFO : com.spring.elderlycare.util.MQTTSubscriber - publish Message
+INFO : com.spring.elderlycare.util.MQTTSubscriber - delivery completed
+근데 왜 connection lost?
+
+publish 성공/ localhost
+
+INFO : com.spring.elderlycare.controller.DeviceController - mqtt-thread : 0.0.0.0
+INFO : com.spring.elderlycare.util.MQTTSubscriber - tcp://127.0.0.1:1883
+======mqtt async test========
+INFO : com.spring.elderlycare.util.MQTTSubscriber - publish Message
+INFO : com.spring.elderlycare.util.MQTTSubscriber - delivery completed
+
+
+
+
+Turns out, there was an EOFException that was being caused by our multiple clients having the same Client ID.
+
+MQTT Brokers prematurely close any connections that are open with a Client ID if another connection with the same Client ID comes in.
+
+
+https://github.com/eclipse/paho.mqtt.java/issues/207
+
+https://github.com/eclipse/paho.mqtt.java/blob/master/org.eclipse.paho.client.mqttv3/src/main/java/org/eclipse/paho/client/mqttv3/MqttAsyncClient.java#L1266
+
+MqttAsyncClient 사용
+https://gist.github.com/benedekh/697b3507e0b3f890f105
+```java
+package mqtt.demo;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+public class MqttSubscribeSample implements MqttCallback {
+
+    public static void main(String[] args) {
+        String topic = "MQTT Examples";
+        int qos = 2;
+        String broker = "tcp://localhost:1883";
+        String clientId = "JavaAsyncSample";
+        MemoryPersistence persistence = new MemoryPersistence();
+
+        try {
+            MqttAsyncClient sampleClient = new MqttAsyncClient(broker, clientId, persistence);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            sampleClient.setCallback(new MqttSubscribeSample());
+            System.out.println("Connecting to broker: " + broker);
+            sampleClient.connect(connOpts);
+            System.out.println("Connected");
+            Thread.sleep(1000);
+            sampleClient.subscribe(topic, qos);
+            System.out.println("Subscribed");
+        } catch (Exception me) {
+            if (me instanceof MqttException) {
+                System.out.println("reason " + ((MqttException) me).getReasonCode());
+            }
+            System.out.println("msg " + me.getMessage());
+            System.out.println("loc " + me.getLocalizedMessage());
+            System.out.println("cause " + me.getCause());
+            System.out.println("excep " + me);
+            me.printStackTrace();
+        }
+    }
+
+    public void connectionLost(Throwable arg0) {
+        System.err.println("connection lost");
+
+    }
+
+    public void deliveryComplete(IMqttDeliveryToken arg0) {
+        System.err.println("delivery complete");
+    }
+
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        System.out.println("topic: " + topic);
+        System.out.println("message: " + new String(message.getPayload()));
+    }
+    
+}
+```
+
+
+
+reason 32104
+msg 클라이언트가 연결되지 않음
+INFO : com.spring.elderlycare.util.MqttSubscriber2 - connection lost
+loc 클라이언트가 연결되지 않음
+cause null
+excep 클라이언트가 연결되지 않음 (32104)
+클라이언트가 연결되지 않음 (32104)
+	at org.eclipse.paho.client.mqttv3.internal.ExceptionHelper.createMqttException(ExceptionHelper.java:31)
+
+
+단순 mqtt 코드를 이용하였을 때, localhost에서는 오류가 없었으나 외부 네트워크의 broker로 접근 할 때, connection lost 발생. 검색해보니 deadlock이 원인이라는 말도 있음. 비동기 mqtt 객체가 있다고 하여 소스코드 확인 후 해당 객체로 구현. 제대로 동작함.
+callback함수인 messagearrived내부에 dto에 접근하는 코드 넣으면 또 connection lost 발생
+MqttException (0) - java.lang.NullPointerException
+오류 발생.
+
+INFO : com.spring.elderlycare.util.MqttSubscriber2 - MqttException (0) - java.lang.NullPointerException
+MqttException (0) - java.lang.NullPointerException
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:176)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+Caused by: java.lang.NullPointerException
+	at com.spring.elderlycare.util.MqttSubscriber2.messageProcessing(MqttSubscriber2.java:93)
+	at com.spring.elderlycare.util.MqttSubscriber2.messageArrived(MqttSubscriber2.java:81)
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.handleMessage(CommsCallback.java:354)
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:162)
+	... 1 more
+
+
+MqttException (0) - java.lang.NullPointerException
+at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:176)
+
+
+```java
+	public void run() {
+		final String methodName = "run";
+		callbackThread = Thread.currentThread();
+		callbackThread.setName(threadName);
+		
+		synchronized (lifecycle) {
+			current_state = State.RUNNING;
+		}
+
+		while (isRunning()) {
+			try {
+				// If no work is currently available, then wait until there is some...
+				try {
+					synchronized (workAvailable) { //<<<<오류 나는 부분... 왜?
+						if (isRunning() && messageQueue.isEmpty()
+								&& completeQueue.isEmpty()) {
+							// @TRACE 704=wait for workAvailable
+							log.fine(CLASS_NAME, methodName, "704");
+							workAvailable.wait();
+						}
+					}
+				} catch (InterruptedException e) {
+				}
+				(생략)
+```
+```java
+if (mqttCallback != null || callbacks.size() > 0) {
+```
+여기가ㅏ 오류 나는 부분인 것 같음 mqttCallback이 null이 되ㄴ는듯
+
+20200701
+```java
+private void insertData(String topic, MqttMessage message) {
+		try { 
+			String tmp = topic.split("/")[1];
+			
+			if(tmp.equals("humid")||tmp.equals("temp")) {
+				Map<String, Object> obj = new HashMap<String, Object>();
+				float data = Float.parseFloat(message.toString()); 
+				obj.put("elderly", eld);
+				obj.put(tmp, data);
+				sqlSession.insert(ns+"log", obj);
+			}else
+				alertToApp(tmp);
+			
+			
+		  }catch(NumberFormatException e) { 
+			  //"home/vid"
+			  
+		  }
+	}
+```
+바로 db에 접근하도록 코드를 수정해보았다.
+`sqlSession.insert(ns+"log", obj);`부분에서 같은 오류 발생.
+
+
+20200702
+시계열 데이터 분석 라이브러리
+https://github.com/signaflo/java-timeseries
+
+1. 웹, MQTT-외부 프로젝트로 따로 구현함- 붙이기. 웹 서버 실행시 MQTT프로그램 실행되도록.
+2. 비밀번호 SHA256암호화 코드 
+3. 프론트엔드 전체 (데이터 그래프)
+4. rest api data async polling
+5. 비디오 받고 decoding, storage저장, db에는 파일이름 등으로 저장
+6. 이상상황 push 알림
+
+<br>
+dto 스트링으로
+home/vid는 새벽 4시에 옴.
+마지막거 하나
+message비어있으면 없는거
+<br>
+그래프는 프론트에서 해야되는 것 같음
+내일 웹 mqtt붙이기 해야될듯. 비밀번호 암호화도
+그 담에 프론트 시작
+<<<<<<< HEAD
+
+20200703
+
+## json and ajax
+https://www.youtube.com/watch?v=rJesac0_Ftw
+
+```js
+var ourRequest = new XMLHttpReqeust();
+ourRequest.open('GET','json경로');
+ourRequest.onload = function(){
+	//data가 load됐을때 무엇을 할 것인가.
+	var ourData = JSON.parse(ourRequest.responseText);
+	console.log(ourData[0]);
+}; 
+ourRequest.send();
+```
+
+Asynchronous (in the background, not required page re?)
+JavaScript
+And
+XML (JSON)
+
+`XMLHttpRequest`
+
+
+
+
+`<button id = "btn">`
+
+```js
+var container = document.getElementById("info");
+var btn = document.getElementById("btn");
+var pageCounter = 1; //바뀌는 값.
+
+btn.addEventListener("click", function(){
+	var ourRequest = new XMLHttpReqeust();
+	ourRequest.open('GET','json경로'+ pageCounter+'.json');
+	ourRequest.onload = function(){
+		//data가 load됐을때 무엇을 할 것인가.
+		var ourData = JSON.parse(ourRequest.responseText);
+		//console.log(ourData[0]);
+		renderHTML(ourData);
+		pageCounter++;
+		if(pageCounter>3)
+			btn.classList.add("hide-me");
+	}; 
+ourRequest.send();
+});
+
+function renderHTML(data){
+	var htmlString = "";
+
+	for(i = 0; i < data.length; i++){
+		htmlString +="<p>"+data[i].name +" is a "+ data[i].species+".</p>"
+	}
+
+	container.insertAdjacentHTML("beforeend", htmlString);
+}
+```
+
+
+
+생활코딩
+https://opentutorials.org/course/53/50
+```
+${'.info'}.html('test');//??
+```
+```js
+//(생략)
+function clickHandler(event){
+	var nav = document.getElementById('naviation');
+	for(var i = 0; i < nav.childNodes.length; i++){
+		if(child.nodeType == 3)
+			continue;
+		child.className ='';
+	}
+	event.target.className = 'selected';
+}
+
+addEvent(window, 'load', function(eventObj){
+	var nav = document.getElementById('navigation');
+	for(var i = 0; i < nav.childNodes.length; i++){
+		var child = nev.childNodes[i];
+		if(child.nodeType == 3)
+			continue;
+		addEvent(child, 'click', clickHandler);
+	}
+});
+//생략
+```
+--------->
+```js
+${'#navigation li'}.live('click', function(){
+	${'#navigation li'}.removeClass("selected");
+	$(this).addClass("selected");
+})
+```
+
+### 오늘 한 일
+* 비밀번호 암호화
+* 로그인 시 권한 받아서 세션에 저장
+* 프론트 공부 조금
+=======
+>>>>>>> cab01cc4f124b3604d6fb363582c4ab9fcde2ae0

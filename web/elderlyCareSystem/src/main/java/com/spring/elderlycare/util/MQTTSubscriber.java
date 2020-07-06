@@ -12,14 +12,17 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+
+//import com.spring.elderlycare.dao.DatasDAO;
+//import com.spring.elderlycare.dto.DatasDTO;
+//import com.spring.elderlycare.dto.DevicesDTO;
 
 /*
  * ref
  * https://www.monirthought.com/2017/11/eclipse-paho-java-client-mqtt-client.html
  * 
  */
-@Component
+//@Component
 public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 	
 	private String brokerURL = null;
@@ -32,6 +35,9 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 	
 	private static final Logger logger = LoggerFactory.getLogger(MQTTSubscriber.class);
 	
+	//@Autowired DatasDAO dao;
+	//@Autowired DatasDTO dto;
+	
 	public MQTTSubscriber() {
 		logger.info("init");
 		//this.config();
@@ -42,31 +48,51 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 		// TODO Auto-generated method stub
 		logger.info("connection lost");
 	}
+	
+	public void publishMessage(String topic, String message) {
+		 logger.info("publish Message");
+	  try {
+		  MqttMessage mqttmessage = new MqttMessage(message.getBytes());
+		  mqttmessage.setQos(this.qos);
+	   this.mqttClient.publish(topic, mqttmessage);
+	  } catch (MqttException me) {
+	   me.printStackTrace();
+	  }
+	 }
+	
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		// TODO Auto-generated method stub
 		String time = new Timestamp(System.currentTimeMillis()).toString();
 		System.out.println();
-		System.out.println("***********************************************************************");
+		System.out.println("------------------------------------------------------------------------");
 		System.out.println("Message Arrived at Time: " + time + "  Topic: " + topic + "  Message: "
 		  + new String(message.getPayload()));
 		System.out.println("***********************************************************************");
 		System.out.println();
+		//dto.setGas(false);
+		//float data = Float.parseFloat(message.toString());
+		//if (topic.equals("home/humid")) 
+		//	dto.setHumid(data);
+		//else if(topic.equals("home/temp"))
+		//	dto.setTemp(data);
 		
+		//dao.insertDataEvent(dto);
 	}
+	
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token) {
 		// TODO Auto-generated method stub
-		logger.info("delivery complete");
-		
+		logger.info("delivery completed");
 	}
 	
-	public void subscribeMessage(String topic) {
+	public void subscribeMessage(String topic, int elderly) {
 		 logger.info("subscribe Message");
 	  try {
 	   this.mqttClient.subscribe(topic, this.qos);
+	   //dto.setElderly(elderly);
 	  } catch (MqttException me) {
 	   me.printStackTrace();
 	  }
@@ -120,5 +146,7 @@ public class MQTTSubscriber extends MQTTConfig implements MqttCallback{
 			  me.printStackTrace();
 		  }
 	}
+	
+	
 
 }

@@ -1,0 +1,9 @@
+1591676698499	Rename package 'com.spring.elderlycare.model'
+1591678509686	Rename package 'com.spring.elderlycare.dao'
+1591678550135	Rename type 'MemberDAO'
+1591678561951	Rename type 'MemberDAOImpl'
+1591681527036	Rename type 'MemberMapper'
+1591681538368	Rename type 'MemberMapperImpl'
+1591681550176	Rename package 'com.spring.elderlycare.mapper'
+1591764763560	Delete element
+1591863561663	Rename type 'DeviceUserService'

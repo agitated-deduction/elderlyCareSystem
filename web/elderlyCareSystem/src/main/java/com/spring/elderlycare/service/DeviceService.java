@@ -11,8 +11,8 @@ import com.spring.elderlycare.dto.ElderlyDTO;
 public interface DeviceService {
 	public List<ElderlyDTO>devicesList(String id);
 	public void deviceRegistration(ElderlyDTO edto, DevicesDTO ddto, String id);
-	public ElderlyDTO deviceInfo(int dnum);
-	public ElderlyDTO selectDeviceInfo(int dnum);
+	public ElderlyDTO elderlyInfo(int dnum);
+	public DevicesDTO deviceInfo(int dnum);
 	public void deleteDevice(int dnum);
 	
 }

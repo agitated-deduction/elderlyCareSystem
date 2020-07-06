@@ -11,5 +11,5 @@ public interface MemberDAO {
 	public int updateMember(MemberDTO mdto);
 	public int deleteMember(String id);
 	public MemberDTO selectOne(String id);
-	public boolean exist(MemberDTO mdto);
+	public int exist(MemberDTO mdto);
 }

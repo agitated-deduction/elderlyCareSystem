@@ -1,5 +1,6 @@
 package com.spring.elderlycare.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.elderlycare.dto.DatasDTO;
 import com.spring.elderlycare.dto.DevicesDTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
+import com.spring.elderlycare.service.DataService;
 import com.spring.elderlycare.service.DeviceService;
 
 @SessionAttributes("uid")
@@ -26,8 +29,11 @@ import com.spring.elderlycare.service.DeviceService;
 @RequestMapping("/devices")
 public class DeviceController {
 	@Autowired private DeviceService service;
+	@Autowired private DataService dataservice;
+	//@Autowired private MqttTaskService mqtt;
 	@Autowired private ElderlyDTO edto;
 	@Autowired private DevicesDTO ddto;
+	@Autowired private DatasDTO datadto;
 	private final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
 	/*
@@ -85,7 +91,7 @@ public class DeviceController {
 	}
 	@RequestMapping(value = "/{num}", method = RequestMethod.GET)
 	public ElderlyDTO deviceInfo(Model model, @PathVariable("num") int dnum) {
-		edto = service.deviceInfo(dnum);
+		edto = service.elderlyInfo(dnum);
 		return edto;
 	}
 	@RequestMapping(value = "/{num}", method = RequestMethod.PUT)
@@ -97,5 +103,26 @@ public class DeviceController {
 	public ModelAndView deviceDelete(ModelAndView mav, @PathVariable("num") int num) {
 		service.deleteDevice(num);
 		return null;
+	}
+	/*
+	 *MQTT 통신 activate, 직접 버튼 클릭하도록 일단 구현. 서버 재시작시 알아서 전부 세팅되도록 수정하고싶음. 
+	 */
+	/*@RequestMapping(value = "/{num}/mqtt-thread")
+	public ModelAndView activateMQTTThread(ModelAndView mav, @PathVariable("num") int dnum) {
+		ddto = service.deviceInfo(dnum);
+		logger.info("mqtt-thread : "+ddto.getHomeIoT());
+		
+		mqtt.runningBackground(ddto); //ㅅㄷㄴㅅ
+		
+		mav.setViewName("redirect:/");
+		
+		return mav;
+	}*/
+	@RequestMapping("/{num}/data")
+	public Map<String, Object> viewData(Model model, @PathVariable("num") int num) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map = dataservice.getHumTemp(num);
+		//맥박, 걸음 수, gps가져와서 put
+		return map;
 	}
 }

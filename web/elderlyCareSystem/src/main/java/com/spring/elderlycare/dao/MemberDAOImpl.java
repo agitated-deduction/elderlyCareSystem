@@ -35,11 +35,13 @@ public class MemberDAOImpl implements MemberDAO{
 		return mdto;
 	}
 	@Override
-	public boolean exist(MemberDTO mdto) {
+	public int exist(MemberDTO mdto) {
 		//System.out.printf("%d", (int)sqlSession.selectOne(ns+"isExist", mdto));
-//		
-//		return false;
-		return (boolean)sqlSession.selectOne(ns+"isExist", mdto);
+		try {
+			return sqlSession.selectOne(ns+"isExist", mdto);
+		}catch(NullPointerException e) {
+			return -2;
+		}
 	}
 	
 }

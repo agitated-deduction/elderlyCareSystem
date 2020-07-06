@@ -29,16 +29,15 @@ public class DeviceServiceImpl implements DeviceService{
 	}
 
 	@Override
-	public ElderlyDTO deviceInfo(int dnum) {
+	public ElderlyDTO elderlyInfo(int dnum) {
 		// TODO Auto-generated method stub
 		
 		return ddao.selectOne(dnum);
 	}
 
 	@Override
-	public ElderlyDTO selectDeviceInfo(int dnum) {
-		// TODO Auto-generated method stub
-		return null;
+	public DevicesDTO deviceInfo(int dnum) {
+		return ddao.selectDevice(dnum);
 	}
 
 	@Override

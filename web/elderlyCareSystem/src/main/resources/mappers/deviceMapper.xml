@@ -27,6 +27,9 @@ WHERE staff = #{value};
 	<select id = "selectDevice" parameterType = "int" resultType = "com.spring.elderlycare.dto.ElderlyDTO">
 		SELECT * FROM elderly WHERE ekey = #{value};
 	</select>
+	<select id = "selectDeviceOne" parameterType = "int" resultType = "com.spring.elderlycare.dto.DevicesDTO">
+		SELECT * FROM devices WHERE elderly = #{value};
+	</select>
 	<delete id="deleteDeivce" parameterType = "int">
 	DELETE FROM elderly WHERE ekey = #{value};
 	</delete>

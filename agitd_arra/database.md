@@ -241,3 +241,19 @@ create table realtimedata(
     gas boolean
     );
 ```
+
+
+
+```sql
+alter table realtimedata drop gas;
+```
+
+```sql
+
+alter table `user` change upwd upwd varchar(256);
+
+alter table manage add constraint fk_constraint_3 foreign key(staff) 
+references `user`(uid) on delete cascade;
+alter table manage add constraint fk_constraint_4 foreign key(relative) 
+references `user`(uid) on delete cascade;
+```

@@ -1,0 +1,12 @@
+package com.spring.elderlycare.service;
+
+import com.spring.elderlycare.dto.DevicesDTO;
+
+//@Component
+public interface MqttTaskService {
+
+	public void runningBackground(DevicesDTO ddto);
+	//private void savedb();
+
+
+}

@@ -15,7 +15,7 @@ public class DeviceDAOImpl implements DeviceDAO{
 	@Autowired
 	private SqlSession sqlSession;
 	@Autowired
-	ElderlyDTO dudto;
+	ElderlyDTO edto;
 	private static final String ns = "com.spring.elderlycare.dao.DeviceDAOImpl.";
 	
 	@Override
@@ -56,6 +56,13 @@ public class DeviceDAOImpl implements DeviceDAO{
 	public void deleteDevice(int dnum) {
 		// TODO Auto-generated method stub
 		sqlSession.delete(ns+"deleteDevice", dnum);
+	}
+
+	@Override
+	public DevicesDTO selectDevice(int dnum) {
+		// TODO Auto-generated method stub
+		
+		return sqlSession.selectOne(ns+"selectDeviceOne", dnum);
 	}
 
 }

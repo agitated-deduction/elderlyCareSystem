@@ -1,7 +1,5 @@
 package com.spring.elderlycare.util;
 
-import java.sql.Timestamp;
-
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -12,13 +10,12 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.spring.elderlycare.util.MQTTConfig;
-
 /*
  * ref
  * https://www.monirthought.com/2017/11/eclipse-paho-java-client-mqtt-client.html
  * 
  */
+//@Component
 public class MQTTPublisher extends MQTTConfig implements MqttCallback{
 	
 	private String brokerURL = null;

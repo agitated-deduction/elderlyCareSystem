@@ -12,7 +12,7 @@ public class App
     public static void main( String[] args )
     {
 		
-    	MqttSubscriber client = new MqttSubscriber();
+    	MqttService client = new MqttService();
 		/*try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			SqlSessionFactory sqlSessionFactory = 
@@ -23,13 +23,13 @@ public class App
 			e.printStackTrace();
 			return;
 		}*/
-		List<Map<String, Object>> list = client.getIoTList();
+		//List<Map<String, Object>> list = client.getIoTList();
 		
-		for(Map<String,Object> m : list) {
-		
-			client.mqttSubscribe((String)m.get("homeIoT"), 1883, "home/#", Integer.parseInt(m.get("elderly").toString()));
-			//client.mqttSubscribe("121.138.83.121", 1883, "home/#", 13);
-			//client.mqttSubscribe("127.0.0.1", 1883, "home/#", 10);
-		}
+		//for(Map<String,Object> m : list) {
+			//System.out.println(m.get("homeIoT"));
+			//client.mqttSubscribe((String)m.get("homeIoT"), 1883, "home/#");
+			client.mqttSubscribe("127.0.0.1", 1883, "home/#");
+			client.mqttSubscribe("121.138.83.121", 1883, "home/#");
+		//}
     }
 }

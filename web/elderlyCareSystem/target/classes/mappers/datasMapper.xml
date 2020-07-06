@@ -12,4 +12,9 @@
 	SELECT measuredtime, temp FROM realtimedata 
 	WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW()) AND temp is not NULL;
 </select>
+<insert id = "log" parameterType = "hashmap">
+	INSERT INTO realtimedata (elderly, humid, temp)
+	VALUES(#{elderly}, #{humid}, #{temp});
+</insert>
+
 </mapper>

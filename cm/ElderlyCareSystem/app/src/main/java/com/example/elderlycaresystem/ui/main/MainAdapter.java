@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.elderlycaresystem.data.Elderly;
+import com.example.elderlycaresystem.data.elderly.Elderly;
 import com.example.elderlycaresystem.R;
 import com.example.elderlycaresystem.ui.info.InfoActivity;
 

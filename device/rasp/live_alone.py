@@ -3,9 +3,16 @@ import cv2
 import numpy as np
 import sys, time, datetime
 from datetime import timedelta
+import paho.mqtt.client as mqtt
 
-cap = cv2.VideoCapture('http://192.168.1.34:8090/?action=stream')   # 스트리밍 영상 가져오기 
+cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # 스트리밍 영상 가져오기 
 
+
+##---- MQTT
+broker_address="localhost" 
+broker_port=1883
+client = mqtt.Client() #create new instance
+client.connect(host=broker_address, port=broker_port)
 
 # Background Subtraction 의 알고리즘 중 BackgroundSubtractorMOG2 적용해 본다.
 # BackgroundSubtractorMOG2
@@ -56,7 +63,7 @@ while(cap.isOpened()):
             hull=cv2.convexHull(cnt)  # 대략적인 다각형 그리기 
             cv2.drawContours(sub_frame,[hull], -1, (0, 255, 0), 1)
             area=int(cv2.contourArea(cnt))
-            print(area)
+            # print(area)
 
         except:
             pass
@@ -84,6 +91,7 @@ while(cap.isOpened()):
                 Hflag = 1
 
 #-------------
+
         # if (Hflag == 1): # 사람이 인식 되었으면 시작 날짜와 이틀 후 날짜를 다시 세팅,  flag =0 
         #     StartDay = datetime.datetime.now() # 시작 시간 
         #     DDay = StartDay + timedelta(days=3)  # 이틀 뒤 날짜
@@ -93,9 +101,13 @@ while(cap.isOpened()):
         #     print("119~~~~~~~~~~~~~")
         #     cv2.putText(sub_frame,'119~~!!', (30, 120),
         #     cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
+
+        #     client.publish("home/11/alone", "1")    ##---- 녹화 끝나면 MQTT메시지 보내기 
+        #     print("home/11/alone: ", "1") 
         #     Hflag = 1  # 알리고 다시 세팅 
 
 #-------------10초로 테스트 해보기 
+
         if (Hflag == 1): 
             StartDay = datetime.datetime.now() 
             DDay = StartDay + timedelta(seconds=10)  
@@ -105,11 +117,14 @@ while(cap.isOpened()):
             print("119~~~~~~~~~~~~~\n")
             cv2.putText(sub_frame,'119~~!!', (30, 120),
             cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
-            Hflag = 1  # 알리고 다시 세팅 
 
-    
+            client.publish("home/11/alone", "1")    ##---- 녹화 끝나면 MQTT메시지 보내기 
+            print("home/11/alone: ", "1")
+            Hflag = 1  # 알리고 다시 세팅 
+           
+
         cv2.imshow('frame', fgmask)
-        cv2.imshow("Found", sub_frame) 
+        cv2.imshow("alone", sub_frame) 
 
         # out.write(fgmask)
    

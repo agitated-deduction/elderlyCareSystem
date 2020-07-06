@@ -2,16 +2,24 @@
 
 import cv2
 import numpy as np
-import sys, time, datetime
+import sys, time, datetime, os
 import subprocess
+import glob
+import base64
 from datetime import timedelta, time, datetime
 from time import sleep
+import paho.mqtt.client as mqtt
 
-#----> 이 파일은 main.py에 의해 1분 ~ 3분마다 불러올 것이다.
+#----> 이 파일은 main.py에 의해  불러올 것이다.
 
+##---- MQTT
+broker_address="localhost" 
+broker_port=1883
+client = mqtt.Client() #create new instance
+client.connect(host=broker_address, port=broker_port)
 
 def dem():
-    cap = cv2.VideoCapture('http://192.168.1.34:8090/?action=stream')   # 스트리밍 영상 가져오기 
+    cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # 스트리밍 영상 가져오기 
 
     # Background Subtraction 의 알고리즘 중 BackgroundSubtractorMOG2 적용해 본다.
     # BackgroundSubtractorMOG2
@@ -37,12 +45,13 @@ def dem():
     #---- 이 파일이 켜질 시간 설정
     global Hflag 
     Hflag = 0              # 사람이 인식 되었는지 0=안됨  1=됨
+   
+
     start_time = time(9,19)  # 밤 11시 ~ 새벽 4시
-    end_time =  time(18,21)
+    end_time =  time(12,13)
     Now_time = datetime.now().time()   # 현재 시간
 
     nightcamera = 0
-
 
     basename = "move"
     suffix = datetime.now().strftime("%y%m%d_%H%M%S")
@@ -54,7 +63,6 @@ def dem():
         #----- 파일 저장 설정  
         frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
         fourcc = cv2.VideoWriter_fourcc(*'DIVX') # 디지털 포맷 코드 - 인코딩 방식 설정 
-        # filename = '/home/pi/_GUI/Move/move({}).avi'.format(datetime.now())
         filename = '/home/pi/_GUI/Move/%s.avi'%filenameis
 
         out = cv2.VideoWriter(filename, fourcc, frame_rate, (frame_width, frame_height)) # 캡쳐 동영상 저장
@@ -71,6 +79,7 @@ def dem():
 
         if (end_time < Now_time): # 카메라가 켜져있지만 감지되지 않고 시간이 지난 경우 종료.  # 밤에 아무 일도 없는 경우 
             nightcamera = 0
+            today_vid()
             
         if (ret):
             
@@ -125,7 +134,8 @@ def dem():
 
             cv2.imshow("denmentia", sub_frame) 
 
-        if(Hflag == 1):
+        if(Hflag == 1):  #--- 이상 움직임 감지 
+            
             print("~~~~HUMAN Detected!~~~~")
             print("EndRec: ", EndRec.second)
             print("NowRec:", NowRec.second)
@@ -133,14 +143,12 @@ def dem():
             out.write(subframe)  # 녹화 시작 /home/pi/_GUI/Move/ 에 저장된다.
       
             if(NowRec.second == EndRec.second): # 초가 지났으면 
-                print("~~~~out release~~~~")              
+                print("~~~~out release~~~~")       
                   
                 break  # ----> 영상촬영 끝나면 dementia.py를 종료한다.
-                # Hflag = 0            
-
         
         if cv2.waitKey(1) & 0xFF == ord('q'):  # q로 종료 
-            break
+            quit()
 
     try:        
         cap.release()
@@ -153,5 +161,39 @@ def dem():
     dem() # 영상 녹화 완료 후  재 실행 
 
 
+
+
+def today_vid():
+
+    #---- 동영상 인코딩해서 전송한다.
+    subprocess.call("find /home/pi/_GUI/Move -type f -size -10k -delete", shell=True)  #아무것도 찍히지 않은 잉여 파일들 자동 삭제 
+
+    print('End record')
+    newest = max(glob.iglob('/home/pi/_GUI/Move/*.avi'), key=os.path.getctime)  # 제일 최신 파일 찾기 
+    todayfile = datetime.now().strftime("%y%m%d")  # 오늘 날짜
+
+    print(os.path.basename(newest))  # 최신 파일 이름 
+    mtime = os.path.getmtime(newest)  # 파일 생성일 
+    newest_make = datetime.fromtimestamp(mtime).strftime("%y%m%d")  # 만든날 
+    print(newest_make)
+    print (todayfile)
+
+    f  = open(newest)
+    encoded = base64.b64encode(f.read())
+
+
+    if(newest_make == todayfile):  # 최신 파일이 오늘 만든 파일이면 보낸다.
+        client.publish("home/1/vid", encoded)
+        print(".....Today video....")
+                
+    else:       
+        print('This is not today file..')
+        pass
+
+    f.close()
+
+
+
 if __name__ == "__main__":
     dem()
+    

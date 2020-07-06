@@ -1,41 +1,49 @@
 #-*- encoding:utf-8 -*-
 import time, random, sys, os, urllib2
 import subprocess
+import keyboard
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4 import *
 from PyQt4 import uic
-from PyQt4 import QtCore, QtCore, QtGui
+from PyQt4 import QtCore, QtGui
 from weather import *
+import paho.mqtt.client as mqtt
 # from weather import NowTemp
 
-
-#-- 온습도 센서 모듈 
+##-- 온습도 센서 모듈 
 import Adafruit_DHT
 sensor = Adafruit_DHT.DHT11
 pin = 4  # 온습도 센서 핀 
 
+##---- MQTT
+broker_address="localhost" 
+broker_port=1883
+client = mqtt.Client() #create new instance
+client.connect(host=broker_address, port=broker_port)
 
 class mainGUI(QDialog):
 
     def __init__(self, parent=None):
         QDialog.__init__(self, parent)
+        ##---- PyQt관련 
         self.ui = uic.loadUi("main.ui")  # ui불러오기 
         self.ui.show()
         # self.ui.showMaximized()
         self.setGeometry(0, 0, 800, 480)  # 화면 사이즈 
 
+
+        ##--- 쓰레드 선언 
         self.th = Thread_dht()  # dht
         self.th2 = Thread_weather()  # weather
         self.th3 = Thread_timer() # timer
         self.th4 = Thread_stream() # camera stream
         self.th5 = Thread_alone() # 독거노인
         self.th6 = Thread_dementia() # 치매환자
+        self.th7 = Thread_talk() # 구글 
 
 
-        
-
-        # 현재 날짜 세팅 
+        ##--- 현재 날짜 세팅 , 함수 실행 , 쓰레드 실행 
         self.dateTimeVar = QDateTime.currentDateTime()  # 값 받아오기 
         self.timer_() # 타이머 실행
         self.displayDateTime() # 날짜 함수 실행 
@@ -45,9 +53,20 @@ class mainGUI(QDialog):
         self.th4.start() # 카메라 스트리밍 실행 
         self.th5.start() # 독거노인 실행 
         self.th6.start() # 치매환자 실행 
+        self.th7.start() # 구글 톡
+
+        self.ui.pushButton.clicked.connect(self.google_talk)
 
 
+    def google_talk(self):
+
+        # 버튼이 눌렸을 때 대화 시작 
+        # keyboard.is_pressed('enter')
+        print('')
         
+    
+
+
     def timer_(self):
 
         self.th3.start()  # 쓰레드 시작 
@@ -122,12 +141,9 @@ class Thread_dht(QThread):
 
     def __init__(self):
         QThread.__init__(self)
-        # self.cond = QWaitCondition()
-        # self.mutex = QMutex()
-        # self._status = True
 
     def run(self):
-        
+
         while True:
             
             h, t = Adafruit_DHT.read_retry(sensor, pin)  
@@ -136,9 +152,15 @@ class Thread_dht(QThread):
 
             self.change_value1.emit(t)
             self.change_value2.emit(h)
+
+            client.publish("home/11/temp", str(t))  # home 의 온도 토픽
+            print("Temperature = {0:0.1f}*C".format(t))
+            time.sleep(15) # 30초 마다 전송 
             
-            # print(t)  # 쓰레드 확인용
-            # print(h)
+            client.publish("home/11/humid", str(h)) # home 의 습도 토픽 
+            print("Humidity = {}%".format(h))
+            time.sleep(15) # 30초 마다 전송 
+            
             self.msleep(100)
 
 
@@ -152,9 +174,6 @@ class Thread_weather(QThread):   ## weather.py  reload
         from weather import *
         import weather  
         reload(weather)   # 날씨를 3 시간 마다 다시 읽기 위해서 
-
-    
-        # import publisher # 온습도 MQTT 전송
 
 
 class Thread_timer(QThread):   ## 타이머 
@@ -172,14 +191,12 @@ class Thread_stream(QThread):   ## 카메라 스트리밍 실행
 
     def __init__(self):
         QThread.__init__(self)
-        # self.daemon = True
+        # self.Daemon = True
 
     def run(self):
-        subprocess.call('sh ~/stream.sh', shell=True)  ##------------- 카메라 스트리밍 실행 
-        # stream.sh 파일 없으면 만든다.  mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/"
-
-                
-
+        ##------------- 카메라 스트리밍 실행 
+        # stream.sh 파일 없으면 만든다.  mjpg_streamer -i "input_raspicam.so " -o "output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/"
+        subprocess.call(['lxterminal -e sh stream.sh'], cwd='/home/pi/', shell=True)
 
 class Thread_alone(QThread):   ## 독거노인 
 
@@ -188,9 +205,9 @@ class Thread_alone(QThread):   ## 독거노인
 
     def run(self):
             
-        subprocess.call("python /home/pi/_GUI/live_alone.py", shell=True)  ##-------- 독거노인: 움직임 감지 실행  
-        
-        
+     ##-------- 독거노인: 움직임 감지 실행  
+        subprocess.Popen(['lxterminal -e python live_alone.py'], cwd='/home/pi/_GUI/', shell=True,  stdout=subprocess.PIPE)
+
 
 class Thread_dementia(QThread):   ##  치매환자
 
@@ -199,20 +216,20 @@ class Thread_dementia(QThread):   ##  치매환자
 
     def run(self):
         
-        subprocess.call("python /home/pi/_GUI/dementia.py", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  ##-------- 치매환자: 야간 이상행동 감지 실행 
+         ##-------- 치매환자: 야간 이상행동 감지 실행 
+        subprocess.Popen(['lxterminal -e python dementia.py'], cwd='/home/pi/_GUI/', shell=True,  stdout=subprocess.PIPE)
+
+class Thread_talk(QThread):   ## 구글 어시스턴트 실행 
+
+    def __init__(self):
+        QThread.__init__(self)
         
-        
 
-# class Thread_MQTT(QThread):   ##-------- MQTT 
-
-#     def __init__(self):
-#         QThread.__init__(self)
-
-#     def run(self):
-        
-#         subprocess.call("python /home/pi/_GUI/publisher.py",shell=True)  
-
-
+    def run(self):
+        ##-------------
+        # subprocess.call(['lxterminal -e ./googletalk.sh'], cwd='/home/pi/', shell=True)
+        subprocess.call('~/googletalk.sh', shell=True)
+        # os.system('./googletalk.sh')
 
 if __name__ == '__main__':
     

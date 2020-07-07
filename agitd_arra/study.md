@@ -1187,3 +1187,44 @@ WARN : org.springframework.web.servlet.PageNotFound - No mapping for GET /elderl
 The method getContextpath() is undefined for the type HttpServletRequest
 
 <script type = "text/javascript" src = "${pageContext.request.contextpath}/resources/jquery-3.5.1.js"></script>
+
+
+20200707
+
+한 일
+7. 3. 로그인 시 권한 받기, 프론트 다듬기, 비밀번호 암호화
+7. 6. 서버 실행 시 mqtt 실행 되도록 하기 //db에 바로 안 들어가짐
+
+할 일
+*
+7. 7. mqtt connection lost시 reconnect 시도. background mqtt db에 바로 insert. 홈 화면에 device목록 띄우기. 새로운 기기 등록 시 connect.
+7. 8. 대시보드 플랫폼 정하기. device 목록에서 device 정보 버튼 클릭 정보 띄우기. 로그아웃 홈으로 리다이렉트. 회원가입 성공 시 홈으로 리다이렉트 실패시 실패 alert
+7. 9 - 7. 10. 안드로이드에서 데이터 받기 rest api polling? 공부
+
+**
+7. 13. 안드 데이터 받기. 보호자 가입 승인 기능. 
+7. 14. 안드 데이터 받기. home/{num}/video 받아 폴더에 영상 저장하기.
+7. 15. 안드 데이터 받기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 16. 안드 데이터 받기. data 보여주기 화면 구성. 현재 온습도, 맥박 출력하기
+7. 17. 안드 데이터 받기. 온습도 그래프. GPS 지도
+
+**
+7. 20. 화면 동작 체크.
+7. 21 -. push 알림.
+
+
+오류 수정
+WARN : org.springframework.web.servlet.PageNotFound - No mapping for GET /elderlycare/resource/jquery-3.5.1.js
+
+root-context.xml에 추가
+<mvc:resources mapping = "/js/**" location = "/resources/js/"></mvc:resources>
+
+경로 수정
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+
+
+1. reconnect callback으로 부른다. reconnect시 subscribe 필요.
+
+
+reconnect 못함ㅜㅜ
+내일 reconnect랑 db 넣는거. 오전에는 화면 구성 먼저 다 해놓고 오후에 mqtt 끝내기

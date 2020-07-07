@@ -23,7 +23,7 @@
 
 </body>
 
-<script type = "text/javascript" src = "<c:url value = '/jquery-3.5.1.js'/>"></script></script>
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
 <script type = "text/javascript">
 	$(document).ready(function(){
 		console.log("TEs");
@@ -35,7 +35,7 @@
 				$.each(data, function(index, entry){
 					html+='<p>';
 					html+=entry.ename;
-					html+=ebirth;
+					html+=entry.ebirth;
 					html+=entry.etel;
 					html+= '</p>';
 				});

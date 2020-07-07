@@ -16,7 +16,6 @@
     <fullyQualifiedTypeName name="com.spring.elderlycare.dao.DatasDAO"/>
     <fullyQualifiedTypeName name="com.spring.elderlycare.dto.DevicesDTO"/>
     <fullyQualifiedTypeName name="java.sql.Timestamp"/>
-    <fullyQualifiedTypeName name="java.util.Timer"/>
     <fullyQualifiedTypeName name="java.util.Hashtable"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.MqttCallback"/>
@@ -33,7 +32,6 @@
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.internal.NetworkModuleService"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.persist.MemoryPersistence"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.internal.NetworkModule"/>
-    <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.internal.ExceptionHelper"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.MqttToken"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.internal.ConnectActionListener"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.MqttCallbackExtended"/>
@@ -42,7 +40,6 @@
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.internal.wire.MqttSubscribe"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.IMqttAsyncClient"/>
     <fullyQualifiedTypeName name="org.slf4j.Logger"/>
-    <fullyQualifiedTypeName name="com.sun.org.slf4j.internal.LoggerFactory"/>
     <fullyQualifiedTypeName name="org.slf4j.LoggerFactory"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.IMqttToken"/>
     <fullyQualifiedTypeName name="java.util.Base64"/>
@@ -51,7 +48,6 @@
     <fullyQualifiedTypeName name="com.spring.elderlycare.service.MqttTaskService"/>
     <fullyQualifiedTypeName name="com.spring.elderlycare.dao.DatasDAOImpl"/>
     <fullyQualifiedTypeName name="java.util.concurrent.Executor"/>
-    <fullyQualifiedTypeName name="com.sun.org.slf4j.internal.Logger"/>
     <fullyQualifiedTypeName name="org.apache.ibatis.io.Resources"/>
     <fullyQualifiedTypeName name="java.util.Iterator"/>
     <fullyQualifiedTypeName name="org.apache.ibatis.session.SqlSession"/>
@@ -60,4 +56,8 @@
     <fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
     <fullyQualifiedTypeName name="java.io.File"/>
     <fullyQualifiedTypeName name="org.apache.ibatis.annotations.Flush"/>
+    <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.internal.ExceptionHelper"/>
+    <fullyQualifiedTypeName name="com.sun.org.slf4j.internal.LoggerFactory"/>
+    <fullyQualifiedTypeName name="com.sun.org.slf4j.internal.Logger"/>
+    <fullyQualifiedTypeName name="java.util.Timer"/>
 </qualifiedTypeNameHistroy>

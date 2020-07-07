@@ -43,7 +43,7 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	<mvc:default-servlet-handler/>
-	
+	<mvc:resources mapping = "/js/**" location = "/resources/js/"></mvc:resources>
 	<bean id="clientFactory"
         class="org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory">
     <property name="connectionOptions">

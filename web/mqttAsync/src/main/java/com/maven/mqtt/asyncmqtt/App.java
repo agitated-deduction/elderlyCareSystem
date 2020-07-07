@@ -29,7 +29,7 @@ public class App
 			//System.out.println(m.get("homeIoT"));
 			//client.mqttSubscribe((String)m.get("homeIoT"), 1883, "home/#");
 			client.mqttSubscribe("127.0.0.1", 1883, "home/#");
-			client.mqttSubscribe("121.138.83.121", 1883, "home/#");
+			//client.mqttSubscribe("121.138.83.121", 1883, "home/#");
 		//}
     }
 }

@@ -37,7 +37,7 @@
 	</form>
 </body>
 
-<script type = "text/javascript" src = "/elderlycare/resources/jquery-3.5.1.js"></script>
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
 <script type = "text/javascript">
 $(function(){
 	$('#join-form').submit(function(event){

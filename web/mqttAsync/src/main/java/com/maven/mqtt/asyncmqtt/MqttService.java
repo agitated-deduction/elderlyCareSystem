@@ -9,9 +9,12 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -25,13 +28,43 @@ public class MqttService implements MqttCallback{
 	
 	MqttAsyncClient client = null;
 	MqttConnectOptions options = null;
-	
+	//ClientComms comms = null;
 	//private int eld = 0;
 	
 	private SqlSession sqlSession = null;
 	
 	private static final String ns = "mqttSubscriber.";
 	
+	private final IMqttActionListener mConnectionCallback = new IMqttActionListener() {
+	       public void onSuccess(IMqttToken asyncActionToken) {
+	    	   System.out.println("onSuccess");
+	       }
+
+	       public void onFailure(IMqttToken asyncActionToken, Throwable ex) {
+	           System.out.println("onFailure");
+	       }
+	};
+	private final MqttCallbackExtended mCallback = new MqttCallbackExtended() {
+	       
+	       public void connectComplete(boolean reconnect, String brokerAddress) {
+	    	   System.out.println("connectComplete");
+	       }
+
+	       
+	       public void connectionLost(Throwable ex) {
+	    	   System.out.println("connectionLost");
+	       }
+
+	       
+	       public void deliveryComplete(IMqttDeliveryToken deliveryToken) {
+	    	   System.out.println("deliveryComplete");
+	       }
+
+	       
+	       public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+	    	   System.out.println("messageArrived");
+	       }
+	};
 	public MqttService() {
 		String resource = "com/maven/mqtt/sql/mybatis-config.xml";
 		try {
@@ -50,12 +83,16 @@ public class MqttService implements MqttCallback{
 		this.brokerURL = "tcp://"+broker+":"+port;
 		try {
 			//this.eld = elderly;
+			//this.topic = topic;
 			client = new MqttAsyncClient(brokerURL, clientId, persistence);
 			options = new MqttConnectOptions();
 			options.setCleanSession(true);
+			options.setAutomaticReconnect(true);
 			
+			//client.setCallback(mCallback);
+			client.connect(options, null, mConnectionCallback);
 			//IMqttToken token = 
-			client.connect(options);
+			//client.connect(options);
 			//token.waitForCompletion();
 			Thread.sleep(1000);
 			client.setCallback(new MqttService());
@@ -72,11 +109,11 @@ public class MqttService implements MqttCallback{
 		}
 	}
 
-
+	
 	public void connectionLost(Throwable cause) {
-		// TODO Auto-generated method stub
 		System.out.println("connection lost");
-		cause.printStackTrace();
+		//cause.printStackTrace();
+		
 	}
 
 
@@ -90,7 +127,6 @@ public class MqttService implements MqttCallback{
 
 
 	public void deliveryComplete(IMqttDeliveryToken token) {
-		// TODO Auto-generated method stub
 		System.out.println("deliveryComplete");
 		
 	}
@@ -151,5 +187,7 @@ public class MqttService implements MqttCallback{
 	public List<Map<String, Object>> getIoTList() {
 		return sqlSession.selectList("selectDevices");
 	}
-}
+
+	
+	}
 	

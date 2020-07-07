@@ -377,22 +377,23 @@ public class MainActivity extends Activity {
                 case Constants.MESSAGE_READ_CHAT_DATA:
                     if(msg.obj != null) {
                           // TODO : Arduino Message -> showMessage();
-                        Log.d("msg.obj",(String)msg.obj);
-                        String str = showMessage((String)msg.obj); // => 메시지 출력!!
-                        if (str == MESSAGE_BT_ADDING){
-                            break;
-                        }
-                        else if (str.substring(0,1).equals("0")){
-                            Log.d("STATE 0", str);
-                        }
-                        else if (str.substring(0,1).equals("1")){
-                            Log.d("STATE 1", str);
-                            String[] recvData = messageParsing(str);
-                            messageSetting(recvData);
-                        }
-                        else{
-                            Log.d("Message Error",str);
-                        }
+                        Log.d("RECEIVE_MSG",(String)msg.obj);
+
+//                        String str = showMessage((String)msg.obj); // => 메시지 출력!!
+//                        if (str == MESSAGE_BT_ADDING){
+//                            break;
+//                        }
+//                        else if (str.substring(0,1).equals("0")){
+//                            Log.d("STATE 0", str);
+//                        }
+//                        else if (str.substring(0,1).equals("1")){
+//                            Log.d("STATE 1", str);
+//                            String[] recvData = messageParsing(str);
+//                            messageSetting(recvData);
+//                        }
+//                        else{
+//                            Log.d("Message Error",str);
+//                        }
                     }
                     break;
 

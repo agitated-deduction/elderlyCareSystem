@@ -1,4 +1,4 @@
-package com.example.mybtchat;
+package com.example.mybtchat.ui;
 
 
 import android.annotation.SuppressLint;
@@ -17,13 +17,15 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.annotation.RequiresApi;
 
+import com.example.mybtchat.R;
 import com.example.mybtchat.service.BTCTemplateService;
 import com.example.mybtchat.utils.AppSettings;
 import com.example.mybtchat.utils.Constants;
@@ -62,6 +64,11 @@ public class MainActivity extends Activity {
     // Time to get message from Arduino
     private static final int NEW_LINE_INTERVAL = 500;
     private static long mLastReceivedTime = 0L;
+    private String latitude;
+    private String longitude;
+
+    public static double lati;
+    public static double longi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +90,15 @@ public class MainActivity extends Activity {
         kcalText = findViewById(R.id.kcalText);
         latiText = findViewById(R.id.latitudeText);
         longText = findViewById(R.id.longitudeText);
+
+        Button button = findViewById(R.id.mapButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
 
@@ -396,7 +412,7 @@ public class MainActivity extends Activity {
 
             long current = System.currentTimeMillis();
             if(current - mLastReceivedTime > NEW_LINE_INTERVAL) {
-                Log.d("Method's Receive MSG",receiveMessage);
+                Log.d("ADDED MESSAGE END",receiveMessage);
                 mLastReceivedTime = current;
                 addMessage = receiveMessage;
                 receiveMessage = "";
@@ -410,30 +426,50 @@ public class MainActivity extends Activity {
 
     public String[] messageParsing(String receiveMsg){
         String[] array = receiveMsg.split(",");
-        Log.d("MESSAGE_PARSING", "step: " + array[0] + ", pulse: " + array[1] + ", kcal: " + array[2] + ", lati: " + array[3] + ", long: " + array[4]);
+
         String step = array[0].substring(6);
         String pulse = array[1].substring(6);
-        String kcal = array[2].substring(5);
-        String latitude = array[3].substring(5);
-        String longitude = array[4].substring(5);
-        Log.d("MESSAGE_PARSING", "step: " + step + ", pulse: " + pulse + ", kcal: " + kcal + ", lati: " + latitude + ", long: " + longitude);
-        String[] parsedData = new String[5];
+        String latitude = array[2].substring(5);
+        String longitude = array[3].substring(5);
+
+        String[] parsedData = new String[4];
         parsedData[0] = step;
         parsedData[1] = pulse;
-        parsedData[2] = kcal;
-        parsedData[3] = latitude;
-        parsedData[4] = longitude;
+        parsedData[2] = latitude;
+        parsedData[3] = longitude;
 
         return parsedData;
     }
     public void messageSetting(String[] str){
-        if (str.length < 5) {
+        if (str.length < 4) {
             return;
         }
         stepText.setText(str[0]);
         pulseText.setText(str[1]);
-        kcalText.setText(str[2]);
-        latiText.setText(str[3]);
-        longText.setText(str[4]);
+
+        String kcal = String.valueOf (Integer.parseInt(str[0]) *3);
+        kcalText.setText(kcal);
+
+        latiText.setText(str[2]);
+        longText.setText(str[3]);
+        MainActivity.setLati(Double.parseDouble(str[2]));
+        MainActivity.setLongi(Double.parseDouble(str[3]));
+        //longi = Double.parseDouble(str[3]);
+    }
+
+    public static double getLati() {
+        return lati;
+    }
+
+    public static void setLati(double lati) {
+        MainActivity.lati = lati;
+    }
+
+    public static double getLongi() {
+        return longi;
+    }
+
+    public static void setLongi(double longi) {
+        MainActivity.longi = longi;
     }
 }

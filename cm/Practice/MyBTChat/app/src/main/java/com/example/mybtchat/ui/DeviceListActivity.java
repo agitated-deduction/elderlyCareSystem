@@ -1,4 +1,4 @@
-package com.example.mybtchat;
+package com.example.mybtchat.ui;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.mybtchat.R;
 
 import java.util.Set;
 

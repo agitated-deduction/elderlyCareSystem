@@ -350,11 +350,15 @@ public class BTCTemplateService extends Service{
                 case BluetoothManager.MESSAGE_READ:
                     Log.d(TAG, "Service - MESSAGE_READ: ");
 
+                    // TODO : 아두이노 메시지(byte)를 버퍼(byte)에 저장
                     byte[] readBuf = (byte[]) msg.obj;
                     int readCount = msg.arg1;
+
                     // send bytes in the buffer to activity
                     if(msg.arg1 > 0) {
+                        // TODO : 버퍼(byte)를 strMsg(String)로 변환
                         String strMsg = new String(readBuf, 0, msg.arg1);
+                        // TODO : MainActivity에서 Service에 등록한 핸들러로 strMsg전송
                         mActivityHandler.obtainMessage(Constants.MESSAGE_READ_CHAT_DATA, strMsg)
                                 .sendToTarget();
                         int command = mCommandParser.setString(strMsg);
@@ -364,7 +368,7 @@ public class BTCTemplateService extends Service{
                             if(parameters != null && parameters.length() > 0)
                                 requestUrl.append(parameters);
 
-                            // TODO : Send data to Server
+                            // TODO : Send data to Server(Retrofit API)
                             //Logs.d("# Find thingspeak command. URL = "+requestUrl);
 //                            HttpAsyncTask task = new HttpAsyncTask(mHTTPListener, 0, requestUrl.toString(), HttpInterface.REQUEST_TYPE_GET);
 //                            task.execute();

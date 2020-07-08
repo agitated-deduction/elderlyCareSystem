@@ -5,7 +5,10 @@ import sys, time, datetime
 from datetime import timedelta
 import paho.mqtt.client as mqtt
 
-cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # 스트리밍 영상 가져오기 
+cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # wifi_스트리밍 영상 가져오기 
+# cap = cv2.VideoCapture('http://192.168.1.35:8090/?action=stream')   # len_스트리밍 영상 가져오기 
+
+# cap = cv2.VideoCapture('http://121.138.83.121:8090/?action=stream')   # wifi_외부_스트리밍 영상 가져오기 
 
 
 ##---- MQTT
@@ -17,14 +20,14 @@ client.connect(host=broker_address, port=broker_port)
 # Background Subtraction 의 알고리즘 중 BackgroundSubtractorMOG2 적용해 본다.
 # BackgroundSubtractorMOG2
 fgbg = cv2.createBackgroundSubtractorMOG2()
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))  # 커널을 생성
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(4,4))  # 커널을 생성
 # 얼굴 검출 
 faceCascade = cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
 
 
 # 파일 저장하기 
-frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), int(cap.get(5))
-fourcc = cv2.VideoWriter_fourcc(*'DIVX') # 디지털 포맷 코드 - 인코딩 방식 설정 
+# frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
+# fourcc = cv2.VideoWriter_fourcc(*'DIVX') # 디지털 포맷 코드 - 인코딩 방식 설정 
 # out = cv2.VideoWriter('move2.avi', fourcc, frame_rate, (frame_width, frame_height), 0) # 캡쳐 동영상 저장
 cnt = 0
 contour_box = None 
@@ -49,10 +52,10 @@ while(cap.isOpened()):
         fgmask = fgbg.apply(frame)
         
         fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)  # 형태 변환 중 Closing 기법을 적용
-        fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)    # 형태 변환 중 Opening 기법을 적용
+        # fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)    # 형태 변환 중 Opening 기법을 적용
 
         # 물체 검출 / 임계처리 (src, 임계값, 임계값 넘었을 때 , 처리 타입 )
-        ret1, thr = cv2.threshold(fgmask, 30, 255, cv2.THRESH_BINARY)
+        ret1, thr = cv2.threshold(fgmask, 70, 255, cv2.THRESH_BINARY)
         
         # 흰색 테두리를 찾으며, 최소 point만 저장하여 메모리 절약 
         countors, hierarchy = cv2.findContours(thr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -123,7 +126,7 @@ while(cap.isOpened()):
             Hflag = 1  # 알리고 다시 세팅 
            
 
-        cv2.imshow('frame', fgmask)
+        # cv2.imshow('frame', fgmask)
         cv2.imshow("alone", sub_frame) 
 
         # out.write(fgmask)

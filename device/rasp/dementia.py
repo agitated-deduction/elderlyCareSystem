@@ -19,15 +19,17 @@ client = mqtt.Client() #create new instance
 client.connect(host=broker_address, port=broker_port)
 
 def dem():
-    cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # 스트리밍 영상 가져오기 
+    cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # wifi_스트리밍 영상 가져오기 
+    # cap = cv2.VideoCapture('http://192.168.1.35:8090/?action=stream')   # len_스트리밍 영상 가져오기 
+    # cap = cv2.VideoCapture('http://121.138.83.121:8090/?action=stream')   # wifi_외부_스트리밍 영상 가져오기 
 
     # Background Subtraction 의 알고리즘 중 BackgroundSubtractorMOG2 적용해 본다.
     # BackgroundSubtractorMOG2
     fgbg = cv2.createBackgroundSubtractorMOG2()
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))  # 커널을 생성
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(4,4))  # 커널을 생성
+
     # 얼굴 검출 
     faceCascade = cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
-
 
     #----- 파일 저장 설정 
     # frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
@@ -48,7 +50,7 @@ def dem():
    
 
     start_time = time(9,19)  # 밤 11시 ~ 새벽 4시
-    end_time =  time(12,13)
+    end_time =  time(18,13)
     Now_time = datetime.now().time()   # 현재 시간
 
     nightcamera = 0
@@ -64,7 +66,6 @@ def dem():
         frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
         fourcc = cv2.VideoWriter_fourcc(*'DIVX') # 디지털 포맷 코드 - 인코딩 방식 설정 
         filename = '/home/pi/_GUI/Move/%s.avi'%filenameis
-
         out = cv2.VideoWriter(filename, fourcc, frame_rate, (frame_width, frame_height)) # 캡쳐 동영상 저장
 
 
@@ -86,10 +87,10 @@ def dem():
             fgmask = fgbg.apply(frame)
             subframe = cv2.cvtColor(sub_frame, cv2.IMREAD_COLOR)
             fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)  # 형태 변환 중 Closing 기법을 적용
-            fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)    # 형태 변환 중 Opening 기법을 적용
+            # fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)    # 형태 변환 중 Opening 기법을 적용
 
             # 물체 검출 / 임계처리 (src, 임계값, 임계값 넘었을 때 , 처리 타입 )
-            ret1, thr = cv2.threshold(fgmask, 30, 255, cv2.THRESH_BINARY)
+            ret1, thr = cv2.threshold(fgmask, 70, 255, cv2.THRESH_BINARY)
             
             # 흰색 테두리를 찾으며, 최소 point만 저장하여 메모리 절약 
             countors, hierarchy = cv2.findContours(thr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -131,7 +132,7 @@ def dem():
                     
                 #--- 알림 전송 해야 한다.
 
-
+            # cv2.imshow("frame", fgmask) 
             cv2.imshow("denmentia", sub_frame) 
 
         if(Hflag == 1):  #--- 이상 움직임 감지 

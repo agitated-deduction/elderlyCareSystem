@@ -1,0 +1,1130 @@
+# spring
+
+* 경량 컨테이너로서 자바 객체를 직접 관리
+* 제어 역행 (IOC Inversion of Control)
+* 의존성 주입(DI Dependency Injection)
+* 관점지향 프로그래밍(AOP Aspect-Oriented Programming)
+* MVC패턴
+----->공통부분의 코딩 용이, 확장성 높음.
+
+
+DI Dependency Injection
+의존성 : unit test와 코드 수정이 어려워진다.
+가령 class명을 변경하게 된다면 해당 클래스가 사용된 모든 클래스를 수정해야 한다.
+
+이러한 이유로 스프링은 DI를 사용해 모듈간의 결합도를 낮춘다.
+* 의존성을 대신 주입 할 bean class작성
+* 주입을 위한 xml또는 @(어노테이션) 설정
+
+IOC Container(Spring Container)
+사용자가 작성한 메타데이터(xml또는 @(어노테이션))에 따라 bean 클래스를 생성 및 관리하는 spring의 컴포넌트를 말한다.
+
+* IOC Container 설정
+1. xml 파일 기술
+	: code와 의존성을 주입하는 부분을 분리할 수 있다. 유지보수가 쉽다. 각 객체간의 의존관계를 한눈에 파악할 수 있다. 그러나 시스템이 거대해진다면 xml 파일이 많아져 오히려 유지보수가 어려울 수 있다.
+2. @annotation 사용
+	: 프로그램의 규모가 커지면서 xml에 기술할 내용이 많아짐에 따라 더 효율적인 annotation이 등장하게 된다. 직관적인 코드 작성이 가능하다.
+
+@Configuration : 스프링 IOC container에게 해당 클래스가 bean 구성 클래스임을 알려줌
+@Bean : 외부 라이브러리를 bean으로 만들고자 할 때 사용
+@Component : 개발자가 직접 작성한 Class를 Bean으로 등록하기 위해 사용
+@AutoWired :  Component 를 사용한 Bean의 의존성 주입은 AutoWired를 사용하여 의존성 자동 주입 가능
+
+# MQTT
+### Message Queuing Telemetry Transport
+
+IoT기기, 모바일 기기에 최적화 된 가벼운 메세징 프로토콜
+
+IoT 기기(publisher) --data--> MQTT브로커 --data--> IoT기기, 컴퓨터, 스마트폰(subscriber)
+
+사물인터넷을 사용하기 위해 개발 된 TCP기반의 프로토콜로서 낮은 전력, 대역폭, 성능의 환경에서도 사용 가능하다.
+
+publisher가 broker에게 데이터를 전송하면 subscriber에서 데이터를 받아온다.
+
+어디로 데이터를 받을 지 정해주는 것이 Topic이다. publisher가 데이터에 대해 topic을 정하면 그 topic을 구독하는 subsciber는 해당 데이터를 받는다.
+
+
+
+참고:<br>
+https://www.joinc.co.kr/w/man/12/MQTT/Tutorial<br>
+http://www.codejs.co.kr/mqtt-%ec%9d%b4%ed%95%b4%ed%95%98%ea%b8%b0/<br>
+https://khj93.tistory.com/entry/MQTT-MQTT%EC%9D%98-%EA%B0%9C%EB%85%90
+
+
+## mqtt client 구현하기 in java
+내용 출처 : https://www.baeldung.com/java-mqtt-client
+
+paho library 의존성 추가
+```
+<dependency>
+  <groupId>org.eclipse.paho</groupId>
+  <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+  <version>1.2.0</version>
+</dependency>
+```
+
+client에서 메세지를 주고 받기 위해서는 IMqttClient interface가 필요하다.
+이 interface는 서버와 연결을 위한 메소드, 그리고 메세지를 주고 받을 수 있는 메소드를 가지고 있다.
+
+1. MqttClient클래스의 인스턴스 생성
+
+```java
+String publisherId = UUID.randomUUID().toString();
+IMqttClient publisher = new MqttClient("tcp://iot.eclipse.org:1883",publisherId);
+```
+
+2. 서버에 연결
+`MqttConnectOptions` 클래스를 통해 인스턴스 선택적으로 전달.<br>
+보안 자격 증명, 세션 복구 모드, 재 연결 모드 등과 같은 추가 정보 전달 가능.<br>
+필요한 옵션만 설정하고 나머지는 기본값으로 가정한다.<br>
+```java
+MqttConnectOptions options = new MqttConnectOptions();
+options.setAutomaticReconnect(true);
+options.setCleanSession(true);
+options.setConnectionTimeout(10);
+publisher.connect(options);
+```
+위의 코드는 해당 내용을 나타낸다.<br>
+* 네트워크 장애 시 라이브러리가 서버에 자동으로 다시 연결을 시도한다.
+* 이전 실행에서 보내지 않은 메세지는 버린다.
+* timeout은 10초
+
+3. 메세지 보내기
+mqtt는 3단계 QoS(Quality of Service)를 제공한다.<br>
+0 - 메세지는 한번만 전달되며, 전달 여부는 확인하지 않는다. Fire and Forget.<br>
+1 - 메세지는 반드시 적어도 한 번 전달된다. 값이 중복전달 될 수 있다. subscriber가 중복값을 처리할 수 있는 경우 이 옵션을 써도 된다.<br>
+2 - 메세지는 정확히 한 번만 전달된다. 메세지 핸드셰이킹 과정을 추적하기 때문에 품질이 높지만 성능이 떨어질 수 있다. subscriber가 중복값을 처리하기 어려운 경우 사용하면 좋다.<br>
+
+```java
+public class EngineTemperatureSensor implements Callable<Void> {
+ 
+    // ... private members omitted
+     
+    public EngineTemperatureSensor(IMqttClient client) {
+        this.client = client;
+    }
+ 
+    @Override
+    public Void call() throws Exception {        
+        if ( !client.isConnected()) {
+            return null;
+        }           
+        MqttMessage msg = readEngineTemp();
+        msg.setQos(0);
+        msg.setRetained(true);
+        client.publish(TOPIC,msg);        
+        return null;        
+    }
+ 
+    private MqttMessage readEngineTemp() {             
+        double temp =  80 + rnd.nextDouble() * 20.0;        
+        byte[] payload = String.format("T:%04.2f",temp)
+          .getBytes();        
+        return new MqttMessage(payload);           
+    }
+}
+```
+
+4. 메세지 받기
+```java
+CountDownLatch receivedSignal = new CountDownLatch(10);
+subscriber.subscribe(EngineTemperatureSensor.TOPIC, (topic, msg) -> {
+    byte[] payload = msg.getPayload();
+    // ... payload handling omitted
+    receivedSignal.countDown();
+});    
+receivedSignal.await(1, TimeUnit.MINUTES);
+```
+
+
+# Spring project 
+
+## mvc project directory 구조
+
+src/main/java : 자바 소스파일 디렉토리<br>
+src/main/resources : 리소스파일(설정파일) 디렉토리<br>
+	src/main/resources/log4j.xml : 로그파일<br>
+<br>
+src/test/java : 테스트 파일 디렉토리<br>
+src/test/resources : 테스트 리소스 파일 디렉토리<br>
+<br>
+Maven Dependencies : maven을 통해 다운받은 라이브러리 파일<br>
+<br>
+src/main/webapp/resources : 리소스파일 디렉토리(js, css, image등)<br>
+<br>
+WEB-INF 외부 직접 접근 차단. 컨드롤러를 통하여 접근 가능.<br>
+	src/main/webapp/WEB-INF/classes : 클래스 파일 디렉토리<br>
+	src/main/webapp/WEB-INF/spring : 스프링 환경 설정 파일 디렉토리 (root-context.xml, servlet-context.xml) (서블릿 파일)<br>
+		src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml : dispatcher 서블릿과 관련된 view 지원 및 bean을 설정하는 파일(controller등)<br>
+		src/main/webapp/WEB-INF/spring/root-context.xml : 공통 bean을 설넝하는 파일(service, repository, db, log등)<br>
+	src/main/webapp/WEB-INF/views : view파일 디렉토리(html, jsp) (jsp파일 폴더)<br>
+	src/main/webapp/WEB-INF/web.xml : 설정을 위한 배포서술자 파일. WAS가 최초 구현될 때 web.xml을 읽고 해당 설정 구현. 설정파일.<br>
+<br>
+target : 빌드 결과물<br>
+<br>
+pom.xml : maven에서 참조하는 설정파일<br>
+
+
+### mybatis
+개발자가 지정한 SQL, 저장 프로시저 그리고 몇가지 고급 매핑을 지원하는 퍼시스턴스 프레임워크 
+https://mybatis.org/mybatis-3/ko/index.html
+
+### interceptor
+컨트롤러에서 들어오는 HttpRequest와 컨트롤러가 응답하는 HttpResponse를 가로채는 역할을 한다.
+
+
+# RESTful
+
+### open api 개방형 api
+프로그래밍에서 사용할 수 있는 개방되어 있는 상태의 인터페이스
+
+### rest representational safe tranfer
+
+https://www.youtube.com/watch?v=pKT4OTFjFcA&list=PL9mhQYIlKEhfYqQ-UkO2pe2suSx9IoFT2&index=24
+
+http uri + http method
+http uri를 통해 제어할 자원 resource를 명시,
+http method (get, post, put, delete)를
+통해 해당 자원을 제어하는 명령을 내리는 방식의 ^아키텍쳐^
+
+| http method | CRUD |
+|:--------|:--------|
+| POST | create(insert) |
+| GET | read(select) |
+| PUT | update |
+| DELETE | delete |
+
+rest의 원리를 따르는 시스템을 restful 용어 사용
+ex
+GET /list.do? no=510&name=java (query string)
+----> GET /bbs/java/510
+GET /delete.do?no=510&name=java
+----> DELETE /bbs/java/510
+GET과 POST만으로 자원에 대한 CRUD를 처리, uri는 액션을 나타내는 기존의 상태에서
+4가지 메서드를 사용하여 CRUD처리, uri는 제어하려는 자원 나타내도록
+
+RESTful과 JSON/xml
+
+json은 경량(lightweight)의 data교환 형식
+javascript에서 객체를 만들때 사용하는 표현식
+특정 언어에 종속되지 않는다.
+```json
+{
+	"string1": "value1",
+	"string2": "value2",
+	"string3": ["value3", "value4"]
+}
+```
+
+json 라이브러리 jackson
+json을 java객체로 java를 json형태로 변환해주는 json라이브러리
+
+xml extensible markup language
+데이터 저장 전달 위한 언어
+
+xml과 html
+data전달하는 것에 포커스 - data를 표현하는 것에 포커스
+사용자가 마음대로 tag정의 가능 - 미리 정의된 tag만 사용 가능
+```xml
+<?xml version = "1.0" encoding = "UTF-8"?>
+<customer>
+	<name>김형희</name>
+	<addr>진안</addr>
+	<phone>01000000000</phone>
+</customer>
+```
+
+
+## spring mvc 기반 restful 웹서비스 환경 설정, 구현
+pom.xml
+jackson mapper
+```xml
+<!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
+<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-mapper-asl</artifactId>
+    <version>1.9.13</version>
+</dependency>
+```
+
+root-context.xml
+`<mvc:annotation-driven />`
+`<mvc:default-servlet-handler/>`서버에 내부적으로 정의된 /무시
+
+구현
+1. RESTful 웹 서비스 처리할 RESTfulController클래서 작성, Spring Bean등록
+2. 요청 처리할 메서드에 @RequestMapping, @ReqeustBody(json ->java)와 @ResponseBody(java->json)어노테이션 선언
+3. REST Client Tool(Postman)을 사용하여 각각의 메서드 테스트
+4. Ajax통신을 하여 RESTful 웹서비스 호출하는 HTML페이지 작성
+
+Postman 설치 (RESTAPI 테스트 하는 Chrome 확장 프로그램)
+
+* 사용자관리
+
+| Action | Resource URI | HTTP Method |
+|:--------|:--------|:--------|
+| 사용자 목록 | /users | GET |
+| 사용자 보기 | /users/{id} | GET |
+| 사용자 등록 | /users | POST |
+| 사용자 수정 | /users | PUT |
+| 사용자 삭제 | /users/{id} | DELETE |
+
+@RequestBody : HTTP Request Body를 java 객체로 전달받을 수 있다.
+@ResponseBody : Java객체를 HTTP Response Body로 전송할 수 있다.
+
+
+오류
+
+`org.springframework.http.converter.HttpMessageNotWritableException: No converter found for return value of type: class com.spring.elderlycare.dto.MemberDTO`
+controller에서 객체 반환시 json으로 변환되지 않음.
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>2.10.0</version>
+</dependency>
+		    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.10.0</version>
+</dependency>
+```
+
+```xml
+<mvc:annotation-driven>
+		<mvc:message-converters>
+		<bean class = "org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+```
+
+### session
+클라이언트가 서버 접속하는 순간 생성
+default 유지시간 30분(서버에 접속 후 요청 하지 않는 최대 시간)
+
+web.xml파일에서 직접 설정 가능
+
+```xml
+<session-config>
+	<session-timeout>30</session-timeout>
+</session-config>
+```
+
+@SessionAttributes 파라미터 지정된 이름이 model에 저장 되면 session에도 저장됨.
+
+
+
+
+
+### Spring AOP
+Aspect Oriented Programming 관점 지향 프로그래밍
+* Aspect: 흩어진 관심사들을 모듈화 한 것. 주로 부가기능을 모듈화 한 것.
+* Target: Aspect를 적용하는 곳(클래스, 메서드 등)
+* Advice: 실질적으로 어떤 일을 해야 할 지에 대한 것, 실질적 부가기능을 담은 구현체
+* JointPoint: Advice가 적용될 위치, 끼어들 수 있는 지점. 메서드 진입 지점, 생성자 호출 시점, 필드에서 값을 꺼내올 때 등 다양한 시점에 적용 가능
+* PointCut: JointPoint의 상세 스페ㄱ 정의. ex A라는 메서드의 진입 시점에 호출 <-처럼 더 구체적으로 advice 실행 지점 정할 수 있음
+
+aspect실행 시점 annotation
+
+* @Before (이전) : 어드바이스 타겟 메소드가 호출되기 전에 어드바이스 기능을 수행
+* @After (이후) : 타겟 메소드의 결과에 관계없이(즉 성공, 예외 관계없이) 타겟 메소드가 완료 되면 어드바이스 기능을 수행
+* @AfterReturning (정상적 반환 이후)타겟 메소드가 성공적으로 결과값을 반환 후에 어드바이스 기능을 수행
+* @AfterThrowing (예외 발생 이후) : 타겟 메소드가 수행 중 예외를 던지게 되면 어드바이스 기능을 수행
+* @Around (메소드 실행 전후) : 어드바이스가 타겟 메소드를 감싸서 타겟 메소드 호출전과 후에 어드바이스 기능을 수행
+
+
+출처: https://engkimbs.tistory.com/746 [새로비]
+
+
+
+https://docs.spring.io/spring-integration/docs/5.3.0.RC1/reference/html/mqtt.html
+
+
+### /users
+
+| 동작 | 요청 | Method | 기능 |
+|:-------|:-------|:-------|:-------|
+| 로그인 화면 | /users/login | GET | 로그인 화면을 띄운다 |
+| 회원가입 화면 | /users/join | GET | 회원가입 화면을 띄운다 |
+| 로그인 체크 | /users/login | POST | 로그인 시도 시 아이디 비밀번호 체크하고 로그인 한다 |
+| 회원가입 하기 | /users/join | POST | 회원가입 한다 |
+| 로그아웃 | /users/logout | GET | 로그하웃 한다 |
+| 내 정보 | /users/{id} | GET | 로그인 된 아이디의 정보를 띄운다 |
+| 내 정보 수정 | /users/{id} | PUT | 로그인 된 아이디의 정보를 수정한다 |
+| 내 정보 삭제 | /users/{id} | DELETE | 로그인 된 아이디 정보를 삭제한다(탈퇴) |
+| 가입 승인(보류) | /users/{b_id} | PUT | 보호자의 가입을 담당자가 승인한다 |
+
+
+### /devices
+
+| 동작 | 요청 | Method | 기능 |
+|:-------|:-------|:-------|:-------|
+| 기기 목록 | /devices | GET | 담당자가 관리하는 기기 목록을 띄운다 보호자인 경우 등록된 기기 하나를 띄운다 |
+| 기기 등록 | /devices/{id} | POST |  |
+
+
+GET /users/login : 로그인 화면
+POST /users/login : 로그인 처리, 아이디 비밀번호 체크
+GET /users/join : 회원가입 화면
+POST /users/join : 회원가입 처리
+GET /users/logout : 로그아웃 처리
+GET /users/{uid} : {uid}(로그인 된 사람)의 개인정보 즉 내정보
+----------------------------------------------------------20200615(오류처리x)
+PUT /users/{uid} : 내 정보 수정
+DELETE /users/{uid} : 회원 탈퇴 처리
+PUT /users/{bid} : {bid}(보호자) 가입 신청 승인 처리
+
+GET /devices : 관리하는 기기(노인정보 포함) 전체 리스트
+POST /devices : 기기 등록
+GET /devices/{num} : {num}기기 등록된 노인정보 상세정보 보기
+PUT /devices/{num} : {num}기기 등록된 노인정보 상세정보 수정
+DELETE /devices/{num} : {num}기기 삭제
+
+
+
+<select id = "selectDevices" parameterType = "String" resultType = "com.spring.elderlycare.dto.DeviceUserDTO">
+	SELECT dname, dtel, daddr FROM deviceUser
+	WHERE staff=#{value} OR relative=#{value};
+	</select>
+
+
+
+
+# AJAX Asynchronous Javascript And Xml
+### javaScript를 사용한 비동기 통신, 클라이언트와 서버간의 XML데이터 주고받는 기술(개발 기법)
+
+https://coding-factory.tistory.com/143
+http://tcpschool.com/ajax/intro
+
+웹페이지 전체를 다시 로딩하는 대신 웹페이지의 일부분만 갱신
+json, xml, html, 텍스트 파일 등 다양한 데이터 주고받을 수 있다.
+
+장
+1. 웹페이지 속도 향상
+2. 서버의 처리 기다리지 않고 처리 가능
+3. 서버에서 data만 전송
+
+단
+1. 히스토리 관리 안 됨
+2. 연속 데이터 요청은 서버 부하 증가
+3. XMLHttpRequest를 통해 통신 시, 요청 완료 전에 사용자가 페이지 떠나거나 오작동 가능성
+
+ajax 프레임워크
+
+* prototype
+* script.aculo.us
+* dojo
+* jQuery
+ 등이 있다.
+
+
+기존의 웹은 브라우저에서 httpRequest를 서버에 보내고 html및 css데이터를 받아서 웹 페이지 전체를 다시 로딩했다면,
+ajax를 사용할때는 XMLHttpRequest를 보내고 서버에서는 ajax요청을 처리해서 HTML, XML, JSON데이터를 보내고 브라우저측에서 웹페이지의 일부분을 로딩한다.
+
+1. 사용자의 요청 이벤트 발생
+2. 요청 이벤트가 발생 시 이벤트 핸들러에 의해 자바스크립트 호출
+3. 자바스크립트는 XMLHttpRequest객체를 사용하여 서버로 요청을 보냄 (보낸 후 응답을 기다리지 않고 다른 작업을 할 수 있다.)
+4. 서버는 XMLHttpRequest를 받아서 Ajax요청을 처리
+5. 서버는 처리한 결과를 html, xml, json의 형태로 웹 브라우저에 전달
+6. 전달받은 데이터를 갱신하는 자바스크립트
+7. 일부분 다시 로딩됨
+
+XMLHttpRequest인스턴스 생성
+```js
+var httpRequest;
+
+function createRequest() {
+
+    if (window.XMLHttpRequest) { // 익스플로러 7과 그 이상의 버전, 크롬, 파이어폭스, 사파리, 오페라 등
+
+        return new XMLHttpRequest();
+
+    } else {                     // 익스플로러 6과 그 이하의 버전
+
+        return new ActiveXObject("Microsoft.XMLHTTP");
+
+    }
+
+}
+```
+
+익스플로러 6이하 버전 사용자 거의 없으므로 아래꺼 사용
+```js
+var httpRequest = new XMLHttpRequest();
+```
+
+open() ajax요청 형식
+```js
+open(전달방식, URL주소, 동기여부);
+```
+open의 세번제 인자를 true로 전달하면 비동기식 요청을 보낼 수 있다. 서버로부터 응답을 기다리는 동안 다른 일을 할 수 있게 되는 것이다.
+만약 false를 전달하면 서버로부터 응답이 올 때까지 어떤 다른 작업도 할 수 없다.
+
+send() 작성된 ajax요청 서버로 전달
+```js
+send();       // GET 방식
+send(문자열); // POST 방식
+```
+
+GET 요청
+```js
+httpRequest.open("GET", "/examples/media/request_ajax.php?city=Seoul&zipcode=06141", true);
+httpRequest.send();
+```
+
+서버상의 문서 존재 유무
+```js
+if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+
+    ...
+
+}
+```
+XMLHttpRequest.DONE : 서버에 요청한 데이터의 처리 완료, 응답 할 준비 됨
+status프로퍼티 값이 200 : 요청한 문서가 서버상에 존재
+
+POST 요청
+```js
+// POST 방식의 요청은 데이터를 Http 헤더에 포함시켜 전송함.
+
+httpRequest.open("POST", "/examples/media/request_ajax.php", true);
+httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+httpRequest.send("city=Seoul&zipcode=06141");
+```
+
+서버로부터 응답 대기, 프로퍼티들
+* readyState
+* status
+* onreadstatechange
+
+readyStatus
+1. UNSENT
+2. OPENED
+3. HEADERS_RECEIVED
+4. LOADING
+5. DONE
+
+status
+* 200 : 서버에 문서 존재
+* 404 : 서버에 문서 존재하지 않음
+
+onreadystatechange
+readyState프로퍼티의 값이 변할 때마다 자동으로 호출되는 함수 설정, 총 5번 호출
+
+```js
+switch (httpRequest.readyState) {
+
+    case XMLHttpRequest.UNSET:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 UNSET 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.OPENED:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 OPENED 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.HEADERS_RECIEVED:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 HEADERS_RECEIVED 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.LOADING:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 LOADING 입니다.<br>";
+
+        break;
+
+    case XMLHttpRequest.DONE:
+
+        currentState += "현재 XMLHttpRequest 객체의 상태는 DONE 입니다.<br>";
+
+        break;
+
+}
+
+document.getElementById("status").innerHTML = currentState;
+
+if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+
+    document.getElementById("text").innerHTML = httpRequest.responseText;
+
+}
+```
+
+
+### http header
+예제
+```
+Accept: */*
+
+Referer: http://codingsam.com/examples/tryit/tryhtml.php?filename=ajax_header_request_01
+
+Accept-Language: ko-KR
+
+Accept-Encoding: gzip, deflate
+
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+
+Host: codingsam.com
+
+DNT: 1
+
+Connection: Keep-Alive
+```
+
+`setRequestHeader()`메소드 사용하여 HTTP요청 헤더 작성
+```js
+XMLHttpRequest인스턴스.setRequestHeader(헤더이름, 헤더값);
+```
+
+예제
+```js
+var httpRequest = new XMLHttpRequest();
+
+httpRequest.onreadystatechange = function() {
+    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+        document.getElementById("text").innerHTML = httpRequest.responseText;
+    }
+};
+
+httpRequest.open("GET", "/examples/media/ajax_request_header.php", true);
+
+/************************/
+httpRequest.setRequestHeader("testheader", "123");
+/************************/
+
+httpRequest.send();
+```
+
+
+
+(생략)
+
+
+
+
+Ajax, JSON
+
+
+users/login
+성공 : {result: true, uid : (uid)}
+실패 : {result: false, uid : undefined}
+
+users/join
+성공 : true
+실패 : false
+
+devices/
+
+
+
+
+WARNING: An illegal reflective access operation has occurred
+
+WARNING: Illegal reflective access by org.apache.ibatis.reflection.Reflector (file:/D:/1elderlyproject/web/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/elderlyCareSystem/WEB-INF/lib/mybatis-3.4.6.jar) to field java.lang.Boolean.value
+
+WARNING: Please consider reporting this to the maintainers of org.apache.ibatis.reflection.Reflector
+
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+
+WARNING: All illegal access operations will be denied in a future release
+login
+
+
+
+6/19
+* ajax success error 함수 실행 안 됨
+* member delete member modify 만들기 일단 버튼은 홈 화면에.
+* 가입 승인 만들기
+* 서비스단 만들기
+
+
+DELETE PUT 메소드 사용하기 위해 web.xml에 등록
+
+```xml
+<!-- HTTP Method Filter -->
+<filter>
+    <filter-name>httpMethodFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>httpMethodFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+1. 회원가입 : 관리자는 DB에 들어있다고 가정. 보호자 가입 기능. 노인의 번호를 입력해야 됨.
+	* 노인의 key를 입력해줄지, 이름과 생년월일을 입력할지.
+	* 가입승인은 관리자가 해줌. 가입승인 구현시 DB table에 저장하고 로그인 할 때, 받아와서 알려줘야 함
+	* DB에서는 user, manage를 갱신한다. manage rel에 이미 들어있는 값이 있다면? 처리방안
+
+2. 폼 (로그인, 회원가입, 기기등록, 정보수정) : 현재는 로그인폼도 컨트롤러에서 부름. 그렇게 구성하는 것이 맞는지.. 아닌거같음
+	* GET users/login -> x GET users
+	* POST users/login ->POST users/login
+	* GET users/join -> x GET users
+	* POST users/join -> POST users
+	* 위처럼 수정할 수 있을까?
+	* PUT users/{uid} 이거 위한 폼은?
+	* jsp 하나로 만든 담에 조건따라 include로 합치기? 조건 어떻게 확인?
+
+3. 기기 삭제 테스트 해봐야 됨
+	* delete cascade 조건 줬지만 테스트 안해봤음
+
+4. DB에 비밀번호 그대로 저장 노노
+
+
+## Transaction 트랜잭션
+
+https://www.youtube.com/watch?v=jSNrGgHk-ds
+https://goddaehee.tistory.com/167
+
+논리적 단위로 한 부분의 작업이 완료되었더라도 다른 부분의 작업이 완료되지 않을 경우 전체 취소되는 것. 작업 완료는 커밋(commit) 이라고 하고 작업 취소는 롤백(rollback)이라고 한다.
+
+* 원자성 : 한 트랜잭션 내에서 실행한 작업은 하나로 간주
+* 일관성 : 일관성있는 ㄷㅂ 상태 유지
+* 격리성 : 동시에 실행되는 트랜잭션 영향 미치지 않도록 관리
+* 지속성 : 트랜잭션 결과 저장
+
+@Transactional <<트랜잭션 기능이 적용된 프록시 객체 생성됨
+이 프록시 계체는 해당 어노테이션이 포함된 메소드 호출 시 `PlatformTransactionManager`를 사용하여 트랜잭션을 시작하고 정상여부에 따라 Commit또는 Rollback한다.
+
+
+
+`<aop:aspectj-autoproxy></aop:aspectj-autoproxy>`
+root-context.xml
+
+웹에서 데이터 처리
+
+김대업. "Client/Server 기반 원격 제어를 위한 실시간 모니터링 시스템 설계 및 구현." 국내석사학위논문 부경대학교대학원, 2002. 부산
+
+길영준. "다중 생체신호를 이용한 혈압 추정 모델 및 IPv6 기반의 실시간 모니터링 시스템 개발." 국내박사학위논문 부산대학교, 2013. 부산
+
+조덕연. "임베디드 리눅스를 이용한 산업용 제어기의 웹 모니터링." 국내석사학위논문 선문대학교, 2002. 충청남도
+
+박제창. "만성 당뇨 환자의 자가 혈당 관리를 위한 지능형 헬스케어 시스템." 국내석사학위논문 강원대학교 일반대학원, 2019. 강원도
+
+최정민. "작물 생육 환경 모니터링을 위한 비동기 IoT 브로커 설계 및 구현." 국내석사학위논문 인천대학교 정보기술대학원, 2017. 인천
+
+
+## 시계열 DB?
+mysql + redis
+mysql + mongodb
+mysql + influxdb
+influxdb
+mongodb
+
+일단은 그냥 mysql로 구현하고 시간이 남으면 다른 db로도 테스트 해보기
+
+
+```sql
+create table realtimedata(
+	measuredtime timestamp default current_timestamp on update current_timestamp,
+    humid float,
+    temp float,
+    gas boolean
+    );
+    ```
+
+
+
+# MQTT
+
+1. 웹 서버에서 계속 돌아야 한다. (서버 시작부터 서버 실행중에는 계속)
+2. 여러개 필요( 기기 수 만큼)
+
+
+https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#spring-core
+
+The `org.springframework.context.ApplicationContext` interface represents the Spring IoC container and is responsible for instantiating, configuring, and assembling the beans. The container gets its instructions on what objects to instantiate, configure, and assemble by reading configuration metadata. The configuration metadata is represented in XML, Java annotations, or Java code. It lets you express the objects that compose your application and the rich interdependencies between those objects.
+
+Several implementations of the `ApplicationContext` interface are supplied with Spring. In stand-alone applications, it is common to create an instance of `ClassPathXmlApplicationContext` or `FileSystemXmlApplicationContext`. While XML has been the traditional format for defining configuration metadata, you can instruct the container to use Java annotations or code as the metadata format by providing a small amount of XML configuration to declaratively enable support for these additional metadata formats.
+
+...
+
+	XML-based metadata is not the only allowed form of configuration metadata. The Spring IoC container itself is totally decoupled from the format in which this configuration metadata is actually written. These days, many developers choose Java-based configuration for their Spring applications.
+
+## Java-based Container Configuration
+https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-java
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public MyService myService() {
+        return new MyServiceImpl();
+    }
+}
+```
+```xml
+<beans>
+    <bean id="myService" class="com.acme.services.MyServiceImpl"/>
+</beans>
+```
+같은 코드.
+
+Spring xml파일을 입력으로 사용하는 것과 거의 같은 방식으로 클래스를 인스턴스화 할 때 `ClassPathXmlApplicationContext`를 사용할 수 있다.
+`@Configuration` `AnnotationConfigApplicationContext` 
+```java
+public static void main(String[] args) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+    MyService myService = ctx.getBean(MyService.class);
+    myService.doStuff();
+}
+```
+
+
+https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
+
+The Spring Framework provides abstractions for the asynchronous execution and scheduling of tasks with the `TaskExecutor` and `TaskScheduler` interfaces, respectively.
+
+
+
+
+20200625
+
+INFO : org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'appServlet'
+INFO : org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'executor' of type [org.springframework.core.task.SimpleAsyncTaskExecutor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+INFO : org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'appConfig' of type [com.spring.elderlycare.util.AppConfig$$EnhancerBySpringCGLIB$$c330023] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+WARN : org.springframework.web.context.support.XmlWebApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcContentNegotiationManager': Initialization of bean failed; nested exception is java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+ERROR: org.springframework.web.servlet.DispatcherServlet - Context initialization failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcContentNegotiationManager': Initialization of bean failed; nested exception is java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+
+
+월 25, 2020 7:20:00 오후 org.apache.catalina.core.ApplicationContext log
+SEVERE: StandardWrapper.Throwable
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcContentNegotiationManager': Initialization of bean failed; nested exception is java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+
+
+
+6월 25, 2020 7:20:00 오후 org.apache.catalina.core.StandardContext loadOnStartup
+SEVERE: 웹 애플리케이션 [/elderlycare] 내의 서블릿 [appServlet]이(가) load() 예외를 발생시켰습니다.
+java.lang.NoSuchMethodError: 'boolean org.springframework.core.annotation.AnnotationUtils.isCandidateClass(java.lang.Class, java.lang.Class)'
+
+
+
+일단 mqtt는 직접 활성화 시킨다! 버튼을 만든다!
+근데 만약에 서버를 재시작하는 경우
+서버에서 알아서 전부 세팅해줘야 하는데 그건 나중에 구혀ㅛㄴ
+
+
+mqtt connection lost.
+localhost로는 정상 작동
+
+
+테스트용. 스레드 엑스 20200626
+
+
+
+publish 성공/ 라즈베리 파이
+
+INFO : com.spring.elderlycare.controller.DeviceController - mqtt-thread : 0.0.0.0
+INFO : com.spring.elderlycare.util.MQTTSubscriber - tcp://222.106.22.114:1883
+======mqtt async test========
+INFO : com.spring.elderlycare.util.MQTTSubscriber - connection lost
+INFO : com.spring.elderlycare.util.MQTTSubscriber - publish Message
+INFO : com.spring.elderlycare.util.MQTTSubscriber - delivery completed
+근데 왜 connection lost?
+
+publish 성공/ localhost
+
+INFO : com.spring.elderlycare.controller.DeviceController - mqtt-thread : 0.0.0.0
+INFO : com.spring.elderlycare.util.MQTTSubscriber - tcp://127.0.0.1:1883
+======mqtt async test========
+INFO : com.spring.elderlycare.util.MQTTSubscriber - publish Message
+INFO : com.spring.elderlycare.util.MQTTSubscriber - delivery completed
+
+
+
+
+Turns out, there was an EOFException that was being caused by our multiple clients having the same Client ID.
+
+MQTT Brokers prematurely close any connections that are open with a Client ID if another connection with the same Client ID comes in.
+
+
+https://github.com/eclipse/paho.mqtt.java/issues/207
+
+https://github.com/eclipse/paho.mqtt.java/blob/master/org.eclipse.paho.client.mqttv3/src/main/java/org/eclipse/paho/client/mqttv3/MqttAsyncClient.java#L1266
+
+MqttAsyncClient 사용
+https://gist.github.com/benedekh/697b3507e0b3f890f105
+```java
+package mqtt.demo;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+public class MqttSubscribeSample implements MqttCallback {
+
+    public static void main(String[] args) {
+        String topic = "MQTT Examples";
+        int qos = 2;
+        String broker = "tcp://localhost:1883";
+        String clientId = "JavaAsyncSample";
+        MemoryPersistence persistence = new MemoryPersistence();
+
+        try {
+            MqttAsyncClient sampleClient = new MqttAsyncClient(broker, clientId, persistence);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            sampleClient.setCallback(new MqttSubscribeSample());
+            System.out.println("Connecting to broker: " + broker);
+            sampleClient.connect(connOpts);
+            System.out.println("Connected");
+            Thread.sleep(1000);
+            sampleClient.subscribe(topic, qos);
+            System.out.println("Subscribed");
+        } catch (Exception me) {
+            if (me instanceof MqttException) {
+                System.out.println("reason " + ((MqttException) me).getReasonCode());
+            }
+            System.out.println("msg " + me.getMessage());
+            System.out.println("loc " + me.getLocalizedMessage());
+            System.out.println("cause " + me.getCause());
+            System.out.println("excep " + me);
+            me.printStackTrace();
+        }
+    }
+
+    public void connectionLost(Throwable arg0) {
+        System.err.println("connection lost");
+
+    }
+
+    public void deliveryComplete(IMqttDeliveryToken arg0) {
+        System.err.println("delivery complete");
+    }
+
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        System.out.println("topic: " + topic);
+        System.out.println("message: " + new String(message.getPayload()));
+    }
+    
+}
+```
+
+
+
+reason 32104
+msg 클라이언트가 연결되지 않음
+INFO : com.spring.elderlycare.util.MqttSubscriber2 - connection lost
+loc 클라이언트가 연결되지 않음
+cause null
+excep 클라이언트가 연결되지 않음 (32104)
+클라이언트가 연결되지 않음 (32104)
+	at org.eclipse.paho.client.mqttv3.internal.ExceptionHelper.createMqttException(ExceptionHelper.java:31)
+
+
+단순 mqtt 코드를 이용하였을 때, localhost에서는 오류가 없었으나 외부 네트워크의 broker로 접근 할 때, connection lost 발생. 검색해보니 deadlock이 원인이라는 말도 있음. 비동기 mqtt 객체가 있다고 하여 소스코드 확인 후 해당 객체로 구현. 제대로 동작함.
+callback함수인 messagearrived내부에 dto에 접근하는 코드 넣으면 또 connection lost 발생
+MqttException (0) - java.lang.NullPointerException
+오류 발생.
+
+INFO : com.spring.elderlycare.util.MqttSubscriber2 - MqttException (0) - java.lang.NullPointerException
+MqttException (0) - java.lang.NullPointerException
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:176)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+Caused by: java.lang.NullPointerException
+	at com.spring.elderlycare.util.MqttSubscriber2.messageProcessing(MqttSubscriber2.java:93)
+	at com.spring.elderlycare.util.MqttSubscriber2.messageArrived(MqttSubscriber2.java:81)
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.handleMessage(CommsCallback.java:354)
+	at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:162)
+	... 1 more
+
+
+MqttException (0) - java.lang.NullPointerException
+at org.eclipse.paho.client.mqttv3.internal.CommsCallback.run(CommsCallback.java:176)
+
+
+```java
+	public void run() {
+		final String methodName = "run";
+		callbackThread = Thread.currentThread();
+		callbackThread.setName(threadName);
+		
+		synchronized (lifecycle) {
+			current_state = State.RUNNING;
+		}
+
+		while (isRunning()) {
+			try {
+				// If no work is currently available, then wait until there is some...
+				try {
+					synchronized (workAvailable) { //<<<<오류 나는 부분... 왜?
+						if (isRunning() && messageQueue.isEmpty()
+								&& completeQueue.isEmpty()) {
+							// @TRACE 704=wait for workAvailable
+							log.fine(CLASS_NAME, methodName, "704");
+							workAvailable.wait();
+						}
+					}
+				} catch (InterruptedException e) {
+				}
+				(생략)
+```
+```java
+if (mqttCallback != null || callbacks.size() > 0) {
+```
+여기가ㅏ 오류 나는 부분인 것 같음 mqttCallback이 null이 되ㄴ는듯
+
+20200701
+```java
+private void insertData(String topic, MqttMessage message) {
+		try { 
+			String tmp = topic.split("/")[1];
+			
+			if(tmp.equals("humid")||tmp.equals("temp")) {
+				Map<String, Object> obj = new HashMap<String, Object>();
+				float data = Float.parseFloat(message.toString()); 
+				obj.put("elderly", eld);
+				obj.put(tmp, data);
+				sqlSession.insert(ns+"log", obj);
+			}else
+				alertToApp(tmp);
+			
+			
+		  }catch(NumberFormatException e) { 
+			  //"home/vid"
+			  
+		  }
+	}
+```
+바로 db에 접근하도록 코드를 수정해보았다.
+`sqlSession.insert(ns+"log", obj);`부분에서 같은 오류 발생.
+
+
+20200702
+시계열 데이터 분석 라이브러리
+https://github.com/signaflo/java-timeseries
+
+1. 웹, MQTT-외부 프로젝트로 따로 구현함- 붙이기. 웹 서버 실행시 MQTT프로그램 실행되도록.
+2. 비밀번호 SHA256암호화 코드 
+3. 프론트엔드 전체 (데이터 그래프)
+4. rest api data async polling
+5. 비디오 받고 decoding, storage저장, db에는 파일이름 등으로 저장
+6. 이상상황 push 알림
+
+<br>
+dto 스트링으로
+home/vid는 새벽 4시에 옴.
+마지막거 하나
+message비어있으면 없는거
+<br>
+그래프는 프론트에서 해야되는 것 같음
+내일 웹 mqtt붙이기 해야될듯. 비밀번호 암호화도
+그 담에 프론트 시작
+<<<<<<< HEAD
+
+20200703
+
+## json and ajax
+https://www.youtube.com/watch?v=rJesac0_Ftw
+
+```js
+var ourRequest = new XMLHttpReqeust();
+ourRequest.open('GET','json경로');
+ourRequest.onload = function(){
+	//data가 load됐을때 무엇을 할 것인가.
+	var ourData = JSON.parse(ourRequest.responseText);
+	console.log(ourData[0]);
+}; 
+ourRequest.send();
+```
+
+Asynchronous (in the background, not required page re?)
+JavaScript
+And
+XML (JSON)
+
+`XMLHttpRequest`
+
+
+
+
+`<button id = "btn">`
+
+```js
+var container = document.getElementById("info");
+var btn = document.getElementById("btn");
+var pageCounter = 1; //바뀌는 값.
+
+btn.addEventListener("click", function(){
+	var ourRequest = new XMLHttpReqeust();
+	ourRequest.open('GET','json경로'+ pageCounter+'.json');
+	ourRequest.onload = function(){
+		//data가 load됐을때 무엇을 할 것인가.
+		var ourData = JSON.parse(ourRequest.responseText);
+		//console.log(ourData[0]);
+		renderHTML(ourData);
+		pageCounter++;
+		if(pageCounter>3)
+			btn.classList.add("hide-me");
+	}; 
+ourRequest.send();
+});
+
+function renderHTML(data){
+	var htmlString = "";
+
+	for(i = 0; i < data.length; i++){
+		htmlString +="<p>"+data[i].name +" is a "+ data[i].species+".</p>"
+	}
+
+	container.insertAdjacentHTML("beforeend", htmlString);
+}
+```
+
+
+
+생활코딩
+https://opentutorials.org/course/53/50
+```
+${'.info'}.html('test');//??
+```
+```js
+//(생략)
+function clickHandler(event){
+	var nav = document.getElementById('naviation');
+	for(var i = 0; i < nav.childNodes.length; i++){
+		if(child.nodeType == 3)
+			continue;
+		child.className ='';
+	}
+	event.target.className = 'selected';
+}
+
+addEvent(window, 'load', function(eventObj){
+	var nav = document.getElementById('navigation');
+	for(var i = 0; i < nav.childNodes.length; i++){
+		var child = nev.childNodes[i];
+		if(child.nodeType == 3)
+			continue;
+		addEvent(child, 'click', clickHandler);
+	}
+});
+//생략
+```
+--------->
+```js
+${'#navigation li'}.live('click', function(){
+	${'#navigation li'}.removeClass("selected");
+	$(this).addClass("selected");
+})
+```
+
+### 오늘 한 일
+* 비밀번호 암호화
+* 로그인 시 권한 받아서 세션에 저장
+* 프론트 공부 조금
+=======
+>>>>>>> cab01cc4f124b3604d6fb363582c4ab9fcde2ae0

@@ -18,7 +18,7 @@
 </c:if>
 <c:if test = "${not empty uid }">
 	<a href = "users/info" class = "btn btn-default" role = "button">내 정보</a>
-	<a href = "users/logout" class = "btn btn-default" role = "button">로그아웃</a>
+	<a class = "btn btn-default" id = "btn-logout" role = "button">로그아웃</a>
 	<c:if test = "${auth == 1 }">
 	<a href = "devices/form" class = "btn btn-default" role = "button">기기등록</a>
 	<a href  = "" class = "btn btn-default" role = "button">가입 승인</a>
@@ -35,8 +35,13 @@
 </body>
 <script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
 <script type = "text/javascript">
-$(function(){
-	$('')
+$(document).ready(function(){
+	$('#btn-logout').click(function(){
+		$.getJSON('users/logout', function(data){
+			window.location.replace('');
+		});
+	});
 });
+
 </script>
 </html>

@@ -55,11 +55,11 @@ $(function(){
 				url : 'join',                         
 				contentType : 'application/json',            
 				data : JSON.stringify(data),            
-				success : function(response){///이거 안됨 왜 안됨ㅜㅜㅜ  
+				success : function(response){
 					$(location).attr("href", "${contextPath}/");
 				},                      
-				error   : function(response){
-					alert(response);
+				error   : function(){
+					alert("error");
 				}
 		});
 		

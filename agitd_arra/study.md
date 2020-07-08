@@ -1228,3 +1228,40 @@ root-context.xml에 추가
 
 reconnect 못함ㅜㅜ
 내일 reconnect랑 db 넣는거. 오전에는 화면 구성 먼저 다 해놓고 오후에 mqtt 끝내기
+
+20200708
+
+오전 : 
+홈 화면에 device목록 띄우기.
+대시보드 플랫폼 정하기.
+device 목록에서 device 정보 버튼 클릭 정보 띄우기.
+로그아웃 홈으로 리다이렉트.
+회원가입 성공 시 홈으로 리다이렉트 실패시 실패 alert
+
+
+jquery 경로
+$(location).attr('pathname'); /elderlycare/
+$(location).attr('host'); localhost:9090
+$(location).attr('hostname'); localhost
+$(location).attr('href'); http://localhost:9090/elderlycare/
+
+
+오후 : 
+mqtt reconnect, mqtt data store into db. < 안되면 마지막으로 미루기
+오늘 온습도 불러오기 갑자기 안 됨.
+프론트 추가 공부
+
+
+dao service 분리 하니까 db 저장 잘 됨.
+async라서 그런가
+
+reconnect
+`options.setAutomaticReconnect(true);` 설정 하면 reconnect는 됨.
+MqttCallbackExtended implements 한 후, `connectComplete()` 에서 `subscribe()`호출 시 connection lost 발생함. null pointer exception.
+
+실행파일로 만들기
+* 프로젝트 우클릭
+* export
+* runnable jar file
+* java -jar [파일]
+

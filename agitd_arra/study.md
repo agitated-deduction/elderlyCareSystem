@@ -1252,9 +1252,6 @@ mqtt reconnect, mqtt data store into db. < 안되면 마지막으로 미루기
 프론트 추가 공부
 
 
-dao service 분리 하니까 db 저장 잘 됨.
-async라서 그런가
-
 reconnect
 `options.setAutomaticReconnect(true);` 설정 하면 reconnect는 됨.
 MqttCallbackExtended implements 한 후, `connectComplete()` 에서 `subscribe()`호출 시 connection lost 발생함. null pointer exception.
@@ -1265,3 +1262,273 @@ MqttCallbackExtended implements 한 후, `connectComplete()` 에서 `subscribe()
 * runnable jar file
 * java -jar [파일]
 
+
+오늘 발견한 오류
+서버가 종료돼도 mqtt가 종료 안됨.
+근데 종료 안 되는게 맞는 것 같긴 함.
+근데 모르겠음.
+
+그럼 저걸 따로 돌려야 되나.
+spring에 붙일 필요가 없었나
+
+spring 실행 시 시작되도록 하면
+event 발생 시 - 기기등록 - disconnect - 재구동? 아니면 메인에서 옵션 줘서 나눠? 하나만 추가로 구동시키는 옵션 줘서 이벤트 발생시 
+Runtime.getRuntime().exec("java -jar "+mqttProcess+" \"[ip번호]\"");
+이런 식으로?
+
+따로 구동하는 게 나을 것 같다는 결론.
+나중에 보완
+
+
+20200709
+
+* 안드로이드에서 데이터 받기! mqtt 
+
+스프링 MVC 비동기 처리 https://12bme.tistory.com/565
+
+비동기 처리 방법
+* 컨트롤러 핸들러 메서드에서 callable타입 반환
+* WebAsyncTask 타입 반환
+
+web.xml 설정에서 활성화 해야 쓸 수 있음
+```xml
+<servlet>
+  <!-- ASYNC -->
+  <async-supported>true</async-supported>
+</servlet>
+
+<filter>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+
+    <!-- ASYNC -->
+    <async-supported>true</async-supported>
+
+    <init-param>
+        <param-name>encoding</param-name>
+        <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+        <param-name>forceEncoding</param-name>
+        <param-value>true</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+
+    <!-- ASYNC -->
+    <dispatcher>ASYNC</dispatcher>
+</filter-mapping>
+```
+
+스프링 MVC에서 비동기 요청 처리를 사용하ㅕㄹ면 필터/서블릿 등록시 `setAsyncSupported()`메서드 호출.
+WebApplicationInitializer
+```java
+public class MWebApplicationInitializer implements WebApplicationInitializer{
+	@Override
+	public void onStartup(ServletContext ctx){
+		DispatcherServlet servlet = new DispatcherServlet();
+		ServletRegistration.Dynamic registration = ctx.addServlet("dispatcher", servlet);
+		registration.setAsyncSupported(true);
+	}
+}
+```
+
+MVC구성 클래스에 설정
+```java
+@Configuration
+public class AsyncConfiguration extends WebMvcConfiguratijonSupport{
+	@Override
+	protected void configurationAsyncSupport(AsyncSupportConfigurer configurer){
+		configurer.setDefaultTimeout(5000);
+		configurer.setTaskExecutor(mvcTaskExecutor());
+	}
+	@Bean
+	public ThreadPoolTaskExecutor mvcTaskExecutor(){
+		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setThreadGroupName("mvc-executor");
+		return taskExecutor;
+	}
+}
+```
+
+비동기 컨트롤러
+: 핸들러 메서드의 반환형만 바꾸면 비동기 처리 컨트롤러로 사용 가능
+* Callable
+```java
+@Controller
+@RequestMapping("/exQuery")
+public class ExQueryController{
+	private final ExService exService;
+
+	public ExServiceController(ExService exService){
+		this.exService = exService;
+	}
+
+	@GetMapping
+	public void setupForm(){}
+
+	@PostMapping
+	public Callable<String> submitForm(@RequestParam("name")String name, Model model){
+		return()->{
+			List<ex> list = java.util.Collection.emptyList();
+			if(courtName != null){
+				Delayer.randomDelay();
+				list = exService.query(name);
+			}
+			model.addAttribute("list", ex);
+			return "exQuery";
+		};
+	}
+}
+```
+* DeferredResult
+ 클래스 인스턴스를 만들어 비동기 처리작업(Runnable)을 전송 후, setResult()메서드를 이용해 DeferredResult결괏값 설정
+```java
+@Controller
+@RequestBody("/exQuery")
+public class ExQueryController{
+	private final ExService exService;
+	private final TaskExecutor taskExecutor;
+
+	public ExQueryCotroller(ExQueryService exQueryService, AsyncTaskExecutor taskExecutor){
+		this.exService = exService;
+		this.taskExecutor = taskExecutor;
+	}
+
+	@GetMapping
+	public void setupForm(){}
+
+	@PostMapping
+	public DeferredResult<String> submitForm(@RequestParam("name")String name, Model model){
+		final DeferredResult<String> result = new DeferredResult<>();
+
+		taskExecutor.execute(()->{
+			List<Ex> list = java.util.Collections.emptyList();
+			if(name !=null){
+				Delayer.randomDelay();
+				list = exService.query(name);
+			}
+			model.addAttribute("list", ex);
+			result.setResult("exQuery");
+		});
+		return result;
+	}
+}
+```
+
+mqttclient는 비동기임. 커ㄴ[ㄱ션  구독을 비동기로 함.
+클라이언트 여러개 돌림 가능함
+별개의 어플리케이션으로 실시간 db 적재 가능함
+\스프링에서 부르면 db적재 안 됨. 기기가 하나인 경우 가능함.
+혹시 mqtt starter자체를 비동기로 불러야 되는건지.
+이따가 5시에 만들어보기.
+
+
+데이터 오면 받아서 넣는 비동기 컨트롤러.
+
+
+안드로이드쪽
+```java
+package com.example.mybtchat.data;
+
+public class ElderlyData {
+    private String elderlyName;
+    private String elderlyStep;
+    private String elderlyPulse;
+    private String elderlyKcal;
+    private String elderlyLatitude;
+    private String elderlyLongitude;
+
+    public ElderlyData(String name, String step, String pulse, String kcal, String latitude, String longitude){
+        elderlyName = name;
+        elderlyStep = step;
+        elderlyPulse = pulse;
+        elderlyKcal = kcal;
+        elderlyLatitude = latitude;
+        elderlyLongitude = longitude;
+    }
+
+    public String getElderlyName() { return elderlyName; }
+
+    public void setElderlyName(String elderlyName) { this.elderlyName = elderlyName; }
+
+    public String getElderlyStep() { return elderlyStep; }
+
+    public void setElderlyStep(String elderlyStep) { this.elderlyStep = elderlyStep; }
+
+    public String getElderlyPulse() { return elderlyPulse; }
+
+    public void setElderlyPulse(String elderlyPulse) { this.elderlyPulse = elderlyPulse; }
+
+    public String getElderlyKcal() { return elderlyKcal; }
+
+    public void setElderlyKcal(String elderlyKcal) { this.elderlyKcal = elderlyKcal; }
+
+    public String getElderlyLatitude() { return elderlyLatitude; }
+
+    public void setElderlyLatitude(String elderlyLatitude) { this.elderlyLatitude = elderlyLatitude; }
+
+    public String getElderlyLongitude() { return elderlyLongitude; }
+
+    public void setElderlyLongitude(String elderlyLongitude) { this.elderlyLongitude = elderlyLongitude; }
+}
+```
+*
+7. 9. 비동기 데이터 받기. 밴드 데이터 보내기. mqtt
+7. 10. 오전 - rest 전체 구성도 확인 naming 점검 보완 / 오후 - 7.9와 동일
+
+
+**
+7. 13. 보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 14. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 15. data 보여주기 화면 구성. 현재 온습도, 맥박 출력하기. 온습도 그래프. GPS 지도
+7. 16 - 7. 17. 화면 동작 체크. 오류 수정. 필요 기능 추가
+
+
+
+
+내일 와서 할 거:
+이거 읽어보고 수정
+```
+WARN : org.springframework.web.context.request.async.WebAsyncManager - 
+!!!
+An Executor is required to handle java.util.concurrent.Callable return values.
+Please, configure a TaskExecutor in the MVC config under "async support".
+The SimpleAsyncTaskExecutor currently in use is not suitable under load.
+-------------------------------
+Request URI: '/elderlycare/datas/1'
+!!!
+```
+
+mqtt starter async로 돌려보기.
+실시간 db 넣는거 async 문제인거 같음.
+https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling-task-executor-types
+You can not use @Async in conjunction with lifecycle callbacks such as @PostConstruct. To asynchronously initialize Spring beans, you currently have to use a separate initializing Spring bean that then invokes the @Async annotated method on the target, as the following example shows:
+```java
+public class SampleBeanImpl implements SampleBean {
+
+    @Async
+    void doSomething() {
+        // ...
+    }
+
+}
+
+public class SampleBeanInitializer {
+
+    private final SampleBean bean;
+
+    public SampleBeanInitializer(SampleBean bean) {
+        this.bean = bean;
+    }
+
+    @PostConstruct
+    public void initialize() {
+        bean.doSomething();
+    }
+
+}
+```

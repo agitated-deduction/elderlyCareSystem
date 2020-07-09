@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.elderlycare.dto.Datas2DTO;
 import com.spring.elderlycare.dto.DatasDTO;
 
 @Repository("datasDAO")
@@ -28,6 +29,12 @@ public class DatasDAOImpl implements DatasDAO{
 	@Override
 	public List<DatasDTO> selectTemps(int num) {
 		return sqlSession.selectList(ns+"selectTemps", num);
+	}
+
+	@Override
+	public void insertBandDatas(Datas2DTO dto) {
+		//sqlSession.insert(ns+"아직 안 만들었다", dto);
+		
 	}
 	
 }

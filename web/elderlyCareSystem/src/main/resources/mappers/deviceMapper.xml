@@ -33,4 +33,8 @@ WHERE staff = #{value};
 	<delete id="deleteDeivce" parameterType = "int">
 	DELETE FROM elderly WHERE ekey = #{value};
 	</delete>
+	
+	<select id = "selectHomedev" resultType = "hashmap">
+		SELECT elderly, homeIoT FROM devices;
+	</select>
 </mapper>

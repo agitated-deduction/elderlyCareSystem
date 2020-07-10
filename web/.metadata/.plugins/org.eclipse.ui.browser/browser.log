@@ -13,3 +13,6 @@
 
 7월 08, 2020 15:36:36.59 NEW SESSION
 7월 08, 2020 15:36:36.59 [1284:8984:0708/153636.596:ERROR:component_installer.cc(324)] Failed to read manifest or verify installation for Safety Tips (C:\Users\bit34\AppData\Local\Google\Chrome\User Data\SafetyTips\1658).: 지정된 파일을 찾을 수 없습니다. (0x2)
+
+7월 10, 2020 16:51:44.43 NEW SESSION
+7월 10, 2020 16:51:44.43 [10032:584:0710/165144.396:ERROR:mcs_client.cc(755)] Received close command, resetting connection.

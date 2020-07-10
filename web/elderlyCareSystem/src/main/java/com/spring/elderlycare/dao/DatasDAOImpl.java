@@ -33,8 +33,24 @@ public class DatasDAOImpl implements DatasDAO{
 
 	@Override
 	public void insertBandDatas(Datas2DTO dto) {
-		//sqlSession.insert(ns+"아직 안 만들었다", dto);
+		sqlSession.insert(ns+"log2", dto);
 		
 	}
+	@Override
+	public Datas2DTO selectCurHealthData(int num) {
+		return sqlSession.selectOne(ns+"curHealth", num);
+	}
+
+	@Override
+	public DatasDTO selectCurHTData(int num) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Datas2DTO> selectHealths(int num) {
+		return sqlSession.selectList(ns+"selectHealths");
+	}
+	
 	
 }

@@ -10,4 +10,5 @@ import com.spring.elderlycare.dto.Datas2DTO;
 public interface DataService {
 	public Map<String, Object> getHumTemp(int num);
 	public void insertBandDatas(Datas2DTO dto);
+	public Datas2DTO selectCurHealthData(int num);
 }

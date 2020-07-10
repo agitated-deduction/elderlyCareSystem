@@ -26,5 +26,10 @@ public class DataServiceImpl implements DataService{
 		dao.insertBandDatas(dto);
 		
 	}
+
+	@Override
+	public Datas2DTO selectCurHealthData(int num) {
+		return dao.selectCurHealthData(num);
+	}
 	
 }

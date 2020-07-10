@@ -13,4 +13,7 @@ public interface DatasDAO  {
 	public List<DatasDTO> selectHumids(int num);
 	public List<DatasDTO> selectTemps(int num);
 	public void insertBandDatas(Datas2DTO dto);
+	public Datas2DTO selectCurHealthData(int num);
+	public DatasDTO selectCurHTData(int num);
+	public List<Datas2DTO> selectHealths(int num);
 }

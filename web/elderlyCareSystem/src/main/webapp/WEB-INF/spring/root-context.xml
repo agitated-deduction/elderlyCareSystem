@@ -52,11 +52,14 @@
             <property name="password" value="${mqtt.password}"/>
         </bean>
     </property>
-</bean>
-	<bean id = "taskExecutor" class = "org.springframework.core.task.SimpleAsyncTaskExecutor">
-	
 	</bean>
 	<bean name = "MqttStarter" init-method = "mqttstart" class = "com.spring.elderlycare.util.MqttStarter"  />
 	<bean name = "MqttDestroy" destroy-method = "mqttdestroy" class = "com.spring.elderlycare.util.MqttStarter"  />
-</beans>
+
+	<bean id = "taskExecutor" class = "org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
+		<property name = "corePoolSize" value = "5" />
+		<property name = "maxPoolSize" value = "10"/>
+		<property name = "queueCapacity" value = "25"/>
+	</bean>	
+	</beans>
 

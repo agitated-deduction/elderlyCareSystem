@@ -10,3 +10,6 @@
 7월 02, 2020 12:24:35.75 [9160:10368:0702/122435.753:ERROR:socket_stream.cc(218)] Closing stream with result -2
 7월 02, 2020 12:37:21.30 [9160:10368:0702/123721.306:ERROR:socket_stream.cc(218)] Closing stream with result -2
 7월 02, 2020 13:24:36.86 [9160:10368:0702/132436.866:ERROR:socket_stream.cc(218)] Closing stream with result -2
+
+7월 08, 2020 15:36:36.59 NEW SESSION
+7월 08, 2020 15:36:36.59 [1284:8984:0708/153636.596:ERROR:component_installer.cc(324)] Failed to read manifest or verify installation for Safety Tips (C:\Users\bit34\AppData\Local\Google\Chrome\User Data\SafetyTips\1658).: 지정된 파일을 찾을 수 없습니다. (0x2)

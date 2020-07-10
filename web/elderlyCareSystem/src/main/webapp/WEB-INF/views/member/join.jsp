@@ -37,7 +37,7 @@
 	</form>
 </body>
 
-<script type = "text/javascript" src = "/elderlycare/resources/jquery-3.5.1.js"></script>
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
 <script type = "text/javascript">
 $(function(){
 	$('#join-form').submit(function(event){
@@ -55,11 +55,11 @@ $(function(){
 				url : 'join',                         
 				contentType : 'application/json',            
 				data : JSON.stringify(data),            
-				success : function(response){///이거 안됨 왜 안됨ㅜㅜㅜ  
+				success : function(response){
 					$(location).attr("href", "${contextPath}/");
 				},                      
-				error   : function(response){
-					alert(response);
+				error   : function(){
+					alert("error");
 				}
 		});
 		

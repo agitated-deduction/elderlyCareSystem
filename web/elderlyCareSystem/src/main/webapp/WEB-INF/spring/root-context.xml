@@ -43,7 +43,7 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	<mvc:default-servlet-handler/>
-	
+	<mvc:resources mapping = "/js/**" location = "/resources/js/"></mvc:resources>
 	<bean id="clientFactory"
         class="org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory">
     <property name="connectionOptions">
@@ -57,5 +57,6 @@
 	
 	</bean>
 	<bean name = "MqttStarter" init-method = "mqttstart" class = "com.spring.elderlycare.util.MqttStarter"  />
+	<bean name = "MqttDestroy" destroy-method = "mqttdestroy" class = "com.spring.elderlycare.util.MqttStarter"  />
 </beans>
 

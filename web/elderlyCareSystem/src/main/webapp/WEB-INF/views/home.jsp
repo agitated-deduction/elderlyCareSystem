@@ -18,31 +18,31 @@
 <p>test ${uid }</p>
 <P>  The time on the server is ${serverTime}. </P>
 <div id = "list">
-
 </div>
 
 </body>
 
-<script type = "text/javascript" src = "${pageContext.request.contextpath}/resources/jquery-3.5.1.js"></script>
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
 <script type = "text/javascript">
-	$(document).ready(function(){
-		console.log("TEs");
-		console.log(window.sessionStorage);
-		if(window.sessionStorage){
-			var RequestURL = $(location).attr('pathname')+'devices';
-			$.getJSON(RequestURL, function(data){
-				var html = '';
-				$.each(data, function(index, entry){
-					html+='<p>';
-					html+=entry.ename;
-					html+=ebirth;
-					html+=entry.etel;
-					html+= '</p>';
-				});
+ 	$(document).ready(function(){
+		var html = '';
+		$.getJSON('devices', function(data){
+			$.each(data, function(index, item){
+				html+='<p>';
+				html+=item.ename+', '+item.ebirth+', '+item.etel+', '+item.eaddr;
+				
+				//data 보기 button
+				
+				html+='</p>';
+				
 			});
-			$('#list').html(html);
-		}
+			$('div').html(html);
+		});
+		/*$(데이터 보기 버튼).click(function(){
+			포워드 , 데이터  화면
+		});*/
+		
 	});
-	
+	 
 </script>
 </html>

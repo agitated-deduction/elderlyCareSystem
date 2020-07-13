@@ -637,7 +637,7 @@ login
 
 
 
-6/19
+### 6/19
 * ajax success error 함수 실행 안 됨
 * member delete member modify 만들기 일단 버튼은 홈 화면에.
 * 가입 승인 만들기
@@ -711,16 +711,6 @@ root-context.xml
 최정민. "작물 생육 환경 모니터링을 위한 비동기 IoT 브로커 설계 및 구현." 국내석사학위논문 인천대학교 정보기술대학원, 2017. 인천
 
 
-## 시계열 DB?
-mysql + redis
-mysql + mongodb
-mysql + influxdb
-influxdb
-mongodb
-
-일단은 그냥 mysql로 구현하고 시간이 남으면 다른 db로도 테스트 해보기
-
-
 ```sql
 create table realtimedata(
 	measuredtime timestamp default current_timestamp on update current_timestamp,
@@ -786,7 +776,7 @@ The Spring Framework provides abstractions for the asynchronous execution and sc
 
 
 
-20200625
+### 20200625
 
 INFO : org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'appServlet'
 INFO : org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'executor' of type [org.springframework.core.task.SimpleAsyncTaskExecutor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
@@ -1003,9 +993,8 @@ private void insertData(String topic, MqttMessage message) {
 `sqlSession.insert(ns+"log", obj);`부분에서 같은 오류 발생.
 
 
-20200702
-시계열 데이터 분석 라이브러리
-https://github.com/signaflo/java-timeseries
+### 20200702
+
 
 1. 웹, MQTT-외부 프로젝트로 따로 구현함- 붙이기. 웹 서버 실행시 MQTT프로그램 실행되도록.
 2. 비밀번호 SHA256암호화 코드 
@@ -1025,7 +1014,7 @@ message비어있으면 없는거
 그 담에 프론트 시작
 <<<<<<< HEAD
 
-20200703
+### 20200703
 
 ## json and ajax
 https://www.youtube.com/watch?v=rJesac0_Ftw
@@ -1131,7 +1120,7 @@ ${'#navigation li'}.live('click', function(){
 
 
 
-20200706
+### 20200706
 
 @EventListener
 
@@ -1189,7 +1178,7 @@ The method getContextpath() is undefined for the type HttpServletRequest
 <script type = "text/javascript" src = "${pageContext.request.contextpath}/resources/jquery-3.5.1.js"></script>
 
 
-20200707
+### 20200707
 
 한 일
 7. 3. 로그인 시 권한 받기, 프론트 다듬기, 비밀번호 암호화
@@ -1280,7 +1269,7 @@ Runtime.getRuntime().exec("java -jar "+mqttProcess+" \"[ip번호]\"");
 나중에 보완
 
 
-20200709
+### 20200709
 
 * 안드로이드에서 데이터 받기! mqtt 
 
@@ -1532,3 +1521,112 @@ public class SampleBeanInitializer {
 
 }
 ```
+
+
+### 20200710
+
+@async종료하기.
+https://stackoverflow.com/questions/38880069/spring-cancel-async-task
+
+destroy-method로
+```java
+public void mqttdestroy() {
+		future.cancel(true);
+		try {
+			Runtime.getRuntime().exec("taskkill /F /IM java.exe");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+```
+잉거 등록했는데 disconnect 안됨. 근데 disconnect 안 해도 될 거 ㅅ같기도 함.
+만약 reconnect 기능 생기면?
+일단은 서버 꺼져도 계속 mqtt 데이터 적재됨.
+
+
+```
+WARN : org.springframework.web.context.request.async.WebAsyncManager - 
+!!!
+An Executor is required to handle java.util.concurrent.Callable return values.
+Please, configure a TaskExecutor in the MVC config under "async support".
+The SimpleAsyncTaskExecutor currently in use is not suitable under load.
+-------------------------------
+Request URI: '/elderlycare/datas/1'
+!!!
+```
+ 위 오류 simpleasynctaskexecutor등록했던거 지우고 아래 threadpooltaskexecutor 등록함.
+
+```xml
+<bean id = "taskExecutor" class = "org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
+		<property name = "corePoolSize" value = "5" />
+		<property name = "maxPoolSize" value = "10"/>
+		<property name = "queueCapacity" value = "25"/>
+	</bean>	
+```
+
+참고로 코드로는 이렇게
+```java
+@Configuration
+@EnableWebMvc
+public class WebMvcConfig extends WebMvcConfigurerAdapter {
+
+  @Override
+  public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+      configurer.setDefaultTimeout(5000);
+      // == 스레드풀을 이용하도록 커스터마이징한 TaskExecutor를 설정 ==
+      configurer.setTaskExecutor(mvcTaskExecutor());
+  }
+
+  @Bean
+  public TaskExecutor mvcTaskExecutor() {
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(5);
+    executor.setMaxPoolSize(10);
+    executor.setQueueCapacity(25);
+    return executor;
+  }
+}
+```
+
+mqtt async로 했는데도 데이터 넣는거 안 됨.
+
+안드에서 데이터 주고받기 테스트 해봐야 됨.
+
+
+
+**
+7. 13. mqtt db입력 오류 해결. mqtt reconnect 구현. 안드로이드에서 json 데이터 받기 테스트.
+7. 14. 보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 15. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 16. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+7. 17. 못 끝낸 거 추가 작업. 화면 동작 체크. 오류 수정. 필요 기능 추가.
+
+
+### 20200713
+
+**
+7. 13. mqtt db입력 오류 해결. mqtt reconnect 구현. 안드로이드에서 json 데이터 받기 테스트.
+7. 14. 보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 15. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 16. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+7. 17. 못 끝낸 거 추가 작업. 화면 동작 체크. 오류 수정. 필요 기능 추가.
+
+
+
+mqtt db입력 오류 해결. mqtt reconnect 구현. 안드로이드에서 json 데이터 받기 테스트.
+
+mqtt reconnect 구현. 이건 나중에
+
+가입승인:
+보호자 - 
+회원가입 시, 노인의 이름과 생년월일을 입력받는다.
+user table insert.
+manage table update.
+
+관리자 -
+로그인 시, manage하는 device list에서 manage의 relative중 role이 -1인 사람 리스트를 가져옴
+리스트를 보여줌. 옆에 가입 승인 버튼
+승인 버튼 누르면 role++;
+
+spring, mybatis, jpa, herinate?

@@ -1,7 +1,8 @@
 package com.spring.elderlycare.controller;
 
-import java.util.concurrent.Callable;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,19 +13,16 @@ import com.spring.elderlycare.service.DataService;
 @RestController
 @RequestMapping("/datas")
 public class ReceiveController {
-	private final DataService dataService;
+	@Autowired private DataService service;
 	
-	public ReceiveController(DataService dataService) {
-		this.dataService = dataService;
-	}
-	
-	@RequestMapping(value = "/{num}", method = RequestMethod.POST,
+	@RequestMapping(method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
-	public Callable<String> receiveData(Datas2DTO dto){
-		return()->{
-			dataService.insertBandDatas(dto);
-			
-			return "Receive";
-		};
+	@Async
+	public String receiveData(@RequestBody Datas2DTO dto){
+		if(dto.getStat() == 0) {
+			//이상 상태. 빨간색 표시.
+		}
+		service.insertBandDatas(dto);
+		return "receive test";
 	}
 }

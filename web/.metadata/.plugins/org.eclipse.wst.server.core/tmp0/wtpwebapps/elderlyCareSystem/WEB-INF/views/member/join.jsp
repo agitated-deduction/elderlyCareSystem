@@ -31,6 +31,8 @@
 	<label for = "uemail">email: </label>
 	<input type = "text" name = "uemail" id = "uemail">
 	</div>
+	<br>
+	
 	<div>
 	<button type = "submit" class = "btn btn-default">가입 신청</button>
 	</div>

@@ -148,16 +148,21 @@ class Thread_dht(QThread):
             html = urllib2.urlopen("https://api.thingspeak.com/update?api_key=KCKL36Q7DWG3F2OR&field1="+str(t)+"&field2="+str(h))       
             # thingspeak 시각자료를 위한 센서값 보내기 : API사용
 
+
+            ht = str("{0}/{1}".format(h,t))
+            client.publish("home/1/ht", ht)
+            print('...')
+
             self.change_value1.emit(t)
             self.change_value2.emit(h)
 
-            client.publish("home/11/temp", str(t))  # home 의 온도 토픽
-            print("Temperature = {0:0.1f}*C".format(t))
-            time.sleep(15) # 30초 마다 전송 
+            # client.publish("home/11/temp", str(t))  # home 의 온도 토픽
+            # print("Temperature = {0:0.1f}*C".format(t))
+            # time.sleep(15) # 30초 마다 전송 
             
-            client.publish("home/11/humid", str(h)) # home 의 습도 토픽 
-            print("Humidity = {}%".format(h))
-            time.sleep(15) # 30초 마다 전송 
+            # client.publish("home/11/humid", str(h)) # home 의 습도 토픽 
+            # print("Humidity = {}%".format(h))
+            # time.sleep(15) # 30초 마다 전송 
             
             self.msleep(100)
 
@@ -204,7 +209,7 @@ class Thread_alone(QThread):   ## 독거노인
     def run(self):
             
      ##-------- 독거노인: 움직임 감지 실행  
-        subprocess.Popen(['lxterminal -e python live_alone.py'], cwd='/home/pi/_GUI/', shell=True,  stdout=subprocess.PIPE)
+        subprocess.Popen(['lxterminal -e python live_alone.py'], cwd='/home/pi/_GUI/', shell=True)
 
 
 class Thread_dementia(QThread):   ##  치매환자
@@ -215,7 +220,7 @@ class Thread_dementia(QThread):   ##  치매환자
     def run(self):
         
          ##-------- 치매환자: 야간 이상행동 감지 실행 
-        subprocess.Popen(['lxterminal -e python dementia.py'], cwd='/home/pi/_GUI/', shell=True,  stdout=subprocess.PIPE)
+        subprocess.Popen(['lxterminal -e python dementia.py'], cwd='/home/pi/_GUI/', shell=True)
 
 
 # class Thread_talk(QThread):   ## 구글 어시스턴트 실행 

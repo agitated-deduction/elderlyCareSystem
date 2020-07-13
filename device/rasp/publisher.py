@@ -51,10 +51,15 @@ f.close()
 
 # #---- 반복적으로 받아올 센서를 전송한다. 
 # while True:
-#        h,t = Adafruit_DHT.read_retry(sensor, pin)
-#        client.publish("home/1/temp", str(t))  # home 의 온도 토픽
-#        print("Temperature = {0:0.1f}*C".format(t))
-#        # time.sleep(60*5) # 30초 마다 전송 
+       # t, h=36, 50
+       # th = str("{0}/{1}".format(t,h))
+       # client.publish("home/1/temp",th)
+       # print('...')
+       # time.sleep(10) 
+       # h,t = Adafruit_DHT.read_retry(sensor, pin)
+       # client.publish("home/1/temp", str(t))  # home 의 온도 토픽
+       # print("Temperature = {0:0.1f}*C".format(t))
+       # # time.sleep(60*5) # 30초 마다 전송 
        
 #        client.publish("home/1/humid", str(h)) # home 의 습도 토픽 
 #        print("Humidity = {}%".format(h))

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.elderlycare.dto.Datas2DTO;
+import com.spring.elderlycare.dto.DatasDTO;
 import com.spring.elderlycare.dto.DevicesDTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
 import com.spring.elderlycare.service.DataService;
@@ -121,13 +122,17 @@ public class DeviceController {
 	@RequestMapping("/{num}/datas")
 	public Map<String, Object> viewDataLog(Model model, @PathVariable("num") int num) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map = dataservice.getHumTemp(num);
+		//List<Datas2DTO> li = dataservice.selectHealths(num);
+		
+		map.put("band", dataservice.selectHealths(num));
+		map.put("ht", dataservice.getHumTemp(num));
+		
 		
 		return map;
 	}
 	@RequestMapping("/{num}/data")
 	public Datas2DTO viewCurData(Model model, @PathVariable("num") int num){
-		Map<String, Object> map = new HashMap<String, Object>();
+		//Map<String, Object> map = new HashMap<String, Object>();
 		datadto = dataservice.selectCurHealthData(num);
 		// 현재 온습도까지
 		return datadto;

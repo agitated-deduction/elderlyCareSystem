@@ -13,6 +13,13 @@ public class Datas2DTO {
 	private double ekcal;
 	private double ealtitude;
 	private double elongitude;
+	private int stat;
+	public int getStat() {
+		return stat;
+	}
+	public void setStat(int stat) {
+		this.stat = stat;
+	}
 	public Timestamp getMeasuredtime() {
 		return measuredtime;
 	}

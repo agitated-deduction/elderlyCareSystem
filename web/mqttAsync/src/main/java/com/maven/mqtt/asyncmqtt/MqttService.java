@@ -78,10 +78,13 @@ public class MqttService implements MqttCallbackExtended {
 	}
 
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		System.out.println("topic: " + topic);
-		System.out.println("message: " + new String(message.getPayload()));
-
-		insertData(topic, message);
+		
+		new Thread(
+				()->{
+					insertData(topic, message);
+				}
+			).start();
+		//insertData(topic, message);
 
 	}
 
@@ -101,7 +104,14 @@ public class MqttService implements MqttCallbackExtended {
 				obj.put(tp[2], data);
 				// sqlSession.insert(ns+"log", obj);
 				dao.insert(obj);
-			} else {
+			}else if(tp[2].equals("ht")){
+				Map<String, Object> obj = new HashMap<String, Object>();
+				String datas[] = message.toString().split("/");
+				obj.put("elderly", Integer.parseInt(tp[1]));
+				obj.put("humid",Float.parseFloat(datas[0]));
+				obj.put("temp",Float.parseFloat(datas[1]));
+				dao.insert(obj);
+			}else {
 				alertToApp(tp[2]);
 			}
 

@@ -16,4 +16,5 @@ public interface DatasDAO  {
 	public Datas2DTO selectCurHealthData(int num);
 	public DatasDTO selectCurHTData(int num);
 	public List<Datas2DTO> selectHealths(int num);
+	public List<DatasDTO> selectHTs(int num);
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class MqttStarter {
 	// 리스트 불러와서 사용
 	
-	 private final String mqttProcess = "D:\\1elderlyproject\\web\\mqttstarternoreconnect.jar"; //로컬호스트 하나 
+	 private final String mqttProcess = "D:\\1elderlyproject\\web\\mqttasyncht.jar"; //로컬호스트 하나 
 	 //private final String mqttProcess = "D:\\1elderlyproject\\web\\mqttTest.jar"; 
 	 public void mqttstart() { 
 		 try { 

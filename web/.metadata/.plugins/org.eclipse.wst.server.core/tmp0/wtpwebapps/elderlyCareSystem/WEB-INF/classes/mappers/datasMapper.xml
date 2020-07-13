@@ -14,13 +14,18 @@
 	WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW()) AND temp is not NULL
 	ORDER BY measuredtime DESC;
 </select>
+<select id = "selectHts" parameterType = "int" resultType = "com.spring.elderlycare.dto.DatasDTO">
+	SELECT * FROM realtimedata
+	WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW())
+	ORDER BY measuredtime DESC;
+</select>
 <insert id = "log" parameterType = "hashmap">
 	INSERT INTO realtimedata (elderly, humid, temp)
 	VALUES(#{elderly}, #{humid}, #{temp});
 </insert>
 <insert id = "log2" parameterType = "com.spring.elderlycare.dto.Datas2DTO">
-	INSERT INTO banddata (ekey, estep, epulse, ekcal, ealtitude, elongitude)
-	VALUES(#{ekey}, #{estep}, #{epulse}, #{ekcal}, #{ealtitude}, #{elongitude});
+	INSERT INTO banddata (ekey, estep, epulse, ekcal, ealtitude, elongitude, stat)
+	VALUES(#{ekey}, #{estep}, #{epulse}, #{ekcal}, #{ealtitude}, #{elongitude}, #{stat});
 </insert>
 <select id = "curHealth" parameterType = "int" resultType = "com.spring.elderlycare.dto.Datas2DTO">
 	SELECT * FROM banddata

@@ -30,6 +30,7 @@ public class DatasDAOImpl implements DatasDAO{
 	public List<DatasDTO> selectTemps(int num) {
 		return sqlSession.selectList(ns+"selectTemps", num);
 	}
+	
 
 	@Override
 	public void insertBandDatas(Datas2DTO dto) {
@@ -49,7 +50,13 @@ public class DatasDAOImpl implements DatasDAO{
 
 	@Override
 	public List<Datas2DTO> selectHealths(int num) {
-		return sqlSession.selectList(ns+"selectHealths");
+		return sqlSession.selectList(ns+"selectHealths", num);
+		
+	}
+
+	@Override
+	public List<DatasDTO> selectHTs(int num) {
+		return sqlSession.selectList(ns+"selectHts", num);
 	}
 	
 	

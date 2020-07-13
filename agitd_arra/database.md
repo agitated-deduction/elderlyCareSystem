@@ -270,3 +270,6 @@ create table banddata(
     constraint fk_constraint_5 foreign key (ekey) references elderly(ekey) on delete cascade
 );
 ```
+```sql
+alter table banddata add stat int;
+```

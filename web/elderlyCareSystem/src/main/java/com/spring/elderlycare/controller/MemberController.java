@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.elderlycare.dto.ElderlyDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 import com.spring.elderlycare.service.MemberService;
 
@@ -29,6 +29,7 @@ import com.spring.elderlycare.service.MemberService;
 public class MemberController {
 	@Autowired private MemberService service;
 	@Autowired private MemberDTO mdto;
+	@Autowired private ElderlyDTO edto;
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	
 	@RequestMapping(value ="login", method = RequestMethod.GET)
@@ -39,9 +40,7 @@ public class MemberController {
 	//화면에서 입력 폼 json으로 받기
 	@RequestMapping(value = "/login", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
-	public @ResponseBody Map<String, Object> loginCheck(HttpSession httpSession,@RequestBody MemberDTO mdto) {
-		logger.info("++++++++++++login form+++++++++++++");
-		logger.info("++++++++++++"+mdto.getUid()+"+++++++++++++");
+	public Map<String, Object> loginCheck(HttpSession httpSession,@RequestBody MemberDTO mdto) {
 		int isExist = service.loginCheck(mdto);
 		Map<String, Object> ret = new HashMap<String, Object>();
 		//ret.put("result", false);
@@ -78,19 +77,27 @@ public class MemberController {
 	
 	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	public ModelAndView memberJoinForm(ModelAndView mav){
-		logger.info("++++++++++++join form+++++++++++++");
 		mav.setViewName("member/join");
 		return mav;
 	}
 	
 	@RequestMapping(value = "/join", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
-	public @ResponseBody Map<String,Object>/*Boolean*/ memberJoin(@RequestBody MemberDTO mdto) {
-		logger.info("++++++++++++join process+++++++++++++");
+	public Map<String,Object>/*Boolean*/ memberJoin(@RequestBody Map<String, Object>map) {
+		mdto.setUid((String)map.get("uid"));
+		mdto.setUpwd((String)map.get("upwd"));
+		mdto.setUname((String)map.get("uname"));
+		mdto.setUtel((String)map.get("utel"));
+		mdto.setUemail((String)map.get("uemail"));
+		
+		edto.setEname((String) map.get("ename"));
+		edto.setEbirth((String) map.get("ebirth"));
+		
+		
 		Map<String, Object> ret = new HashMap<String, Object>();
 		ret.put("result", false);
 		
-		if(service.join(mdto)>0) { //서비스단 아래로 수정 필요 성공시 0보다 큰 값, 실패시 0
+		if(service.join(mdto)>0) { //join(mdto, edto)수정 0713
 			ret.put("result", true);
 			return ret;
 		}
@@ -107,12 +114,12 @@ public class MemberController {
 		return mdto;
 	}
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public @ResponseBody Boolean memberLogout(SessionStatus sessionStatus) {
+	public Boolean memberLogout(SessionStatus sessionStatus) {
 		sessionStatus.setComplete();
 		return true;
 	}
 	@DeleteMapping("/info")
-	public @ResponseBody Boolean memberDelete(SessionStatus sessionStatus, /*@PathVariable("uid") String m_id*/HttpSession session) {
+	public Boolean memberDelete(SessionStatus sessionStatus, /*@PathVariable("uid") String m_id*/HttpSession session) {
 		String uid = (String) session.getAttribute("uid");
 		if(service.delet(uid)>0) {
 			sessionStatus.setComplete();
@@ -121,7 +128,7 @@ public class MemberController {
 		return false;
 	}
 	@PutMapping("/info")
-	public @ResponseBody Boolean memberModify(MemberDTO mdto  /*@PathVariable("uid") String m_id*/) {
+	public Boolean memberModify(MemberDTO mdto  /*@PathVariable("uid") String m_id*/) {
 		
 		if(service.modify(mdto)>0) {
 			return true;

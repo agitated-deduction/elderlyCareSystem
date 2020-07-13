@@ -7,9 +7,11 @@ import paho.mqtt.client as mqtt
 
 cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # wifi_스트리밍 영상 가져오기 
 # cap = cv2.VideoCapture('http://192.168.1.35:8090/?action=stream')   # len_스트리밍 영상 가져오기 
-
 # cap = cv2.VideoCapture('http://121.138.83.121:8090/?action=stream')   # wifi_외부_스트리밍 영상 가져오기 
 
+# cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
+# cap.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
+# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 640)
 
 ##---- MQTT
 broker_address="localhost" 
@@ -121,8 +123,8 @@ while(cap.isOpened()):
             cv2.putText(sub_frame,'119~~!!', (30, 120),
             cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
 
-            client.publish("home/11/alone", "1")    ##---- 녹화 끝나면 MQTT메시지 보내기 
-            print("home/11/alone: ", "1")
+            client.publish("home/1/alone", "1")    ##---- 녹화 끝나면 MQTT메시지 보내기 
+            print("home/1/alone: ", "1")
             Hflag = 1  # 알리고 다시 세팅 
            
 
@@ -131,7 +133,7 @@ while(cap.isOpened()):
 
         # out.write(fgmask)
    
-    if cv2.waitKey(10) & 0xFF == ord('q'):  # q로 종료 
+    if cv2.waitKey(1) & 0xFF == ord('q'):  # q로 종료 
         break
 
 cap.release()

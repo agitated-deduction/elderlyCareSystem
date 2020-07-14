@@ -1630,3 +1630,53 @@ manage table update.
 승인 버튼 누르면 role++;
 
 spring, mybatis, jpa, herinate?
+
+
+### 20200714
+보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+
+```sql
+UPDATE manage SET relative = "ddd" 
+	WHERE elderly = (
+	SELECT ekey FROM elderly 
+	WHERE ename = "노인1" AND ebirth = "19330202");
+```
+```sql
+UPDATE manage SET relative = "ddd" 
+	WHERE elderly = (
+	SELECT ekey FROM elderly 
+	WHERE ename = "노인1" AND ebirth = "19330201");
+```
+
+Transaction
+
+Atomicity
+Consistency
+Isolation
+Durability
+세로 읽기 ACID : 대충 힘들다는 뜻
+
+@Transactional
+```xml
+<!-- 트랜잭션 관련 설정 -->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"></property>
+</bean>
+	
+<!-- 트랜잭션 어노테이션 인식 -->
+<tx:annotation-driven/>
+```
+<<이거 했는데 왜 안되냐
+
+그냥 직접 롤백 하는거 시도
+
+트랜잭션, deletecascade 없애기
+
+
+**
+7. 15. 오전 - join 부분 수정. db 수정. / 오후 - home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 16. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 17. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+
++ 트랜잭션ㅜㅜ
+

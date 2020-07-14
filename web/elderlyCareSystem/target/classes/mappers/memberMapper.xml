@@ -27,6 +27,11 @@
 	<select id = "selectOne" parameterType = "String" resultType = "com.spring.elderlycare.dto.MemberDTO">
 	SELECT uid, uname, utel, uemail, urole FROM `user` WHERE uid = #{value};
 	</select>
-	
+	<update id = "insertRel" parameterType = "hashmap">
+	UPDATE manage SET relative = #{uid} 
+	WHERE elderly = (
+	SELECT ekey FROM elderly 
+	WHERE ename = #{ename} AND ebirth = #{ebirth});
+	</update>
 
 </mapper>

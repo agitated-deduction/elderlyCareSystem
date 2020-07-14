@@ -1,5 +1,6 @@
 package com.spring.elderlycare.controller;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.elderlycare.dto.ElderlyDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 import com.spring.elderlycare.service.MemberService;
 
@@ -29,7 +29,6 @@ import com.spring.elderlycare.service.MemberService;
 public class MemberController {
 	@Autowired private MemberService service;
 	@Autowired private MemberDTO mdto;
-	@Autowired private ElderlyDTO edto;
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	
 	@RequestMapping(value ="login", method = RequestMethod.GET)
@@ -84,20 +83,19 @@ public class MemberController {
 	@RequestMapping(value = "/join", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
 	public Map<String,Object>/*Boolean*/ memberJoin(@RequestBody Map<String, Object>map) {
-		mdto.setUid((String)map.get("uid"));
+		/*mdto.setUid((String)map.get("uid"));
 		mdto.setUpwd((String)map.get("upwd"));
 		mdto.setUname((String)map.get("uname"));
 		mdto.setUtel((String)map.get("utel"));
-		mdto.setUemail((String)map.get("uemail"));
+		mdto.setUemail((String)map.get("uemail"));*/
 		
-		edto.setEname((String) map.get("ename"));
-		edto.setEbirth((String) map.get("ebirth"));
-		
+		//edto.setEname((String) map.get("ename"));
+		//edto.setEbirth((String) map.get("ebirth"));
 		
 		Map<String, Object> ret = new HashMap<String, Object>();
 		ret.put("result", false);
 		
-		if(service.join(mdto)>0) { //join(mdto, edto)수정 0713
+		if(service.join(map)>0) { //join(mdto, edto)수정 0713
 			ret.put("result", true);
 			return ret;
 		}
@@ -109,9 +107,7 @@ public class MemberController {
 	@RequestMapping("/info")
 	public MemberDTO myPage(Model model, /*@PathVariable("uid") String m_id*/HttpSession session) {
 		String uid = (String) session.getAttribute("uid");
-		mdto = service.myPage(uid);
-		System.out.println(uid);
-		return mdto;
+		return service.myPage(uid);
 	}
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public Boolean memberLogout(SessionStatus sessionStatus) {

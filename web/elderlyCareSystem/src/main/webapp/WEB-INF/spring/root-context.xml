@@ -15,9 +15,9 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
-	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	
 	
+
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
@@ -44,6 +44,7 @@
 	</mvc:annotation-driven>
 	<mvc:default-servlet-handler/>
 	<mvc:resources mapping = "/js/**" location = "/resources/js/"></mvc:resources>
+	
 	<bean id="clientFactory"
         class="org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory">
     <property name="connectionOptions">
@@ -61,5 +62,26 @@
 		<property name = "maxPoolSize" value = "10"/>
 		<property name = "queueCapacity" value = "25"/>
 	</bean>	
+	
+	
+		<!-- 트랜잭션 관련 설정 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<aop:config proxy-target-class = "true">
+		<aop:pointcut id = "txAdvisePointCut" expression= "execution(public * com.elderlycare..service.*Service.*(..))"/>
+		<aop:advisor id = "transactionAdvisor" pointcut-ref = "txAdvisePointCut" advice-ref = "txAdvice"/>
+	</aop:config>
+	
+	<tx:advice id = "txAdvice" transaction-manager = "transactionManager">
+		<tx:attributes>
+			<tx:method name = "join" propagation="REQUIRED" rollback-for = "Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 트랜잭션 어노테이션 인식 -->
+	<tx:annotation-driven/>
+	
 	</beans>
 

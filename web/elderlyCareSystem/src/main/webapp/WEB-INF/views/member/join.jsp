@@ -38,7 +38,7 @@
 	</div>
 	<div>
 	<label for = "ebirth">elderly birth: </label>
-	<input type = "text" name = "ebirth" id = "ebirth">
+	<input type = "date" name = "ebirth" id = "ebirth">
 	</div>
 	<div>
 	<button type = "submit" class = "btn btn-default">가입 신청</button>
@@ -59,7 +59,7 @@ $(function(){
 				utel: $('#utel').val(),
 				uemail: $('#uemail').val(),
 				ename : $('#ename').val(),
-				ebirth : $('ebirth').val()
+				ebirth : $('#ebirth').val()
 		};
 
 		$.ajax({

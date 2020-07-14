@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
-    <fullyQualifiedTypeName name="org.springframework.web.SpringServletContainerInitializer"/>
     <fullyQualifiedTypeName name="org.springframework.web.WebApplicationInitializer"/>
     <fullyQualifiedTypeName name="org.springframework.context.ApplicationContext"/>
     <fullyQualifiedTypeName name="javax.annotation.Resource"/>
@@ -60,4 +58,6 @@
     <fullyQualifiedTypeName name="com.mysql.cj.xdevapi.JsonParser"/>
     <fullyQualifiedTypeName name="java.util.Map"/>
     <fullyQualifiedTypeName name="org.apache.ibatis.javassist.bytecode.Descriptor.Iterator"/>
+    <fullyQualifiedTypeName name="org.springframework.transaction.interceptor.TransactionAspectSupport"/>
+    <fullyQualifiedTypeName name="java.sql.Date"/>
 </qualifiedTypeNameHistroy>

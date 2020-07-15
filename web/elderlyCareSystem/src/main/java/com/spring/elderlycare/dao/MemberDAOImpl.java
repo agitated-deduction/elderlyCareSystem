@@ -1,6 +1,5 @@
 package com.spring.elderlycare.dao;
 
-import java.sql.Date;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -56,8 +55,7 @@ public class MemberDAOImpl implements MemberDAO{
 		int ret = sqlSession.insert(ns+"insertRel", map);
 		//if(ret <1)
 			//throw new Exception("rollback");
-		System.out.println(ret);
-		System.out.println((Date)map.get("ebirth"));
+		
 		return ret;
 	}
 	

@@ -33,17 +33,16 @@ public class DeviceDAOImpl implements DeviceDAO{
 	}
 
 	@Override
-	public void insertDevice(ElderlyDTO edto, DevicesDTO ddto, String id) {
-		// TODO Auto-generated method stub
-		
+	public void insertDevice(ElderlyDTO edto, String id) {
+		// insert elderly
 		sqlSession.insert(ns+"insertElderly", edto);
-		int eld = edto.getEkey();
-		ddto.setElderly(eld);
-		sqlSession.insert(ns+"insertDevice", ddto);
+		//insert device
+		sqlSession.insert(ns+"insertDevice", edto);
+		//device registration
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("elderly", eld);
+		map.put("elderly", edto.getEkey());
 		map.put("staff", id);
-		sqlSession.insert(ns+"manage", map);
+		sqlSession.insert(ns+"insertManage", map);
 	}
 
 	@Override

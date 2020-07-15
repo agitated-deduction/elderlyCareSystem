@@ -30,6 +30,11 @@
 			$.each(data, function(index, item){
 				html+='<p>';
 				html+=item.ename+', '+item.ebirth+', '+item.etel+', '+item.eaddr;
+				//html += '<button type = \"button\" onClick = \"location.href=\'http://'; //현재창
+				html += '<button type = \"button\" onClick = \"window.open(\'http://';	//새창
+				html +=item.homeIoT;
+				html +=':8090/?action=stream\')\">';
+				html +=item.homeIoT+'</button>'
 				
 				//data 보기 button
 				

@@ -1,7 +1,5 @@
 package com.spring.elderlycare.dto;
 
-import java.sql.Date;
-
 import org.springframework.stereotype.Component;
 
 @Component("ElderlyDTO")
@@ -11,7 +9,14 @@ public class ElderlyDTO {
 	private String ebirth;
 	private String etel;
 	private String eaddr;
+	private String homeIoT;
 	
+	public String getHomeIoT() {
+		return homeIoT;
+	}
+	public void setHomeIoT(String homeIoT) {
+		this.homeIoT = homeIoT;
+	}
 	public int getEkey() {
 		return ekey;
 	}

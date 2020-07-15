@@ -32,10 +32,7 @@
 	<label for = "homeiot">homeiot: </label>
 	<input type = "text" name = "homeiot" id = "homeiot">
 	</div>
-	<div>
-	<label for = "bandiot">bandiot: </label>
-	<input type = "text" name = "bandiot" id = "bandiot">
-	</div>
+	
 	<div>
 	<button type = "submit" class = "btn btn-default">기기등록</button>
 	</div>
@@ -51,8 +48,7 @@ $(function(){
 					ebirth:$('#ebirth').val(),
 					etel:$('#etel').val(),
 					eaddr:$('#eaddr').val(),
-					homeIoT:$('#homeiot').val(),
-					bandIoT:$('#bandiot').val()
+					homeIoT:$('#homeiot').val()
 					};
 	$.ajax({
 			type: 'POST',

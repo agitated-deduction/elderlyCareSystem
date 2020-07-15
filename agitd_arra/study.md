@@ -1680,3 +1680,24 @@ Durability
 
 + 트랜잭션ㅜㅜ
 
+iframe
+
+기기 등록 시, mqtt
+
+동영상 저장.
+
+파일 업로드
+```java
+File targetFile = new File("/경로"+multipartFile.getOriginalFilename());
+try{
+	InputStream fileStream = multipartFile.getInputStream();
+	FileUtils.copyInputStreamToFile(fileStream, targetFile);
+}catch(IOException e){
+	FileUtils.deleteQuietly(targetFile);
+	e.printStackTrace();
+}
+return "redirect:/";
+```
+
+### 20200716
+

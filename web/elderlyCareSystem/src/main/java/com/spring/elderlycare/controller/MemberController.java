@@ -1,6 +1,5 @@
 package com.spring.elderlycare.controller;
 
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ import com.spring.elderlycare.service.MemberService;
 @RequestMapping("/users")
 public class MemberController {
 	@Autowired private MemberService service;
-	@Autowired private MemberDTO mdto;
+	//@Autowired private MemberDTO mdto;
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	
 	@RequestMapping(value ="login", method = RequestMethod.GET)

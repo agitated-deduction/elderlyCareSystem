@@ -5,7 +5,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.spring.elderlycare.dao.MemberDAO;
 import com.spring.elderlycare.dto.MemberDTO;
@@ -29,8 +28,8 @@ public class MemberServiceImpl implements MemberService{
 		
 		//map.put("upwd", SHA.encryptSHA256((String)map.get("upwd")));
 		//int ret =  mdao.insertMember(map);
-		//int ret = mdao.insertMember(mdto);
-		int ret = 1;
+		int ret = mdao.insertMember(mdto);
+		//int ret = 1;
 		if(ret>0) 
 			ret= mdao.insertRelation(map); 
 		

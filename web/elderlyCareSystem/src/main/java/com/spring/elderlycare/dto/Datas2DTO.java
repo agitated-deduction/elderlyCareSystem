@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component("Datas2DTO")
 public class Datas2DTO {
-	private Timestamp measuredtime;
+	private String measuredtime;
 	private int ekey;
 	private int estep;
 	private int epulse;
@@ -20,10 +20,10 @@ public class Datas2DTO {
 	public void setStat(int stat) {
 		this.stat = stat;
 	}
-	public Timestamp getMeasuredtime() {
+	public String getMeasuredtime() {
 		return measuredtime;
 	}
-	public void setMeasuredtime(Timestamp measuredtime) {
+	public void setMeasuredtime(String measuredtime) {
 		this.measuredtime = measuredtime;
 	}
 	public int getEkey() {

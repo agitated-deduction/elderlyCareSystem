@@ -1,7 +1,5 @@
 package com.spring.elderlycare.dto;
 
-import java.sql.Timestamp;
-
 import org.springframework.stereotype.Component;
 
 @Component("Datas2DTO")
@@ -14,6 +12,21 @@ public class Datas2DTO {
 	private double ealtitude;
 	private double elongitude;
 	private int stat;
+	private float humid;
+	private float temp;
+	
+	public float getHumid() {
+		return humid;
+	}
+	public void setHumid(float humid) {
+		this.humid = humid;
+	}
+	public float getTemp() {
+		return temp;
+	}
+	public void setTemp(float temp) {
+		this.temp = temp;
+	}
 	public int getStat() {
 		return stat;
 	}

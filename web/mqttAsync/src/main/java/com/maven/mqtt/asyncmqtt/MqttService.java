@@ -1,5 +1,11 @@
 package com.maven.mqtt.asyncmqtt;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +101,7 @@ public class MqttService implements MqttCallbackExtended {
 
 	private void insertData(String topic, MqttMessage message) {
 		System.out.println("topic "+topic);
-		System.out.println("message "+message);
+		//System.out.println("message "+message);
 		try {
 			String[] tp = topic.split("/");
 
@@ -113,31 +119,38 @@ public class MqttService implements MqttCallbackExtended {
 				obj.put("humid",Float.parseFloat(datas[0]));
 				obj.put("temp",Float.parseFloat(datas[1]));
 				dao.insert(obj);
+			}else if(tp[2].equals("vid")) {
+				//"home/{num}/vid"
+				byte[] vid = message.toString().getBytes();
+				Decoder decoder = Base64.getDecoder();
+				
+				byte[] dvid = decoder.decode(vid);
+				SimpleDateFormat forma = new SimpleDateFormat("yyyyMMdd");
+				Date time = new Date();
+				
+				writeFile(forma.format(time),dvid);
 			}else {
 				myAlert(tp[2]);
 			}
 
-		} catch (NumberFormatException e) {
-			System.out.println("cat1"+topic);
-			// "home/vid"
-			// 인코딩 되어서 오는 파일 디코딩해서 저장하든 뭐 하든 알아서
-			/*
-			 * https://addio3305.tistory.com/83 참고해서 수정하기 if(topic.equals("home/vid")) {
-			 * Decoder decoder = Base64.getDecoder(); byte[] decodesBytes =
-			 * decoder.decode(message.getPayload());
-			 * System.out.println("testestest"+decodesBytes.toString());
-			 * 
-			 * try { File outFile = new File("./test"); FileOutputStream fileOutputStream =
-			 * new FileOutputStream(outFile); fileOutputStream.write(decodesBytes);
-			 * fileOutputStream.close();
-			 * 
-			 * }catch(Throwable e) { e.printStackTrace(System.out); } }
-			 */
-			// e.printStackTrace();
 		} catch (Exception e) {
 			System.out.println("catch "+topic);
 			// home vid?? 왜?
 			//일단 버림.
+		}
+	}
+	private void writeFile(String filename, byte[] data) {
+		if(data == null) return;
+		System.out.println("write File");
+		//int byteArrSize = data.length;
+		
+		try {
+			File outFile = new File("./"+filename);
+			FileOutputStream outStream = new FileOutputStream(outFile);
+			outStream.write(data);;
+			outStream.close();
+		}catch(Throwable e) {
+			e.printStackTrace();
 		}
 	}
 

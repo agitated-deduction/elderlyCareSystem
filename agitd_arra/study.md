@@ -1701,3 +1701,52 @@ return "redirect:/";
 
 ### 20200716
 
+**
+7. 16. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 17. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+
+encoding 된 byte[] 를 mqttmessage로 받음. 
+message.toString
+byte string to byte array
+decoding
+decoding byte to file
+file save
+
+
+
+DATA에 온습도 추가할거면
+DTO 새로 만들기
+db는 그대로 나눠둠
+
+
+root-context.xml
+datasource bean
+
+```sql
+select * FROM(select * FROM banddata
+where ekey = #{value}
+order by measuredtime DESC limit 1)b
+cross join (SELECT humid, temp FROM realtimedata
+where elderly = #{value}
+order by measuredtime DESC limit 1)a;
+```
+
+
+Error Code: 1248. Every derived table must have its own alias
+
+b
+```
+select * FROM(select * FROM banddata
+where ekey = #{value}
+order by measuredtime DESC limit 1)b
+```
+
+
+datas2dto에 humid temp 추가 안하고 map으로 전달할 지
+그냥 할 지
+
+list로 받을때는 따로 주니까
+그건 또 어떻게 하지
+일단 냅두고
+
+내일은 프론트부터 만들어야겠다

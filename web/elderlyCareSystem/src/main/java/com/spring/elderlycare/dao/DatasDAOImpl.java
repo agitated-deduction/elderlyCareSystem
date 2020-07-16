@@ -38,15 +38,11 @@ public class DatasDAOImpl implements DatasDAO{
 		
 	}
 	@Override
-	public Datas2DTO selectCurHealthData(int num) {
-		return sqlSession.selectOne(ns+"curHealth", num);
+	public Datas2DTO selectCurData(int num) {
+		return sqlSession.selectOne(ns+"curData", num);
 	}
 
-	@Override
-	public DatasDTO selectCurHTData(int num) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	public List<Datas2DTO> selectHealths(int num) {
@@ -58,6 +54,7 @@ public class DatasDAOImpl implements DatasDAO{
 	public List<DatasDTO> selectHTs(int num) {
 		return sqlSession.selectList(ns+"selectHts", num);
 	}
+
 	
 	
 }

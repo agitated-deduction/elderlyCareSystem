@@ -1,7 +1,5 @@
 package com.spring.elderlycare.dto;
 
-import java.sql.Timestamp;
-
 import org.springframework.stereotype.Component;
 
 @Component("DatasDTO")
@@ -10,7 +8,7 @@ public class DatasDTO {
 	private float humid;
 	private float temp;
 	private boolean gas;
-	private Timestamp measuredtime;
+	private String measuredtime;
 	
 	public int getElderly() {
 		return elderly;
@@ -36,10 +34,10 @@ public class DatasDTO {
 	public void setGas(boolean gas) {
 		this.gas = gas;
 	}
-	public Timestamp getMeasuredtime() {
+	public String getMeasuredtime() {
 		return measuredtime;
 	}
-	public void setMeasuredtime(Timestamp measuredtime) {
+	public void setMeasuredtime(String measuredtime) {
 		this.measuredtime = measuredtime;
 	}
 	

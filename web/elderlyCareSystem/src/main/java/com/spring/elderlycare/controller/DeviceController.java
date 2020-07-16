@@ -122,7 +122,7 @@ public class DeviceController {
 	@RequestMapping(value = "/{num}/data", method = RequestMethod.GET)
 	public Datas2DTO viewCurData(Model model, @PathVariable("num") int num){
 		//Map<String, Object> map = new HashMap<String, Object>();
-		datadto = dataservice.selectCurHealthData(num);
+		datadto = dataservice.selectCurData(num);
 		// 현재 온습도까지
 		return datadto;
 	}

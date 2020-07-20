@@ -43,8 +43,14 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	<mvc:default-servlet-handler/>
+	<mvc:resources mapping="/resources/**" location="/resources/" />  
+	<mvc:annotation-driven ignore-default-model-on-redirect="true" />
+	<!--  
 	<mvc:resources mapping = "/js/**" location = "/resources/js/"></mvc:resources>
-	
+	<mvc:resources mapping = "/css/**" location = "/resources/css/"></mvc:resources>
+	<mvc:resources mapping = "/font/**" location = "/resources/font/"></mvc:resources>
+	<mvc:resources mapping = "/img/**" location = "/resources/img/"></mvc:resources>
+	-->
 	<bean id="clientFactory"
         class="org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory">
     <property name="connectionOptions">

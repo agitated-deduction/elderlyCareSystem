@@ -80,9 +80,13 @@ public class DeviceController {
 		return mav;
 	}
 	@RequestMapping(value = "/{num}", method = RequestMethod.GET)
-	public ElderlyDTO deviceInfo(Model model, @PathVariable("num") int dnum) {
+	public ModelAndView deviceInfo(HttpSession session,ModelAndView mav, @PathVariable("num") int dnum) {
+		
 		edto = service.elderlyInfo(dnum);
-		return edto;
+		session.setAttribute("edto", edto);
+		mav.setViewName("redirect:/");
+
+		return mav;
 	}
 	@RequestMapping(value = "/{num}", method = RequestMethod.PUT)
 	public ElderlyDTO deviceInfoModify(Model model) {
@@ -108,7 +112,7 @@ public class DeviceController {
 		
 		return mav;
 	}*/
-	@RequestMapping("/{num}/datas")
+	@RequestMapping("/{num}/daydatas")
 	public Map<String, Object> viewDataLog(Model model, @PathVariable("num") int num) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		//List<Datas2DTO> li = dataservice.selectHealths(num);
@@ -119,11 +123,17 @@ public class DeviceController {
 		
 		return map;
 	}
-	@RequestMapping(value = "/{num}/data", method = RequestMethod.GET)
+	@RequestMapping(value = "/{num}/curdata", method = RequestMethod.GET)
 	public Datas2DTO viewCurData(Model model, @PathVariable("num") int num){
 		//Map<String, Object> map = new HashMap<String, Object>();
 		datadto = dataservice.selectCurData(num);
 		// 현재 온습도까지
 		return datadto;
+	}
+	@RequestMapping("/datas")
+	public ModelAndView datasPage(ModelAndView mav) {
+		
+		mav.setViewName("charts");
+		return mav;
 	}
 }

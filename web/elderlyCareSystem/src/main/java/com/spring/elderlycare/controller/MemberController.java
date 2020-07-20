@@ -32,7 +32,7 @@ public class MemberController {
 	
 	@RequestMapping(value ="login", method = RequestMethod.GET)
 	public ModelAndView memberLogin(ModelAndView mav) {
-		mav.setViewName("member/login");
+		mav.setViewName("login");
 		return mav;
 	}
 	//화면에서 입력 폼 json으로 받기

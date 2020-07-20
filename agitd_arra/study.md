@@ -1750,3 +1750,235 @@ list로 받을때는 따로 주니까
 일단 냅두고
 
 내일은 프론트부터 만들어야겠다
+
+
+20200717
+
+
+https://www.egrappler.com/templatevamp-twitter-bootstrap-admin-template-now-available/
+
+
+
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+
+<script type = "text/javascript">
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+
+</script>
+
+
+
+
+
+**
+7.20. 전체 화면 틀 만들기
+7.21 - 7.22. 현재 데이터, 데이터 그래프 만들기.
+7.23. 기기 목록, 현재 상태
+7.24. 로그인, 로그아웃, 회원가입, 기기등록.
+
+20200720
+
+<!DOCTYPE html5>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ page session="true" %>
+<html>
+<head>
+	<title>Home</title>
+
+</head>
+<body>
+<%@ include file="header.jsp" %>
+
+<h1>
+	Hello world!  
+</h1>
+<p>session id : <%=session.getAttribute("uid") %></p>
+<p>test ${uid }</p>
+<P>  The time on the server is ${serverTime}. </P>
+<div id = "list">
+</div>
+
+</body>
+
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+<script type = "text/javascript">
+ 	$(document).ready(function(){
+		var html = '';
+		$.getJSON('devices', function(data){
+			$.each(data, function(index, item){
+				html+='<p>';
+				html+=item.ename+', '+item.ebirth+', '+item.etel+', '+item.eaddr;
+				//html += '<button type = \"button\" onClick = \"location.href=\'http://'; //현재창
+				html += '<button type = \"button\" onClick = \"window.open(\'http://';	//새창
+				html +=item.homeIoT;
+				html +=':8090/?action=stream\')\">';
+				html +=item.homeIoT+'</button>'
+				
+				//data 보기 button
+				
+				html+='</p>';
+				
+			});
+			$('div').html(html);
+		});
+		/*$(데이터 보기 버튼).click(function(){
+			포워드 , 데이터  화면
+		});*/
+		
+	});
+	 
+</script>
+
+</html>
+
+
+
+Spring mvc에서 js, css 파일 사용하기
+
+root-context.xml
+```xml
+<mvc:resource mapping = "/resources/**" location = "/resources/" />
+```
+/resource/js, /resource/css와 같은 경로를 명시하는 경우에 /resources/ 경로로 해석하겠다는 의미. resources는 webapp/resources를 의미한다.
+
+```
+<c:url value = "/resources/css/main.css" />" rel = "stylesheet">
+```
+이런 식으로 사용 가능.
+
+a태그에 js function 사용하기.
+`<a href="javascript:함수();">`
+url에 자동으로 #이 붙는ㄴ 경우가 생김
+
+`<a href = "#" onClick=함수();return false;>`
+	로 해결
+
+```js
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+```
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ page session="true" %>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="<c:url value = '/resources/css/bootstrap.min.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/bootstrap-responsive.min.css'/>" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+<link href="<c:url value = '/resources/css/font-awesome.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/style.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/pages/dashboard.css'/>" rel="stylesheet">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+<c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
+
+<a href = "${contextPath}/">HOME</a>
+<c:if test = "${empty uid }">
+	<a href = "${contextPath}/users/login" class = "btn btn-default" role = "button">로그인</a>
+	<a href = "${contextPath}/users/join" class = "btn btn-default" role = "button">회원가입</a>
+</c:if>
+<c:if test = "${not empty uid }">
+	<a href = "${contextPath}/users/info" class = "btn btn-default" role = "button">내 정보</a>
+	<a class = "btn btn-default" id = "btn-logout" role = "button">로그아웃</a>
+	<c:if test = "${auth == 1 }">
+	<a href = "${contextPath}/devices/form" class = "btn btn-default" role = "button">기기등록</a>
+	<a href  = "" class = "btn btn-default" role = "button">가입 승인</a>
+	</c:if>
+	<br/>
+	<form class = 'delete-form' action = "${contextPath}/users/info" method = "post">
+	<input type = "hidden" name = "_method" value = "delete"/>
+	<button type = "submit">회원 탈퇴</button>
+	</form>
+	<a href = "${contextPath}/users/mod-form" class = "btn btn-default" role = "button">정보 수정</a>
+	
+
+</c:if>
+
+</body>
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+
+<script type = "text/javascript">
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+
+</script>
+
+</html>
+
+
+
+자바스크립트에서 context path 사용하기
+
+<script type = "text/javascript" charset="utf-8">
+	sessionStorage.setItem("contextpath", "${pageContext.request.contextPath}");
+</script>
+처음에 세션에 저장해두고 필요할때
+var ctx = sessionStorage.getItem("contextpath");
+
+
+<tr>
+                    <td> 노인1 </td>
+                    <td> 주소주소 주소 주소 주소주소</td>
+                    <td> 0313333333</td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-ok"> </i></a><a href="javascript:;" class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></td>
+                  </tr>
+
+
+
+
+ <mvc:annotation-driven ignoreDefaultModelOnRedirect="true" />
+
+
+
+
+
+**
+7.21 - 7.22. 현재 데이터, 데이터 그래프 만들기.
+7.23. 현재 상태
+7.24. 로그인, 로그아웃, 회원가입, 기기등록.
+
+
+
+헤더 분리 or 합체?????????????

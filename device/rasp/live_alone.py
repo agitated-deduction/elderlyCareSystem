@@ -110,13 +110,15 @@ while(cap.isOpened()):
         #     client.publish("home/11/alone", "1")    ##---- 녹화 끝나면 MQTT메시지 보내기 
         #     print("home/11/alone: ", "1") 
         #     Hflag = 1  # 알리고 다시 세팅 
+            # import live_alone  # 버퍼링 
 
 #-------------10초로 테스트 해보기 
 
         if (Hflag == 1): 
             StartDay = datetime.datetime.now() 
             DDay = StartDay + timedelta(seconds=10)  
-            Hflag = 0                           
+            Hflag = 0                      
+            import live_alone  # 버퍼링 제거     
 
         if(NowDay.second == DDay.second):  # 10초 동안 움직이지 않았다.
             print("119~~~~~~~~~~~~~\n")
@@ -126,7 +128,7 @@ while(cap.isOpened()):
             client.publish("home/1/alone", "1")    ##---- 녹화 끝나면 MQTT메시지 보내기 
             print("home/1/alone: ", "1")
             Hflag = 1  # 알리고 다시 세팅 
-           
+        #    import live_alone  # 버퍼링 
 
         # cv2.imshow('frame', fgmask)
         cv2.imshow("alone", sub_frame) 

@@ -27,6 +27,10 @@ WeatherCast = soup.find('p', {'class' : 'cast_txt'}).text
 
 #자외선
 TodayUV = soup.find('span', {'class' : 'indicator'}).text[4:-2] + " " + soup.find('span', {'class' : 'indicator'}).text[-2:]
+# TodayUV = soup.find('span', {'class' : 'lv4'}).text
+
+# 현재 사는 위치  
+nowlocal = soup.find('span', {'class' : 'btn_select'}).text
 
 # 미세먼지, 초미세먼지, 오존 지수 
 CheckDust1 = soup.find('div', {'class': 'sub_info'}) 
@@ -38,13 +42,13 @@ FineDust = CheckDust[0][:-2] + " " + CheckDust[0][-2:]
 UltraFineDust = CheckDust[1][:-2] + " " + CheckDust[1][-2:] 
 Ozon = CheckDust[2][:-2] + " " + CheckDust[2][-2:]
 
-print('현재온도:'+NowTemp)
+print('현재 위치: '+ nowlocal)
+print('현재온도 :'+NowTemp)
 print(WeatherCast)
-print('자외선:'+TodayUV)
-print('미세먼지:'+FineDust)
-print('초미세먼지:'+UltraFineDust)
-print('오존 지수:'+Ozon)
-
+print('자외선: '+TodayUV)
+print('미세먼지 :'+FineDust)
+print('초미세먼지 :'+UltraFineDust)
+print('오존 지수 :'+Ozon)
 
 # print('reload')
 

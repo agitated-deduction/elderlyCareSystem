@@ -19,16 +19,16 @@
 <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <script type = "text/javascript" charset = "utf-8">
-    sessionStorage.setItem("ctx", "${pageContext.request.contextPath}");
+ 
+<script type = "text/javascript" charset = "utf-8">
+    //sessionStorage.setItem("ctx", "${pageContext.request.contextPath}");
     //var ctx = sessionStorage.getItem("ctx");
-    </script>
+    </script>   
 </head>
 <body>
 <c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
-
 <c:if test = "${empty uid }">
-<%response.sendRedirect("users/login"); %>
+<%response.sendRedirect(request.getContextPath()+"users/login"); %>
 </c:if>
 
 <div class="navbar navbar-fixed-top">
@@ -96,16 +96,21 @@
 			window.location.replace('');
 		});
 	}
+	function selectDev(ekey){
+		sessionStorage.setItem('ekey', ekey);
+		window.location.replace('');
+	}
 	 $(document).ready(function() {
 	 	var html = '';
-	 	$.getJSON('devices', function(data){
+	 	$.getJSON('/elderlycare/devices', function(data){
 	 		$.each(data, function(index, item){
-	 			html +="<li><a href = 'devices/"+item.ekey+"'>";
+	 			//html +="<li><a href = 'devices/"+item.ekey+"'>";
+	 			html+="<li><a href='#' onclick='selectDev("+item.ekey+"); return false;'>"
 	 			html +=item.ename+"</a></li>";
 	 		});
 	 		$('#eld-list').html(html);
 	 	});
-	 	sessionStorage.getItem('ekey', ekey);
+	 	//sessionStorage.getItem('ekey', ekey);
 	 	
 	 });
 </script>

@@ -19,16 +19,17 @@
 <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <script type = "text/javascript" charset = "utf-8">
-    sessionStorage.setItem("ctx", "${pageContext.request.contextPath}");
+   
+<script type = "text/javascript" charset = "utf-8">
+    //sessionStorage.setItem("contextPath", "${pageContext.request.contextPath}");
     //var ctx = sessionStorage.getItem("ctx");
     </script>
 </head>
 <body>
-<c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
 
+<c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
 <c:if test = "${empty uid }">
-<%response.sendRedirect("users/login"); %>
+<%response.sendRedirect("/users/login"); %>
 </c:if>
 
 <div class="navbar navbar-fixed-top">
@@ -261,6 +262,10 @@ function logout(){
 		window.location.replace('');
 	});
 }
+function selectDev(ekey){
+	sessionStorage.setItem('ekey', ekey);
+	window.location.replace('');
+}
 
         var lineChartData = {
             labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -383,7 +388,8 @@ function logout(){
         var html1 = '';
      	$.getJSON('devices', function(data){
      		$.each(data, function(index, item){
-     			html1 +="<li><a href = 'devices/"+item.ekey+"'>";
+     			html1+="<li><a href='#' onclick='selectDev("+item.ekey+"); return false;'>"
+	 			//html1 +="<li><a href = 'devices/"+item.ekey+"'>";
      			html1 +=item.ename+"</a></li>";
      		});
      		$('#eld-list').html(html1);

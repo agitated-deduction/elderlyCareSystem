@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.elderlycare.dto.Datas2DTO;
+import com.spring.elderlycare.dto.DatasDTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
 import com.spring.elderlycare.service.DataService;
 import com.spring.elderlycare.service.DeviceService;
@@ -123,9 +124,15 @@ public class DeviceController {
 		
 		return map;
 	}
+	@RequestMapping("/{num}/htdatas")
+	public List<DatasDTO> viewHTdatas(Model model, @PathVariable("num") int num) {
+		List<DatasDTO> list = dataservice.getHumTemp(num);
+		return list;
+	}
 	@RequestMapping(value = "/{num}/curdata", method = RequestMethod.GET)
 	public Datas2DTO viewCurData(Model model, @PathVariable("num") int num){
 		//Map<String, Object> map = new HashMap<String, Object>();
+		
 		datadto = dataservice.selectCurData(num);
 		// 현재 온습도까지
 		return datadto;

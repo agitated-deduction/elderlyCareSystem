@@ -12,7 +12,6 @@ $(function () {
 	$('#login-form').submit(function(event){
 		event.preventDefault();
 		var data = {uid: $("#uid").val(), upwd: $('#upwd').val()};
-		var ctx = sessionStorage.getItem("ctx");
 		$.ajax({
 			type : 'POST',                            
 			url : 'login',                        
@@ -21,8 +20,8 @@ $(function () {
 			data : JSON.stringify(data),            
 			success : function(response){
 				if(response.result){
-					alert(response.uid+'님 환영합니다.');
-					$(location).attr("href", ctx+"/");
+					alert(response.uid+'님 환영합니다~');
+					window.location.replace('');
 				}else
 					alert("아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다.");
 			},                      

@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -119,8 +121,38 @@
 
 <script src="<c:url value='/resources/js/jquery-1.7.2.min.js' />"></script>
 <script src="<c:url value='/resources/js/bootstrap.js' />"></script>
+<script type = "text/javascript">
+$(function(){
+	$('#login-form').submit(function(event){
+		event.preventDefault();
+		
+		//var data = {"uid": "staff101058", "upwd": "staff101058"};
+		var data = {uid: $("#uid").val(), upwd: $('#upwd').val()};
 
-<script src="<c:url value='/resources/js/signin.js' />"></script>
+		$.ajax({
+				type : 'POST',                            
+				url : 'login',                        
+				dataType : 'json',                          
+				contentType : 'application/json',            
+				data : JSON.stringify(data),            
+				success : function(response){
+					if(response.result){
+						alert(response.uid+'님 환영합니다~');
+						window.location.replace('/elderlycare/');
+					}else
+						alert("아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다.");
+				},                      
+				error   : function(response){
+					alert(response.uid);
+				}
+		});
+	});
+});
+	
+
+
+</script>
+<!--  <script src="<c:url value='/resources/js/signin.js' />"></script>-->
 
 </body>
 

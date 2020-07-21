@@ -1982,3 +1982,159 @@ var ctx = sessionStorage.getItem("contextpath");
 
 
 헤더 분리 or 합체?????????????
+
+
+
+20200721
+
+
+
+
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+<%@ include file="../header.jsp" %>
+<h1>login page</h1>
+<form action = "login" id ="login-form" method = "POST">
+<div>
+	<label for = "uid">ID:</label>
+	<input id = "uid" type = "text" name = "uid" >
+	</div>
+	<div>
+	<label for = "upwd">PASSWORD:</label>
+	<input id = "upwd" type = "password" name = "upwd" >
+</div>
+<button type = "submit">로그인</button>
+</form>
+</body>
+<script type = "text/javascript" src = "/elderlycare/resources/jquery-3.5.1.js"></script>
+<script type = "text/javascript">
+$(function(){
+	$('#login-form').submit(function(event){
+		event.preventDefault();
+		
+		//var data = {"uid": "staff101058", "upwd": "staff101058"};
+		var data = {uid: $("#uid").val(), upwd: $('#upwd').val()};
+
+		$.ajax({
+				type : 'POST',                            
+				url : 'login',                        
+				dataType : 'json',                          
+				contentType : 'application/json',            
+				data : JSON.stringify(data),            
+				success : function(response){
+					if(response.result){
+						alert(response.uid+'님 환영합니다.');
+						$(location).attr("href", "${contextPath}/");
+					}else
+						alert("아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다.");
+				},                      
+				error   : function(response){
+					alert(response.uid);
+				}
+		});
+	});
+});
+	
+
+
+</script>
+</html>
+```
+
+```js
+var key = ${edto.ekey}
+		//alert(key);
+		//html = "<div class ='stat'><i class = 'icon-asterisk'></i><span class = 'value'>33</span></div>";
+		//$('#test').html(html);
+		var html = '';
+     	 $.getJSON(key+'/curdata', function(data){
+     		alert(data.temp);
+     		//$.each(data, function(index, item){
+     			html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
+     			html+= data.temp;
+     			html+= "</span> </div>";
+     			
+     			html += "<div class='stat'> <i class='icon-tint'></i> <span class='value'>";
+	     		html+= data.humid;
+	     		html+= "</span> </div>";
+	     			
+	     		html += "<div class='stat'> <i class='icon-heart'></i> <span class='value'>";
+		     	html+= data.epulse;
+		     	html+= "</span> </div>";
+		     		
+		     	html += "<div class='stat'> <i class='icon-shopping-cart'></i> <span class='value'>";
+			    html+= data.estep;
+			    html+= "</span> </div>";
+     		//});
+     		$('#cur-data').html(html); 
+     	}); 
+```
+이렇게 통째로 넣으려니까 안 됨 왜 그런지 모르겠음
+
+```
+<div id="big_stats" class="cf" id = "cur-data">
+                  
+                      
+                    <div class="stat"> <i class="icon-asterisk"></i> <span class="value" id = "temp"></span> </div>
+                
+                    
+                    <div class="stat"> <i class="icon-tint"></i> <span class="value"id = humid></span> </div>
+             
+                    
+                    <div class="stat"> <i class="icon-heart"></i> <span class="value"id = "epulse"></span> </div>
+              
+                    
+                    <div class="stat"> <i class="icon-shopping-cart"></i> <span class="value"id = "estep"></span> </div>
+               
+                </div>
+```
+```js
+var key = ${edto.ekey}
+		//alert(key);
+		//html = "<div class ='stat'><i class = 'icon-asterisk'></i><span class = 'value'>33</span></div>";
+		//$('#test').html(html);
+		var html = '';
+     	 $.getJSON(key+'/curdata', function(data){
+     		
+     		//$.each(data, function(index, item){
+     			//html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
+     			html= data.temp;
+     			//html+= "</span> </div>";
+     			$('#temp').html(html);
+     			
+     			//html += "<div class='stat'> <i class='icon-tint'></i> <span class='value'>";
+	     		html= data.humid;
+	     		//html+= "</span> </div>";
+	     		$('#humid').html(html);
+	     			
+	     		//html += "<div class='stat'> <i class='icon-heart'></i> <span class='value'>";
+		     	html= data.epulse;
+		     	//html+= "</span> </div>";
+		     	$('#epulse').html(html);
+		     		
+		     	//html += "<div class='stat'> <i class='icon-shopping-cart'></i> <span class='value'>";
+			    html= data.estep;
+			    //html+= "</span> </div>";
+			    $('#estep').html(html);
+     		//});
+     		//$('#cur-data').html(html);
+     	});
+```
+
+하나씩 넣어줬음
+
+
+
+
+그래프!!!!!!!!
+이상 데이터 처리!!!!!!!!!!!
+실시간 스트리밍!!!!!!
+녹화비디오!!!!!!

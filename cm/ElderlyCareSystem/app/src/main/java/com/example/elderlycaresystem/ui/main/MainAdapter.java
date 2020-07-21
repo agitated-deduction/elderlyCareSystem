@@ -118,7 +118,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext() , InfoActivity.class);
-                    intent.putExtra("KEY",item.getEkey());
+                    intent.putExtra("KEY",item.getEkey()); //
                     intent.putExtra("NAME",item.getEname());
                     intent.putExtra("HOME",item.getHomeIoT());
                     Log.d("MainAdapter","home url: "+item.getHomeIoT());

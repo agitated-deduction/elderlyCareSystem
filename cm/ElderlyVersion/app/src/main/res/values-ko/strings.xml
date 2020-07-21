@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">My BT Chat</string>
-    <string name="service_name">BT Chat Service</string>
-    
-    
-    <!-- Settings -->
-    <string name="action_settings">설정</string>
-    <string name="settings_background_service">백그라운드로 실행</string>
-    <string name="settings_iot_guide">\n앱에서 아래와 같은 형식의 메시지를 받으면 자동으로 지정된 서버로 HTTP request를 보내줍니다.</string>
-    <string name="settings_copyrights">\n\nFind more at http://www.hardcopyworld.com</string>
-    
-    <!-- UI, Activity, Fragment -->
-    <string name="title_example">BT Chat</string>
-    <string name="title_ll_settings">설정</string>
-    
-    <string name="ui_send">전송</string>
-    
+    <string name="app_name">Elderly Care</string>
+    <string name="service_name">Elderly Care Service</string>
+
+
+<!--    &lt;!&ndash; Settings &ndash;&gt;-->
+<!--    <string name="action_settings">설정</string>-->
+<!--    <string name="settings_background_service">백그라운드로 실행</string>-->
+<!--    <string name="settings_iot_guide">\n앱에서 아래와 같은 형식의 메시지를 받으면 자동으로 지정된 서버로 HTTP request를 보내줍니다.</string>-->
+<!--    <string name="settings_copyrights">\n\nFind more at http://www.hardcopyworld.com</string>-->
+<!--    -->
+<!--    &lt;!&ndash; UI, Activity, Fragment &ndash;&gt;-->
+<!--    <string name="title_example">BT Chat</string>-->
+<!--    <string name="title_ll_settings">설정</string>-->
+<!--    -->
+<!--    <string name="ui_send">전송</string>-->
+<!--    -->
     <!--  Bluetooth -->
     <string name="bt_title">Bluetooth</string>
     

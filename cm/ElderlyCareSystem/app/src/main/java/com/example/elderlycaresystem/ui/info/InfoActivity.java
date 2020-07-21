@@ -14,12 +14,8 @@ import android.widget.Toast;
 import com.example.elderlycaresystem.ui.map.MapActivity;
 import com.example.elderlycaresystem.R;
 import com.example.elderlycaresystem.data.info.ElderlyData;
-import com.example.elderlycaresystem.util.ApiUtils;
+import com.example.elderlycaresystem.util.RetroUtils;
 
-import java.io.IOException;
-import java.sql.Timestamp;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,10 +33,8 @@ public class InfoActivity extends AppCompatActivity {
     private double longitude;
     private String name;
     private String home;
-
-    private int temp;
-    private int humid;
-
+    private float temp;
+    private float humid;
 
     private TextView nameText;
     private TextView statText;
@@ -105,12 +99,37 @@ public class InfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
+}
 
-    // TODO : Local Test
+    // TODO : LoopBack version. ( Test version : getTestData() -> getElderlyData(ekey) )
     private void getTestData() {
         // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
-        ApiUtils.getElderlyService(getApplicationContext()).getTestData().enqueue(new Callback<ElderlyData>() { //TODO : Response body -> ElderlyData 구성하고 그걸로 ㄱㄱ!!
+        RetroUtils.getElderlyService(getApplicationContext()).getTestData().enqueue(new Callback<ElderlyData>() {
+            // 연결 성공시
+            @Override
+            public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
+                    setData(response.body());
+                }else {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ElderlyData> call, Throwable t) {
+                Log.d("InfoActivity", "Connect_Error");
+                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+
+    // TODO : Final version.
+    private void getTestData2() {
+        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
+        RetroUtils.getElderlyService(getApplicationContext()).getElderlyData(ekey).enqueue(new Callback<ElderlyData>() {
             // 연결 성공시
             @Override
             public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
@@ -133,29 +152,6 @@ public class InfoActivity extends AppCompatActivity {
     }
 
 
-//    private void getElderlyList(int key) {
-//        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
-//        ApiUtils.getElderlyService(getApplicationContext()).getElderlyData(key).enqueue(new Callback<ElderlyData>() { //TODO : Response body -> ElderlyData 구성하고 그걸로 ㄱㄱ!!
-//            // 연결 성공시
-//            @Override
-//            public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
-//                if(response.isSuccessful() && response.body() != null) {
-//                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
-//                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
-//                    setData(response.body());
-//                }else {
-//                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
-//                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<ElderlyData> call, Throwable t) {
-//                Log.d("InfoActivity", "Connect_Error");
-//                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
-//                t.printStackTrace();
-//            }
-//        });
-//    }
 
     private void setData(ElderlyData elderlyData){
         // 정상 상태일 때 -> Intent from MainActivity
@@ -163,28 +159,24 @@ public class InfoActivity extends AppCompatActivity {
         pulse = elderlyData.getEpulse();
         kcal = elderlyData.getEkcal();
         stat = elderlyData.getStat();
-//        temp = elderlyData.getEtemp();
-//        humid = elderlyData.getEhumid();
+        temp = elderlyData.getTemp();
+        humid = elderlyData.getHumid();
 
         stepText.setText(String.valueOf(step));
         pulseText.setText(String.valueOf(pulse));
         kcalText.setText(String.valueOf(elderlyData.getEkcal()));
-//        tempText.setText(temp);
-//        humidText.setText(elderlyData.getEstep());
-
+        tempText.setText(String.valueOf(temp));
+        humidText.setText(String.valueOf(step));
 
         latitude = elderlyData.getEaltitude();
         longitude = elderlyData.getElongitude();
         Log.d("InfoActivity","SET lati:"+latitude+", longi:"+longitude);
-        tempText.setText(String.valueOf(latitude));
-        humidText.setText(String.valueOf(longitude));
 
         if (stat == 1){
             statText.setText("정상");
         } else if (stat == 0){
-            statText.setText("비정상");
+            statText.setText("위험");
         }
-
     }
 
     private void showMap(double lati, double longi){

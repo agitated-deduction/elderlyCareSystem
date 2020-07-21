@@ -30,11 +30,18 @@ class mainGUI(QDialog):
 
     def __init__(self, parent=None):
         QDialog.__init__(self, parent)
+        # self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
+        
         ##---- PyQt관련 
         self.ui = uic.loadUi("main.ui")  # ui불러오기 
+
+        self.ui.setWindowFlags(QtCore.Qt.FramelessWindowHint)   # 프레임 없애기 
+        self.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)   # 맨 앞으로 보내기 
+
         self.ui.show()
-        # self.ui.showMaximized()
-        self.setGeometry(0, 0, 800, 480)  # 화면 사이즈 
+        # self.ui.showFullScreen()   # 전체화면 
+        
+        self.setGeometry(0, 0, 800, 460)  # 화면 사이즈 
 
 
         ##--- 쓰레드 선언 
@@ -123,12 +130,12 @@ class mainGUI(QDialog):
     def displayweather(self):  
         self.th2.start()  # 쓰레드 시작 
  
-        self.ui.label_weather_6.setText('현재온도: '+NowTemp+'\n')
+        self.ui.label_weather_6.setText('현재온도 : '+NowTemp+'\n')
         self.ui.label_weather_5.setText(WeatherCast+'\n')
-        self.ui.label_weather_4.setText('자외선:'+TodayUV+'\n')
-        self.ui.label_weather_3.setText('미세먼지:'+FineDust+'\n')
-        self.ui.label_weather_2.setText('초미세먼지:'+UltraFineDust+'\n')
-        self.ui.label_weather.setText('오존 지수:'+Ozon+'\n')
+        self.ui.label_weather_4.setText('자외선 : '+TodayUV+'\n')
+        self.ui.label_weather_3.setText('미세먼지 : '+FineDust+'\n')
+        self.ui.label_weather_2.setText('초미세먼지 : '+UltraFineDust+'\n')
+        self.ui.label_weather.setText('오존 지수 : '+Ozon+'\n')
 
 
 
@@ -155,6 +162,7 @@ class Thread_dht(QThread):
 
             self.change_value1.emit(t)
             self.change_value2.emit(h)
+            time.sleep(30)
 
             # client.publish("home/11/temp", str(t))  # home 의 온도 토픽
             # print("Temperature = {0:0.1f}*C".format(t))
@@ -164,7 +172,7 @@ class Thread_dht(QThread):
             # print("Humidity = {}%".format(h))
             # time.sleep(15) # 30초 마다 전송 
             
-            self.msleep(100)
+            # self.msleep(100*30)
 
 
 class Thread_weather(QThread):   ## weather.py  reload

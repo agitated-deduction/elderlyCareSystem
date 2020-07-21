@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.example.elderlycaresystem.data.elderly.ElderlyInfo;
 import com.example.elderlycaresystem.R;
-import com.example.elderlycaresystem.util.ApiUtils;
+import com.example.elderlycaresystem.util.RetroUtils;
 
 import java.util.List;
 
@@ -56,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // TODO : Local Test
+    // TODO : LoopBack version. ( Test version : getTestList() -> getElderlyList(id) )
     private void getElderlyList() {
         // Server에서 MainActivity에 띄울 elderlyList를 받아와 View Queue에 넣기
-        ApiUtils.getElderlyService(getApplicationContext()).getTestList().enqueue(new Callback<List<ElderlyInfo>>() {
+        RetroUtils.getElderlyService(getApplicationContext()).getTestList().enqueue(new Callback<List<ElderlyInfo>>() {
             // 연결 성공시
             @Override
             public void onResponse(Call<List<ElderlyInfo>> call, Response<List<ElderlyInfo>> response) {
@@ -82,33 +82,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // TODO : /device 데이터 받아오기.(TEST)
-    //  > 서버에서 사용자 List 요청 & 받아오기
-    //  > 요청 성공( => JSON data ~> GSON data로 변환)
-//    private void getElderlyList() {
-//        // Server에서 MainActivity에 띄울 elderlyList를 받아와 View Queue에 넣기
-//        ApiUtils.getElderlyService(getApplicationContext()).getElderlyList(id).enqueue(new Callback<List<ElderlyInfo>>() {
-//            // 연결 성공시
-//            @Override
-//            public void onResponse(Call<List<ElderlyInfo>> call, Response<List<ElderlyInfo>> response) {
-//                if(response.isSuccessful() && response.body() != null) {
-////                    Log.d("Main_getList_Success", "Get Data(0).home : "+ response.body().get(0).getHomeIoT());
-//                    adapter.addItems(response.body());
-//                    adapter.notifyDataSetChanged();// 어댑터로 화면 내 데이터 새로고침
-//                }else {
-//                    int statusCode  = response.code();
-//                    Log.d("Main_getList_Empty", "Empty Body.");
-//                    Toast.makeText(MainActivity.this, "Empty Body : " + statusCode, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<List<ElderlyInfo>> call, Throwable t) {
-//                Log.d("Main_getList_Failure", "Get Failed.");
-//                Toast.makeText(MainActivity.this, "Error code : " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    // TODO : Final version
+    private void getElderlyList2() {
+        // Server에서 MainActivity에 띄울 elderlyList를 받아와 View Queue에 넣기
+        RetroUtils.getElderlyService(getApplicationContext()).getTestList().enqueue(new Callback<List<ElderlyInfo>>() {
+            // 연결 성공시
+            @Override
+            public void onResponse(Call<List<ElderlyInfo>> call, Response<List<ElderlyInfo>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+//                    Log.d("Main_getList_Success", "Get Data(0).home : "+ response.body().get(0).getHomeIoT());
+                    adapter.addItems(response.body());
+                    adapter.notifyDataSetChanged();// 어댑터로 화면 내 데이터 새로고침
+                } else {
+                    int statusCode = response.code();
+                    Log.d("Main_getList_Empty", "Empty Body.");
+                    Toast.makeText(MainActivity.this, "Empty Body : " + statusCode, Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<List<ElderlyInfo>> call, Throwable t) {
+                Log.d("Main_getList_Failure", "Get Failed.");
+                Toast.makeText(MainActivity.this, "Error code : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logoutService() {
-        ApiUtils.getElderlyService(getApplicationContext()).logout().enqueue(new Callback<ResponseBody>() {
+        RetroUtils.getElderlyService(getApplicationContext()).logout().enqueue(new Callback<ResponseBody>() {
             // 연결 성공시
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -156,5 +154,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Error code : " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
     }
 }

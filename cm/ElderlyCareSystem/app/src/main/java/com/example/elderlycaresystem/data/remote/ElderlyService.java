@@ -3,6 +3,7 @@ package com.example.elderlycaresystem.data.remote;
 import com.example.elderlycaresystem.data.elderly.ElderlyInfo;
 import com.example.elderlycaresystem.data.info.ElderlyData;
 import com.example.elderlycaresystem.data.login.LoginData;
+import com.example.elderlycaresystem.data.login.LoginData2;
 import com.example.elderlycaresystem.data.login.LoginResponse;
 
 import java.util.List;
@@ -16,11 +17,11 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ElderlyService {
+
+    /** Test Version **/
+
     @POST("users/login")
     Call<LoginResponse> login(@Body LoginData loginData);
-
-    @GET("users/logout")
-    Call<ResponseBody> logout();
 
     @GET("devices")
     Call<List<ElderlyInfo>> getElderlyList(@Query("uid") String id);
@@ -28,14 +29,28 @@ public interface ElderlyService {
     @GET("devices/{num}/data")
     Call<ElderlyData> getElderlyData(@Path("num") int key);
 
-    @GET("http://192.168.1.22:3000/login")
+
+    @GET("users/logout")
+    Call<ResponseBody> logout();
+
+
+
+    /** LoopBack Version **/
+
+    @GET("login")
     Call<LoginResponse> getTestLogin();
 
 
-    @GET("http://192.168.1.22:3000/devices")
+    @GET("devices")
     Call<List<ElderlyInfo>> getTestList();
 
-    @GET("http://192.168.1.22:3000/data")
+    @GET("datas")
     Call<ElderlyData> getTestData();
+
+
+    /** Final Version **/
+
+    @POST("users/login")
+    Call<LoginResponse> login2(@Body LoginData2 loginData);
 
 }

@@ -16,10 +16,10 @@ public class ElderlyData {
     private Double ealtitude;
     private Double elongitude;
     private Integer stat;
+    private float humid;
+    private float temp;
 
-    public String getMeasuredtime() {
-        return measuredtime;
-    }
+    public String getMeasuredtime() { return measuredtime; }
 
     public void setMeasuredtime(String measuredtime) {
         this.measuredtime = measuredtime;
@@ -81,4 +81,11 @@ public class ElderlyData {
         this.stat = stat;
     }
 
+    public float getHumid() { return humid; }
+
+    public void setHumid(float humid) { this.humid = humid; }
+
+    public float getTemp() { return temp; }
+
+    public void setTemp(float temp) { this.temp = temp; }
 }

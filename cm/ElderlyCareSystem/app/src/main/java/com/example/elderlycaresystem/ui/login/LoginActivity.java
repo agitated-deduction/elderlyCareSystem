@@ -19,13 +19,19 @@ import android.widget.Toast;
 
 import com.example.elderlycaresystem.data.login.LoginData;
 import com.example.elderlycaresystem.data.elderly.ElderlyInfo;
+import com.example.elderlycaresystem.data.login.LoginData2;
 import com.example.elderlycaresystem.data.login.LoginResponse;
 import com.example.elderlycaresystem.R;
 import com.example.elderlycaresystem.ui.main.MainActivity;
-import com.example.elderlycaresystem.util.ApiUtils;
+import com.example.elderlycaresystem.util.RetroUtils;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private ProgressBar progressBar;
     private  ArrayList<ElderlyInfo> elderlyInfoArrayList;
+    String newToken = "";
 
     private ElderlyInfo elder;
 
@@ -46,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        // TODO : 등록 ID(Token) 확인을 위한 리스너 설정하기
 
         initView();
         requestCallPermission();
@@ -75,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                login2();
                 // DO something
             }
         });
@@ -83,15 +91,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private void requestCallPermission() {
         // CALL_PHONE 위험 권한 요청하기
-        String[] targets = {Manifest.permission.CALL_PHONE};
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.CALL_PHONE)!=PackageManager.PERMISSION_GRANTED){
-            Toast.makeText(this,"전화 권한 없음.", Toast.LENGTH_LONG).show();
-            ActivityCompat.requestPermissions(LoginActivity.this,targets,101);
+        String[] targets = {Manifest.permission.CALL_PHONE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
+            for (int i =0;i<targets.length;i++){
+                if(ContextCompat.checkSelfPermission(this,targets[i])!=PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this,"전화 권한 없음.", Toast.LENGTH_LONG).show();
+                    ActivityCompat.requestPermissions(LoginActivity.this,targets,101);
+            }
+
         }
     }
 
-    // TODO : Local Test
-    private void login() {
+    // TODO : LoopBack version. (Test version : getTestlogin() -> login(logindata)
+    private void login2() {
         String id = idText.getText().toString();
         String pw = pwText.getText().toString();
 
@@ -107,12 +118,21 @@ public class LoginActivity extends AppCompatActivity {
         }
         LoginData loginData = new LoginData(id,pw);
 
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                newToken = instanceIdResult.getToken();
+                Log.v("token","등록 id: "+newToken);
+                Toast.makeText(LoginActivity.this, "tocken: " + newToken, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        LoginData2 loginData2 = new LoginData2(id,pw,newToken);
+
         // ProgressBar Setting
         progressBar.setVisibility(View.VISIBLE);
-        // Server에 로그인 데이터(id,pw) 전송
-
-        //
-        ApiUtils.getElderlyService(getApplicationContext()).getTestLogin().enqueue(new Callback<LoginResponse>() {
+        // Server에 로그인 데이터(id,pw,regid) 전송
+        RetroUtils.getElderlyService(getApplicationContext()).getTestLogin().enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 progressBar.setVisibility(View.GONE); // ProgressBar Close
@@ -134,59 +154,55 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, "지금은 연결할 수 없습니다. " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "지금은 연결할 수 없습니다. " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void login() {
+        String id = idText.getText().toString();
+        String pw = pwText.getText().toString();
 
-//    private void login() {
-//        String id = idText.getText().toString();
-//        String pw = pwText.getText().toString();
-//
-//        if (id.length()==0) {
-//            Toast.makeText(LoginActivity.this, "아이디를 입력하세요", Toast.LENGTH_SHORT).show();
-//            idText.requestFocus();
-//            return ;
-//        }
-//        if (pw.length()==0) {
-//            Toast.makeText(LoginActivity.this, "비밀번호를 입력하세요", Toast.LENGTH_SHORT).show();
-//            pwText.requestFocus();
-//            return ;
-//        }
-//        LoginData loginData = new LoginData(id,pw);
-//
-//        // ProgressBar Setting
-//        progressBar.setVisibility(View.VISIBLE);
-//        // Server에 로그인 데이터(id,pw) 전송
-//
-//        //
-//        ApiUtils.getElderlyService(getApplicationContext()).login(loginData).enqueue(new Callback<LoginResponse>() {
-//            @Override
-//            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-//                progressBar.setVisibility(View.GONE); // ProgressBar Close
-//                if(response.isSuccessful() && response.body() != null) {
-//                    Log.d("Connect_Login", "Header values(Set-Cookie) : "+response.headers().values("Set-Cookie").toString().substring(12,44));
-//
-//                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                    if (response.body().getUid()!=null){
-//                        intent.putExtra(MainActivity.INTENT_ID, response.body().getUid());
-//                        startActivity(intent);
-//                    }
-//                    else{
-//                        Toast.makeText(LoginActivity.this,"아이디 비밀번호를 확인하세요",Toast.LENGTH_LONG).show();
-//                        return;
-//                    }
-//                }else {
-//                    int statusCode  = response.code();
-//                    Toast.makeText(LoginActivity.this, "연결 실패 : " + statusCode+", 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<LoginResponse> call, Throwable t) {
-//                progressBar.setVisibility(View.GONE);
-//                Toast.makeText(LoginActivity.this, "지금은 연결할 수 없습니다. " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+        if (id.length()==0) {
+            Toast.makeText(LoginActivity.this, "아이디를 입력하세요", Toast.LENGTH_SHORT).show();
+            idText.requestFocus();
+            return ;
+        }
+        if (pw.length()==0) {
+            Toast.makeText(LoginActivity.this, "비밀번호를 입력하세요", Toast.LENGTH_SHORT).show();
+            pwText.requestFocus();
+            return ;
+        }
+        LoginData loginData = new LoginData(id,pw);
+
+        // ProgressBar Setting
+        progressBar.setVisibility(View.VISIBLE);
+        // Server에 로그인 데이터(id,pw,regid) 전송
+        RetroUtils.getElderlyService(getApplicationContext()).login(loginData).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                progressBar.setVisibility(View.GONE); // ProgressBar Close
+                if(response.isSuccessful() && response.body() != null) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    if (response.body().getUid()!=null){
+                        intent.putExtra(MainActivity.INTENT_ID, response.body().getUid());
+                        startActivity(intent);
+                    }
+                    else{
+                        //Toast.makeText(LoginActivity.this,"아이디 비밀번호를 확인하세요",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }else {
+                    int statusCode  = response.code();
+                    Toast.makeText(LoginActivity.this, "연결 실패 : " + statusCode+", 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, "지금은 연결할 수 없습니다. " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

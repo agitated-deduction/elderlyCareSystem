@@ -80,15 +80,17 @@ public class DeviceController {
 		
 		return mav;
 	}
-	@RequestMapping(value = "/{num}", method = RequestMethod.GET)
-	public ModelAndView deviceInfo(HttpSession session,ModelAndView mav, @PathVariable("num") int dnum) {
-		
-		edto = service.elderlyInfo(dnum);
-		session.setAttribute("edto", edto);
-		mav.setViewName("redirect:/");
 
-		return mav;
-	}
+	/*
+	 * @RequestMapping(value = "/{num}", method = RequestMethod.GET) public
+	 * ModelAndView deviceInfo(HttpSession session,ModelAndView
+	 * mav, @PathVariable("num") int dnum) {
+	 * 
+	 * edto = service.elderlyInfo(dnum); session.setAttribute("edto", edto);
+	 * mav.setViewName("redirect:/");
+	 * 
+	 * return mav; }
+	 */
 	@RequestMapping(value = "/{num}", method = RequestMethod.PUT)
 	public ElderlyDTO deviceInfoModify(Model model) {
 		
@@ -123,6 +125,12 @@ public class DeviceController {
 		
 		
 		return map;
+	}
+	@RequestMapping("/{num}/banddatas")
+	public List<Datas2DTO> viewBandData(Model model, @PathVariable("num") int num) {
+		List<Datas2DTO> list = dataservice.selectHealths(num);
+		
+		return list;
 	}
 	@RequestMapping("/{num}/htdatas")
 	public List<DatasDTO> viewHTdatas(Model model, @PathVariable("num") int num) {

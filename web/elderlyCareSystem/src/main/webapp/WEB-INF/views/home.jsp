@@ -29,7 +29,7 @@
 
 <c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
 <c:if test = "${empty uid }">
-<%response.sendRedirect("/users/login"); %>
+<%response.sendRedirect("users/login"); %>
 </c:if>
 
 <div class="navbar navbar-fixed-top">

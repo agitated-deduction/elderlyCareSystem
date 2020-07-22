@@ -16,7 +16,8 @@
 </select>
 <select id = "selectHts" parameterType = "int" resultType = "com.spring.elderlycare.dto.DatasDTO">
 	SELECT * FROM realtimedata
-	WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW())
+	  WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW())
+	<!--WHERE elderly = #{value} AND DATE(measuredtime) = DATE("2020-07-21") for test -->
 	ORDER BY measuredtime DESC;
 </select>
 <insert id = "log" parameterType = "hashmap">
@@ -46,7 +47,8 @@
 <select id = "selectHealths" parameterType = "int" resultType = "com.spring.elderlycare.dto.Datas2DTO">
 <!-- 하루 health 로그 -->
 	SELECT * FROM banddata
-	WHERE ekey = #{value} AND DATE(measuredtime) = DATE(NOW())
-	ORDER BY measuredtime DESC;
+	<!--WHERE ekey = #{value} AND DATE(measuredtime) = DATE(NOW())-->
+	WHERE ekey = #{value} <!-- AND DATE(measuredtime) = DATE("2020-07-21") --> <!--for test -->
+	ORDER BY measuredtime DESC limit 20;
 </select>
 </mapper>

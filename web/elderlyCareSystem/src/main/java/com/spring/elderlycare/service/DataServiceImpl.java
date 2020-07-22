@@ -28,8 +28,8 @@ public class DataServiceImpl implements DataService{
 	}
 
 	@Override
-	public Datas2DTO selectCurHealthData(int num) {
-		return dao.selectCurHealthData(num);
+	public Datas2DTO selectCurData(int num) {
+		return dao.selectCurData(num);
 	}
 
 	@Override

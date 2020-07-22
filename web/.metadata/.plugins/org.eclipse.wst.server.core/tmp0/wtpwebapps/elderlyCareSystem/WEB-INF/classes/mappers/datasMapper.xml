@@ -16,7 +16,8 @@
 </select>
 <select id = "selectHts" parameterType = "int" resultType = "com.spring.elderlycare.dto.DatasDTO">
 	SELECT * FROM realtimedata
-	WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW())
+	  WHERE elderly = #{value} AND DATE(measuredtime) = DATE(NOW())
+	<!--WHERE elderly = #{value} AND DATE(measuredtime) = DATE("2020-07-21") for test -->
 	ORDER BY measuredtime DESC;
 </select>
 <insert id = "log" parameterType = "hashmap">
@@ -27,11 +28,15 @@
 	INSERT INTO banddata (ekey, estep, epulse, ekcal, ealtitude, elongitude, stat)
 	VALUES(#{ekey}, #{estep}, #{epulse}, #{ekcal}, #{ealtitude}, #{elongitude}, #{stat});
 </insert>
-<select id = "curHealth" parameterType = "int" resultType = "com.spring.elderlycare.dto.Datas2DTO">
-	SELECT * FROM banddata
-	WHERE ekey = #{value}
-	ORDER BY measuredtime DESC limit 1;
+<select id = "curData"  parameterType = "int" resultType = "com.spring.elderlycare.dto.Datas2DTO">
+	 select * FROM(select * FROM banddata
+    where ekey = #{value}
+    order by measuredtime DESC limit 1)b
+	cross join (SELECT humid, temp FROM realtimedata
+    where elderly = #{value}
+    order by measuredtime DESC limit 1)a;
 </select>
+
 <select id = "curHT" parameterType = "int" resultType = "hashmap">
 <!-- 현재 온습도 -->
 	<!-- 쿼리 두개로 나눠서 날짜 시간 하나랑 온습도 한번에 받을까? -->
@@ -42,7 +47,8 @@
 <select id = "selectHealths" parameterType = "int" resultType = "com.spring.elderlycare.dto.Datas2DTO">
 <!-- 하루 health 로그 -->
 	SELECT * FROM banddata
-	WHERE ekey = #{value} AND DATE(measuredtime) = DATE(NOW())
-	ORDER BY measuredtime DESC;
+	<!--WHERE ekey = #{value} AND DATE(measuredtime) = DATE(NOW())-->
+	WHERE ekey = #{value} <!-- AND DATE(measuredtime) = DATE("2020-07-21") --> <!--for test -->
+	ORDER BY measuredtime DESC limit 20;
 </select>
 </mapper>

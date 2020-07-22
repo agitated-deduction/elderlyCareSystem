@@ -1,7 +1,10 @@
 package com.spring.elderlycare.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.elderlycare.dao.MemberDAO;
 import com.spring.elderlycare.dto.MemberDTO;
@@ -12,11 +15,23 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired
 	private MemberDAO mdao;
 	@Autowired SHAUtil SHA;
+	@Autowired MemberDTO mdto;
 	
 	@Override
-	public int join(MemberDTO mdto) {
-		mdto.setUpwd(SHA.encryptSHA256(mdto.getUpwd()));
-		int ret =  mdao.insertMember(mdto);
+	@Transactional
+	public int join(Map<String, Object> map) {
+		mdto.setUid((String)map.get("uid"));
+		mdto.setUpwd(SHA.encryptSHA256((String) map.get("upwd")));
+		mdto.setUname((String)map.get("uname"));
+		mdto.setUtel((String)map.get("utel"));
+		mdto.setUemail((String)map.get("uemail"));
+		
+		//map.put("upwd", SHA.encryptSHA256((String)map.get("upwd")));
+		//int ret =  mdao.insertMember(map);
+		int ret = mdao.insertMember(mdto);
+		//int ret = 1;
+		if(ret>0) 
+			ret= mdao.insertRelation(map); 
 		
 		return ret;
 	}

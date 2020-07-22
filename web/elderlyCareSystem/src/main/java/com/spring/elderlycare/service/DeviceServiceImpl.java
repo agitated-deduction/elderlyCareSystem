@@ -23,9 +23,9 @@ public class DeviceServiceImpl implements DeviceService{
 	}
 
 	@Override
-	public void deviceRegistration(ElderlyDTO edto, DevicesDTO ddto, String id) {
+	public void deviceRegistration(ElderlyDTO edto, String id) {
 		// TODO Auto-generated method stub
-		ddao.insertDevice(edto, ddto, id);
+		ddao.insertDevice(edto, id);
 	}
 
 	@Override

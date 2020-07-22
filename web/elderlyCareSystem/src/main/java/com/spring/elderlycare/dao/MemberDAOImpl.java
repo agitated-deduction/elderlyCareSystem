@@ -1,5 +1,7 @@
 package com.spring.elderlycare.dao;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
@@ -16,6 +18,11 @@ public class MemberDAOImpl implements MemberDAO{
 	@Autowired
 	MemberDTO mdto;
 	private static final String ns = "com.spring.elderlycare.dao.MemberDAOImpl.";
+	/*@Override
+	public int insertMember(Map<String, Object> map) {
+		return sqlSession.insert(ns+"insertMember", map);
+		
+	}*/
 	@Override
 	public int insertMember(MemberDTO mdto) {
 		return sqlSession.insert(ns+"insertMember", mdto);
@@ -42,6 +49,14 @@ public class MemberDAOImpl implements MemberDAO{
 		}catch(NullPointerException e) {
 			return -2;
 		}
+	}
+	@Override
+	public int insertRelation(Map<String, Object> map) {//throws Exception{
+		int ret = sqlSession.insert(ns+"insertRel", map);
+		//if(ret <1)
+			//throw new Exception("rollback");
+		
+		return ret;
 	}
 	
 }

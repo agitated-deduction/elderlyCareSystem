@@ -12,17 +12,18 @@
 
 
 	</insert>
-	<insert id = "insertDevice" parameterType = "com.spring.elderlycare.dto.DevicesDTO">
+	<insert id = "insertDevice" parameterType = "com.spring.elderlycare.dto.ElderlyDTO">
 	INSERT INTO devices(elderly, homeIoT, bandIoT)
-	VALUES(#{elderly}, #{homeIoT}, #{bandIoT});
+	VALUES(#{ekey}, #{homeIoT});
 	</insert>
-	<insert id = "manage" parameterType = "HashMap">
+	<insert id = "insertManage" parameterType = "HashMap">
 	INSERT INTO manage(staff, elderly)
 	VALUES(#{staff}, #{elderly});
 	</insert>
 	<select id = "selectDevices" parameterType = "String" resultType = "com.spring.elderlycare.dto.ElderlyDTO">
-		SELECT * FROM elderly LEFT JOIN manage ON manage.elderly =ekey
-WHERE staff = #{value};
+		SELECT * FROM elderly LEFT JOIN devices ON devices.elderly =  ekey
+				LEFT JOIN manage ON manage.elderly =ekey WHERE staff = #{value};
+		
 	</select>
 	<select id = "selectDevice" parameterType = "int" resultType = "com.spring.elderlycare.dto.ElderlyDTO">
 		SELECT * FROM elderly WHERE ekey = #{value};

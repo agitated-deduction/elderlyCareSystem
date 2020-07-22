@@ -1,48 +1,117 @@
-
-<!DOCTYPE html>
+<!DOCTYPE html5>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ page session="true" %>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<title>Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="<c:url value='/resources/css/bootstrap.min.css'/>" rel="stylesheet">
+<link href="<c:url value='/resources/css/bootstrap-responsive.min.css'/>" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+<link href="<c:url value='/resources/css/font-awesome.css'/>" rel="stylesheet">
+<link href="<c:url value='/resources/css/style.css'/>" rel="stylesheet">
+<link href="<c:url value='/resources/css/pages/dashboard.css'/>" rel="stylesheet">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+ 
+<script type = "text/javascript" charset = "utf-8">
+    //sessionStorage.setItem("ctx", "${pageContext.request.contextPath}");
+    //var ctx = sessionStorage.getItem("ctx");
+    </script>   
 </head>
 <body>
 <c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
-<a href = "${contextPath}/">HOME</a>
 <c:if test = "${empty uid }">
-	<a href = "${contextPath}/users/login" class = "btn btn-default" role = "button">로그인</a>
-	<a href = "${contextPath}/users/join" class = "btn btn-default" role = "button">회원가입</a>
+<%response.sendRedirect(request.getContextPath()+"/users/login"); %>
 </c:if>
-<c:if test = "${not empty uid }">
-	<a href = "${contextPath}/users/info" class = "btn btn-default" role = "button">내 정보</a>
-	<a class = "btn btn-default" id = "btn-logout" role = "button">로그아웃</a>
-	<c:if test = "${auth == 1 }">
-	<a href = "${contextPath}/devices/form" class = "btn btn-default" role = "button">기기등록</a>
-	<a href  = "" class = "btn btn-default" role = "button">가입 승인</a>
-	</c:if>
-	<br/>
-	<form class = 'delete-form' action = "${contextPath}/users/info" method = "post">
-	<input type = "hidden" name = "_method" value = "delete"/>
-	<button type = "submit">회원 탈퇴</button>
-	</form>
-	<a href = "${contextPath}/users/mod-form" class = "btn btn-default" role = "button">정보 수정</a>
-	
 
-</c:if>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="${contextPath}/">노인 건강 모니터링 시스템 </a>
+      <div class="nav-collapse">
+        <ul class="nav pull-right">
+          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i> 
+                            <c:if test ="${empty edto }">List</c:if>
+                            ${edto.ename } <b class="caret"></b></a>
+            <ul class="dropdown-menu" id = "eld-list">
+              <li>
+            </ul>
+          </li>
+          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                            class="icon-user"></i> ${ uid} <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:;">Profile</a></li>
+              <li><a href="#" onclick="logout(); return false;">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="navbar-search pull-right">
+          <input type="text" class="search-query" placeholder="Search">
+        </form>
+      </div>
+      <!--/.nav-collapse --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /navbar-inner --> 
+</div>
+<!-- /navbar -->
+<div class="subnavbar">
+  <div class="subnavbar-inner">
+    <div class="container">
+      <ul class="mainnav">
+        <li class="active"><a href="${contextPath}/"><i class="icon-dashboard"></i><span>Home</span> </a> </li>
+        <li><a href="${contextPath }/devices/datas"><i class="icon-bar-chart"></i><span>Datas</span> </a> </li>
+        <li><a href="guidely.html"><i class="icon-facetime-video"></i><span>Home CCTV</span> </a></li>
+
+      <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Drops</span> <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="signup.html">기기 등록</a></li>
+            <li><a href="error.html">가입 승인</a></li>
+          </ul>
+        </li>
+
+        
+      </ul>
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /subnavbar-inner --> 
+</div>
+<!-- /subnavbar -->
 </body>
-<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
-<script type = "text/javascript">
-$(document).ready(function(){
-	
-	$('#btn-logout').click(function(){
+
+
+<script src="<c:url value='/resources/js/jquery-1.7.2.min.js'/>"></script> 
+<script>	
+	function logout(){
 		$.getJSON('/elderlycare/users/logout', function(data){
 			window.location.replace('');
 		});
-	});
-});
-
+	}
+	function selectDev(ekey){
+		sessionStorage.setItem('ekey', ekey);
+		window.location.replace('');
+	}
+	 $(document).ready(function() {
+	 	var html = '';
+	 	$.getJSON('/elderlycare/devices', function(data){
+	 		$.each(data, function(index, item){
+	 			//html +="<li><a href = 'devices/"+item.ekey+"'>";
+	 			html+="<li><a href='#' onclick='selectDev("+item.ekey+"); return false;'>"
+	 			html +=item.ename+"</a></li>";
+	 		});
+	 		$('#eld-list').html(html);
+	 	});
+	 	//sessionStorage.getItem('ekey', ekey);
+	 	
+	 });
 </script>
 </html>

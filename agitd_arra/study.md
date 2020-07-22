@@ -1630,3 +1630,522 @@ manage table update.
 승인 버튼 누르면 role++;
 
 spring, mybatis, jpa, herinate?
+
+
+### 20200714
+보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+
+```sql
+UPDATE manage SET relative = "ddd" 
+	WHERE elderly = (
+	SELECT ekey FROM elderly 
+	WHERE ename = "노인1" AND ebirth = "19330202");
+```
+```sql
+UPDATE manage SET relative = "ddd" 
+	WHERE elderly = (
+	SELECT ekey FROM elderly 
+	WHERE ename = "노인1" AND ebirth = "19330201");
+```
+
+Transaction
+
+Atomicity
+Consistency
+Isolation
+Durability
+세로 읽기 ACID : 대충 힘들다는 뜻
+
+@Transactional
+```xml
+<!-- 트랜잭션 관련 설정 -->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"></property>
+</bean>
+	
+<!-- 트랜잭션 어노테이션 인식 -->
+<tx:annotation-driven/>
+```
+<<이거 했는데 왜 안되냐
+
+그냥 직접 롤백 하는거 시도
+
+트랜잭션, deletecascade 없애기
+
+
+**
+7. 15. 오전 - join 부분 수정. db 수정. / 오후 - home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 16. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 17. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+
++ 트랜잭션ㅜㅜ
+
+iframe
+
+기기 등록 시, mqtt
+
+동영상 저장.
+
+파일 업로드
+```java
+File targetFile = new File("/경로"+multipartFile.getOriginalFilename());
+try{
+	InputStream fileStream = multipartFile.getInputStream();
+	FileUtils.copyInputStreamToFile(fileStream, targetFile);
+}catch(IOException e){
+	FileUtils.deleteQuietly(targetFile);
+	e.printStackTrace();
+}
+return "redirect:/";
+```
+
+### 20200716
+
+**
+7. 16. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 17. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+
+encoding 된 byte[] 를 mqttmessage로 받음. 
+message.toString
+byte string to byte array
+decoding
+decoding byte to file
+file save
+
+
+
+DATA에 온습도 추가할거면
+DTO 새로 만들기
+db는 그대로 나눠둠
+
+
+root-context.xml
+datasource bean
+
+```sql
+select * FROM(select * FROM banddata
+where ekey = #{value}
+order by measuredtime DESC limit 1)b
+cross join (SELECT humid, temp FROM realtimedata
+where elderly = #{value}
+order by measuredtime DESC limit 1)a;
+```
+
+
+Error Code: 1248. Every derived table must have its own alias
+
+b
+```
+select * FROM(select * FROM banddata
+where ekey = #{value}
+order by measuredtime DESC limit 1)b
+```
+
+
+datas2dto에 humid temp 추가 안하고 map으로 전달할 지
+그냥 할 지
+
+list로 받을때는 따로 주니까
+그건 또 어떻게 하지
+일단 냅두고
+
+내일은 프론트부터 만들어야겠다
+
+
+20200717
+
+
+https://www.egrappler.com/templatevamp-twitter-bootstrap-admin-template-now-available/
+
+
+
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+
+<script type = "text/javascript">
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+
+</script>
+
+
+
+
+
+**
+7.20. 전체 화면 틀 만들기
+7.21 - 7.22. 현재 데이터, 데이터 그래프 만들기.
+7.23. 기기 목록, 현재 상태
+7.24. 로그인, 로그아웃, 회원가입, 기기등록.
+
+20200720
+
+<!DOCTYPE html5>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ page session="true" %>
+<html>
+<head>
+	<title>Home</title>
+
+</head>
+<body>
+<%@ include file="header.jsp" %>
+
+<h1>
+	Hello world!  
+</h1>
+<p>session id : <%=session.getAttribute("uid") %></p>
+<p>test ${uid }</p>
+<P>  The time on the server is ${serverTime}. </P>
+<div id = "list">
+</div>
+
+</body>
+
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+<script type = "text/javascript">
+ 	$(document).ready(function(){
+		var html = '';
+		$.getJSON('devices', function(data){
+			$.each(data, function(index, item){
+				html+='<p>';
+				html+=item.ename+', '+item.ebirth+', '+item.etel+', '+item.eaddr;
+				//html += '<button type = \"button\" onClick = \"location.href=\'http://'; //현재창
+				html += '<button type = \"button\" onClick = \"window.open(\'http://';	//새창
+				html +=item.homeIoT;
+				html +=':8090/?action=stream\')\">';
+				html +=item.homeIoT+'</button>'
+				
+				//data 보기 button
+				
+				html+='</p>';
+				
+			});
+			$('div').html(html);
+		});
+		/*$(데이터 보기 버튼).click(function(){
+			포워드 , 데이터  화면
+		});*/
+		
+	});
+	 
+</script>
+
+</html>
+
+
+
+Spring mvc에서 js, css 파일 사용하기
+
+root-context.xml
+```xml
+<mvc:resource mapping = "/resources/**" location = "/resources/" />
+```
+/resource/js, /resource/css와 같은 경로를 명시하는 경우에 /resources/ 경로로 해석하겠다는 의미. resources는 webapp/resources를 의미한다.
+
+```
+<c:url value = "/resources/css/main.css" />" rel = "stylesheet">
+```
+이런 식으로 사용 가능.
+
+a태그에 js function 사용하기.
+`<a href="javascript:함수();">`
+url에 자동으로 #이 붙는ㄴ 경우가 생김
+
+`<a href = "#" onClick=함수();return false;>`
+	로 해결
+
+```js
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+```
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ page session="true" %>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="<c:url value = '/resources/css/bootstrap.min.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/bootstrap-responsive.min.css'/>" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+<link href="<c:url value = '/resources/css/font-awesome.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/style.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/pages/dashboard.css'/>" rel="stylesheet">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+<c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
+
+<a href = "${contextPath}/">HOME</a>
+<c:if test = "${empty uid }">
+	<a href = "${contextPath}/users/login" class = "btn btn-default" role = "button">로그인</a>
+	<a href = "${contextPath}/users/join" class = "btn btn-default" role = "button">회원가입</a>
+</c:if>
+<c:if test = "${not empty uid }">
+	<a href = "${contextPath}/users/info" class = "btn btn-default" role = "button">내 정보</a>
+	<a class = "btn btn-default" id = "btn-logout" role = "button">로그아웃</a>
+	<c:if test = "${auth == 1 }">
+	<a href = "${contextPath}/devices/form" class = "btn btn-default" role = "button">기기등록</a>
+	<a href  = "" class = "btn btn-default" role = "button">가입 승인</a>
+	</c:if>
+	<br/>
+	<form class = 'delete-form' action = "${contextPath}/users/info" method = "post">
+	<input type = "hidden" name = "_method" value = "delete"/>
+	<button type = "submit">회원 탈퇴</button>
+	</form>
+	<a href = "${contextPath}/users/mod-form" class = "btn btn-default" role = "button">정보 수정</a>
+	
+
+</c:if>
+
+</body>
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+
+<script type = "text/javascript">
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+
+</script>
+
+</html>
+
+
+
+자바스크립트에서 context path 사용하기
+
+<script type = "text/javascript" charset="utf-8">
+	sessionStorage.setItem("contextpath", "${pageContext.request.contextPath}");
+</script>
+처음에 세션에 저장해두고 필요할때
+var ctx = sessionStorage.getItem("contextpath");
+
+
+<tr>
+                    <td> 노인1 </td>
+                    <td> 주소주소 주소 주소 주소주소</td>
+                    <td> 0313333333</td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-ok"> </i></a><a href="javascript:;" class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></td>
+                  </tr>
+
+
+
+
+ <mvc:annotation-driven ignoreDefaultModelOnRedirect="true" />
+
+
+
+
+
+**
+7.21 - 7.22. 현재 데이터, 데이터 그래프 만들기.
+7.23. 현재 상태
+7.24. 로그인, 로그아웃, 회원가입, 기기등록.
+
+
+
+헤더 분리 or 합체?????????????
+
+
+
+20200721
+
+
+
+
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+<%@ include file="../header.jsp" %>
+<h1>login page</h1>
+<form action = "login" id ="login-form" method = "POST">
+<div>
+	<label for = "uid">ID:</label>
+	<input id = "uid" type = "text" name = "uid" >
+	</div>
+	<div>
+	<label for = "upwd">PASSWORD:</label>
+	<input id = "upwd" type = "password" name = "upwd" >
+</div>
+<button type = "submit">로그인</button>
+</form>
+</body>
+<script type = "text/javascript" src = "/elderlycare/resources/jquery-3.5.1.js"></script>
+<script type = "text/javascript">
+$(function(){
+	$('#login-form').submit(function(event){
+		event.preventDefault();
+		
+		//var data = {"uid": "staff101058", "upwd": "staff101058"};
+		var data = {uid: $("#uid").val(), upwd: $('#upwd').val()};
+
+		$.ajax({
+				type : 'POST',                            
+				url : 'login',                        
+				dataType : 'json',                          
+				contentType : 'application/json',            
+				data : JSON.stringify(data),            
+				success : function(response){
+					if(response.result){
+						alert(response.uid+'님 환영합니다.');
+						$(location).attr("href", "${contextPath}/");
+					}else
+						alert("아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다.");
+				},                      
+				error   : function(response){
+					alert(response.uid);
+				}
+		});
+	});
+});
+	
+
+
+</script>
+</html>
+```
+
+```js
+var key = ${edto.ekey}
+		//alert(key);
+		//html = "<div class ='stat'><i class = 'icon-asterisk'></i><span class = 'value'>33</span></div>";
+		//$('#test').html(html);
+		var html = '';
+     	 $.getJSON(key+'/curdata', function(data){
+     		alert(data.temp);
+     		//$.each(data, function(index, item){
+     			html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
+     			html+= data.temp;
+     			html+= "</span> </div>";
+     			
+     			html += "<div class='stat'> <i class='icon-tint'></i> <span class='value'>";
+	     		html+= data.humid;
+	     		html+= "</span> </div>";
+	     			
+	     		html += "<div class='stat'> <i class='icon-heart'></i> <span class='value'>";
+		     	html+= data.epulse;
+		     	html+= "</span> </div>";
+		     		
+		     	html += "<div class='stat'> <i class='icon-shopping-cart'></i> <span class='value'>";
+			    html+= data.estep;
+			    html+= "</span> </div>";
+     		//});
+     		$('#cur-data').html(html); 
+     	}); 
+```
+이렇게 통째로 넣으려니까 안 됨 왜 그런지 모르겠음
+
+```
+<div id="big_stats" class="cf" id = "cur-data">
+                  
+                      
+                    <div class="stat"> <i class="icon-asterisk"></i> <span class="value" id = "temp"></span> </div>
+                
+                    
+                    <div class="stat"> <i class="icon-tint"></i> <span class="value"id = humid></span> </div>
+             
+                    
+                    <div class="stat"> <i class="icon-heart"></i> <span class="value"id = "epulse"></span> </div>
+              
+                    
+                    <div class="stat"> <i class="icon-shopping-cart"></i> <span class="value"id = "estep"></span> </div>
+               
+                </div>
+```
+```js
+var key = ${edto.ekey}
+		//alert(key);
+		//html = "<div class ='stat'><i class = 'icon-asterisk'></i><span class = 'value'>33</span></div>";
+		//$('#test').html(html);
+		var html = '';
+     	 $.getJSON(key+'/curdata', function(data){
+     		
+     		//$.each(data, function(index, item){
+     			//html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
+     			html= data.temp;
+     			//html+= "</span> </div>";
+     			$('#temp').html(html);
+     			
+     			//html += "<div class='stat'> <i class='icon-tint'></i> <span class='value'>";
+	     		html= data.humid;
+	     		//html+= "</span> </div>";
+	     		$('#humid').html(html);
+	     			
+	     		//html += "<div class='stat'> <i class='icon-heart'></i> <span class='value'>";
+		     	html= data.epulse;
+		     	//html+= "</span> </div>";
+		     	$('#epulse').html(html);
+		     		
+		     	//html += "<div class='stat'> <i class='icon-shopping-cart'></i> <span class='value'>";
+			    html= data.estep;
+			    //html+= "</span> </div>";
+			    $('#estep').html(html);
+     		//});
+     		//$('#cur-data').html(html);
+     	});
+```
+
+하나씩 넣어줬음
+
+
+
+
+그래프!!!!!!!!
+이상 데이터 처리!!!!!!!!!!!
+실시간 스트리밍!!!!!!
+녹화비디오!!!!!!
+
+
+20200722
+
+** 데이터 받을때 범위 많이 벗어나는 예외 데이터 지우기.
+
+
+
+7.23. 맥박 그래프, 걸음 수 그래프, 삐죽 튀어나오는 데이터들 거르기(mqtt)
+
+7.24. 현재 상태 (stat) 이상 있을때 목록에 체크표시, 회원가입, 기기등록

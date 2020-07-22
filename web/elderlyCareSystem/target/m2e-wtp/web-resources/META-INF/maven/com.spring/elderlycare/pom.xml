@@ -43,13 +43,7 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-				
-		<!-- AspectJ -->
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>${org.aspectj-version}</version>
-		</dependency>	
+		
 		
 		<!-- Logging -->
 		<dependency>
@@ -133,6 +127,14 @@
     <artifactId>aspectjweaver</artifactId>
     <version>1.9.4</version>
 </dependency>
+
+<!-- https://mvnrepository.com/artifact/cglib/cglib -->
+<dependency>
+    <groupId>cglib</groupId>
+    <artifactId>cglib</artifactId>
+    <version>3.3.0</version>
+</dependency>
+
 	<!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
 <dependency>
     <groupId>org.springframework</groupId>

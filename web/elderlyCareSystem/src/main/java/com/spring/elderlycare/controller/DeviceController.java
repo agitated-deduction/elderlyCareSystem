@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.elderlycare.dto.Datas2DTO;
 import com.spring.elderlycare.dto.DatasDTO;
-import com.spring.elderlycare.dto.DevicesDTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
 import com.spring.elderlycare.service.DataService;
 import com.spring.elderlycare.service.DeviceService;
@@ -33,7 +32,6 @@ public class DeviceController {
 	@Autowired private DataService dataservice;
 	//@Autowired private MqttTaskService mqtt;
 	@Autowired private ElderlyDTO edto;
-	@Autowired private DevicesDTO ddto;
 	@Autowired private Datas2DTO datadto;
 	private final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
@@ -67,20 +65,12 @@ public class DeviceController {
 	/*********************************/
 	@RequestMapping(value = "/form", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
-	public boolean form(HttpSession httpSession, @RequestBody Map<String, String> json) {
-		logger.info(json.toString());
-		edto.setEname(json.get("ename"));
-		edto.setEbirth(json.get("ebirth"));
-		edto.setEaddr(json.get("eaddr"));
-		edto.setEtel(json.get("etel"));
+	public boolean form(HttpSession httpSession, @RequestBody ElderlyDTO edto) {
 		
-		ddto.setHomeIoT(json.get("homeIoT"));
-		ddto.setBandIoT(json.get("bandIoT"));
 		
 		logger.info(edto.getEname());
-		logger.info(ddto.getBandIoT());
 		
-		service.deviceRegistration(edto, ddto, (String)httpSession.getAttribute("uid"));
+		service.deviceRegistration(edto, (String)httpSession.getAttribute("uid"));
 		
 		return true;
 	}
@@ -90,11 +80,17 @@ public class DeviceController {
 		
 		return mav;
 	}
-	@RequestMapping(value = "/{num}", method = RequestMethod.GET)
-	public ElderlyDTO deviceInfo(Model model, @PathVariable("num") int dnum) {
-		edto = service.elderlyInfo(dnum);
-		return edto;
-	}
+
+	/*
+	 * @RequestMapping(value = "/{num}", method = RequestMethod.GET) public
+	 * ModelAndView deviceInfo(HttpSession session,ModelAndView
+	 * mav, @PathVariable("num") int dnum) {
+	 * 
+	 * edto = service.elderlyInfo(dnum); session.setAttribute("edto", edto);
+	 * mav.setViewName("redirect:/");
+	 * 
+	 * return mav; }
+	 */
 	@RequestMapping(value = "/{num}", method = RequestMethod.PUT)
 	public ElderlyDTO deviceInfoModify(Model model) {
 		
@@ -119,7 +115,7 @@ public class DeviceController {
 		
 		return mav;
 	}*/
-	@RequestMapping("/{num}/datas")
+	@RequestMapping("/{num}/daydatas")
 	public Map<String, Object> viewDataLog(Model model, @PathVariable("num") int num) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		//List<Datas2DTO> li = dataservice.selectHealths(num);
@@ -130,11 +126,29 @@ public class DeviceController {
 		
 		return map;
 	}
-	@RequestMapping("/{num}/data")
+	@RequestMapping("/{num}/banddatas")
+	public List<Datas2DTO> viewBandData(Model model, @PathVariable("num") int num) {
+		List<Datas2DTO> list = dataservice.selectHealths(num);
+		
+		return list;
+	}
+	@RequestMapping("/{num}/htdatas")
+	public List<DatasDTO> viewHTdatas(Model model, @PathVariable("num") int num) {
+		List<DatasDTO> list = dataservice.getHumTemp(num);
+		return list;
+	}
+	@RequestMapping(value = "/{num}/curdata", method = RequestMethod.GET)
 	public Datas2DTO viewCurData(Model model, @PathVariable("num") int num){
 		//Map<String, Object> map = new HashMap<String, Object>();
-		datadto = dataservice.selectCurHealthData(num);
+		
+		datadto = dataservice.selectCurData(num);
 		// 현재 온습도까지
 		return datadto;
+	}
+	@RequestMapping("/datas")
+	public ModelAndView datasPage(ModelAndView mav) {
+		
+		mav.setViewName("charts");
+		return mav;
 	}
 }

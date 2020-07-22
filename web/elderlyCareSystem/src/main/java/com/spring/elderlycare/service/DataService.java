@@ -12,5 +12,5 @@ public interface DataService {
 	public List<DatasDTO> getHumTemp(int num);
 	public List<Datas2DTO> selectHealths(int num);
 	public void insertBandDatas(Datas2DTO dto);
-	public Datas2DTO selectCurHealthData(int num);
+	public Datas2DTO selectCurData(int num);
 }

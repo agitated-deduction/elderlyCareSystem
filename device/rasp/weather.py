@@ -29,6 +29,9 @@ WeatherCast = soup.find('p', {'class' : 'cast_txt'}).text
 TodayUV = soup.find('span', {'class' : 'indicator'}).text[4:-2] + " " + soup.find('span', {'class' : 'indicator'}).text[-2:]
 # TodayUV = soup.find('span', {'class' : 'lv4'}).text
 
+# 비
+rain = soup.find('span', {'class' : 'rainfall'}).text
+
 # 현재 사는 위치  
 nowlocal = soup.find('span', {'class' : 'btn_select'}).text
 
@@ -45,7 +48,16 @@ Ozon = CheckDust[2][:-2] + " " + CheckDust[2][-2:]
 print('현재 위치: '+ nowlocal)
 print('현재온도 :'+NowTemp)
 print(WeatherCast)
-print('자외선: '+TodayUV)
+
+if (WeatherCast.startswith('비')==True):
+    print(rain)  # 비 
+else:
+    print('자외선: '+TodayUV)
+
+# print('자외선: '+TodayUV)
+# print('자외선: '+rain)  # 비 
+
+
 print('미세먼지 :'+FineDust)
 print('초미세먼지 :'+UltraFineDust)
 print('오존 지수 :'+Ozon)

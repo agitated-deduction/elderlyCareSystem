@@ -132,7 +132,12 @@ class mainGUI(QDialog):
  
         self.ui.label_weather_6.setText('현재온도 : '+NowTemp+'\n')
         self.ui.label_weather_5.setText(WeatherCast+'\n')
-        self.ui.label_weather_4.setText('자외선 : '+TodayUV+'\n')
+        if (WeatherCast.startswith('비')==True):
+            self.ui.label_weather_4.setText(rain+'\n')
+        else:
+            self.ui.label_weather_4.setText('자외선 : '+TodayUV+'\n')
+        # self.ui.label_weather_4.setText('자외선 : '+TodayUV+'\n')
+        
         self.ui.label_weather_3.setText('미세먼지 : '+FineDust+'\n')
         self.ui.label_weather_2.setText('초미세먼지 : '+UltraFineDust+'\n')
         self.ui.label_weather.setText('오존 지수 : '+Ozon+'\n')
@@ -162,7 +167,7 @@ class Thread_dht(QThread):
 
             self.change_value1.emit(t)
             self.change_value2.emit(h)
-            time.sleep(30)
+            time.sleep(60*2)
 
             # client.publish("home/11/temp", str(t))  # home 의 온도 토픽
             # print("Temperature = {0:0.1f}*C".format(t))

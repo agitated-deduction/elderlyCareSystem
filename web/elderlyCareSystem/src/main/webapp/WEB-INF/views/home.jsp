@@ -26,67 +26,8 @@
     </script>
 </head>
 <body>
+<%@ include file="header.jsp" %>
 
-<c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
-<c:if test = "${empty uid }">
-<%response.sendRedirect("users/login"); %>
-</c:if>
-
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
-                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="${contextPath}/">노인 건강 모니터링 시스템 </a>
-      <div class="nav-collapse">
-        <ul class="nav pull-right">
-          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i> 
-                            <c:if test ="${empty edto }">List</c:if>
-                            ${edto.ename } <b class="caret"></b></a>
-            <ul class="dropdown-menu" id = "eld-list">
-              <li>
-            </ul>
-          </li>
-          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                            class="icon-user"></i> ${ uid} <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="javascript:;">Profile</a></li>
-              <li><a href="#" onclick="logout(); return false;">Logout</a></li>
-            </ul>
-          </li>
-        </ul>
-        <form class="navbar-search pull-right">
-          <input type="text" class="search-query" placeholder="Search">
-        </form>
-      </div>
-      <!--/.nav-collapse --> 
-    </div>
-    <!-- /container --> 
-  </div>
-  <!-- /navbar-inner --> 
-</div>
-<!-- /navbar -->
-<div class="subnavbar">
-  <div class="subnavbar-inner">
-    <div class="container">
-      <ul class="mainnav">
-        <li class="active"><a href="${contextPath}/"><i class="icon-dashboard"></i><span>Home</span> </a> </li>
-        <li><a href="${contextPath }/devices/datas"><i class="icon-bar-chart"></i><span>Datas</span> </a> </li>
-        <li><a href="guidely.html"><i class="icon-facetime-video"></i><span>Home CCTV</span> </a></li>
-
-      <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Drops</span> <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="signup.html">기기 등록</a></li>
-            <li><a href="error.html">가입 승인</a></li>
-          </ul>
-        </li>
-
-        
-      </ul>
-    </div>
-    <!-- /container --> 
-  </div>
-  <!-- /subnavbar-inner --> 
-</div>
-<!-- /subnavbar -->
 <div class="main">
   <div class="main-inner">
     <div class="container">
@@ -136,8 +77,10 @@
                 <thead>
                   <tr>
                     <th> 이름 </th>
+                    <th>생년월일</th>
                     <th> 주소</th>
                     <th> 전화번호</th>
+                    
                     <th class="td-actions"> status</th>
                   </tr>
                 </thead>
@@ -399,9 +342,13 @@ function selectDev(ekey){
 	 		$.each(data, function(index, item){
 	 			html2+="<tr>";
 	 			html2 +="<td>"+item.ename+"</td>";
+	 			html2+="<td>"+item.ebirth+"</td>";
 	 			html2 +="<td>"+item.eaddr+"</td>";
 	 			html2 +="<td>"+item.etel+"</td>";
-	 			html2 += "<td class='td-actions'><a href='javascript:;' class='btn btn-small btn-success'><i class='btn-icon-only icon-ok'> </i></a><a href='javascript:;' class='btn btn-danger btn-small'><i class='btn-icon-only icon-remove'> </i></a></td>";
+	 			
+	 			html2 += 
+	 				item.stat?'<td class="td-actions"><a class="btn btn-small btn-success"><i class="btn-icon-only icon-ok"> </i></a></td>'
+	 			:'<td class="td-actions"> <a class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></td>';
 	 			html2+="</tr>";
 	 		});
 	 		$('#eld-table').html(html2);

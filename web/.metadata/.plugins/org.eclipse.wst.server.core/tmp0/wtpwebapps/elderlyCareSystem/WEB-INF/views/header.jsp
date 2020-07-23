@@ -70,13 +70,14 @@
         <li class="active"><a href="${contextPath}/"><i class="icon-dashboard"></i><span>Home</span> </a> </li>
         <li><a href="${contextPath }/devices/datas"><i class="icon-bar-chart"></i><span>Datas</span> </a> </li>
         <li><a href="guidely.html"><i class="icon-facetime-video"></i><span>Home CCTV</span> </a></li>
-
+<c:if test = '${auth eq 1}' >
       <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Drops</span> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="signup.html">기기 등록</a></li>
             <li><a href="error.html">가입 승인</a></li>
           </ul>
         </li>
+        </c:if>
 
         
       </ul>

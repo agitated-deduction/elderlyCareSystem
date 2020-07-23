@@ -82,7 +82,11 @@ public class LoginActivity extends AppCompatActivity {
         intent.putExtra("name", name);
         intent.putExtra("homeIot", "http://192.168.1.22:3000/");
         intent.putExtra("ekey", 1);
-        intent.putExtra("regid", "e-A5lnhOXLg:APA91bGTHRMaaKXBT3a_tl5wjApb3pc_bkk7C2GlAqYnqaLqXebScVMZHec2F1qDaytod0CmB9OITs3fo9NNxVKnnMCnPSHhSZEnfox8HI7wa6s3rWc1FsTHKKHEC6Uz-eFk7e5Bygd5");
+//        intent.putExtra("regid", "fW5vaG9wrME:APA91bEHkDueZb_RSeqCH9soJ8k2SGc5kWFrCfz0Ahk9_EA6n69ZPcmDEK1OCNSnyx8TCcjpjK2Qc9dWR4zcZRfBVdaG59HEI7tXz3kbJhiPu74canyYF1yStVCmBSCCNixrerDU-FHC");
+//        intent.putExtra("regid", "e-A5lnhOXLg:APA91bGTHRMaaKXBT3a_tl5wjApb3pc_bkk7C2GlAqYnqaLqXebScVMZHec2F1qDaytod0CmB9OITs3fo9NNxVKnnMCnPSHhSZEnfox8HI7wa6s3rWc1FsTHKKHEC6Uz-eFk7e5Bygd5");
+//        intent.putExtra("regid", "cU5SXNtAK1M:APA91bGCXzrFsivGR2bN1icHZM1xbXqr22UYEvOh5Tj6Sysk5RjuE7daZqkoluOhwUwqCSghaBl2iWDmEgCvjCI-7SNgwo_6FSYwUL2VsuYhF5ABQdWC818DU5UPvNkBxQR4-6vONVl5");
+        intent.putExtra("regid", "fONoNYucCDk:APA91bGHk7G2qnw-p9pwh2xcyANWibcaUWMPPkhXjBtXoVUhFQuzUmj1_p8UfRrsEUI4QsjFeZNiDANq7F5X_HoDDUCnRFog7w0U3xcrtBA8P_R8NqhS4iWoiF0citzMAzsiiLTsKGf6");
+
 
         startActivity(intent);
     }

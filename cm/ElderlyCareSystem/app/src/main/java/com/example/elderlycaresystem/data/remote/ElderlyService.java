@@ -44,7 +44,7 @@ public interface ElderlyService {
     @GET("devices")
     Call<List<ElderlyInfo>> getTestList();
 
-    @GET("datas")
+    @GET("elderly")
     Call<ElderlyData> getTestData();
 
 

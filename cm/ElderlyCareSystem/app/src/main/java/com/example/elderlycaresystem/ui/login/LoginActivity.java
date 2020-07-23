@@ -25,8 +25,6 @@ import com.example.elderlycaresystem.R;
 import com.example.elderlycaresystem.ui.main.MainActivity;
 import com.example.elderlycaresystem.util.RetroUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,14 +116,14 @@ public class LoginActivity extends AppCompatActivity {
         }
         LoginData loginData = new LoginData(id,pw);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                newToken = instanceIdResult.getToken();
-                Log.v("token","등록 id: "+newToken);
-                Toast.makeText(LoginActivity.this, "tocken: " + newToken, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                newToken = instanceIdResult.getToken();
+//                Log.v("token","등록 id: "+newToken);
+//                Toast.makeText(LoginActivity.this, "tocken: " + newToken, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         LoginData2 loginData2 = new LoginData2(id,pw,newToken);
 
@@ -204,5 +202,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 }

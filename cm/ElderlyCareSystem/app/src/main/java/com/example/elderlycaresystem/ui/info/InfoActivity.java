@@ -161,6 +161,9 @@ public class InfoActivity extends AppCompatActivity {
         stat = elderlyData.getStat();
         temp = elderlyData.getTemp();
         humid = elderlyData.getHumid();
+        String str = "step: "+step+", pulse: "+pulse+", kcal: "+kcal+", stat: "+stat+", temp: "+temp;
+        Log.d("InfoActivity_SD",str);
+        Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
 
         stepText.setText(String.valueOf(step));
         pulseText.setText(String.valueOf(pulse));

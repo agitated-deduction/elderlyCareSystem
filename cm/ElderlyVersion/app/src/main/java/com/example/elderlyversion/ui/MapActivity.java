@@ -102,7 +102,7 @@ public class MapActivity extends AppCompatActivity implements AutoPermissionsLis
     }
 
     public void startLocationService() {
-        lati = MainActivity.getElderlyData().getElatitude();
+        lati = MainActivity.getElderlyData().getEaltitude();
         longi = MainActivity.getElderlyData().getElongitude();
 
         //TODO : 임시 위도-경도

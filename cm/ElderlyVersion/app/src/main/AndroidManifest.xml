@@ -27,10 +27,7 @@
         android:usesCleartextTraffic="true">
 
 
-        <service
-            android:name="com.example.elderlyversion.service.DataSendService"
-            android:enabled="true"
-            android:exported="true" /> <!-- Map library -->
+       <!-- Map library -->
         <uses-library android:name="com.google.android.maps" />
         <uses-library
             android:name="org.apache.http.legacy"

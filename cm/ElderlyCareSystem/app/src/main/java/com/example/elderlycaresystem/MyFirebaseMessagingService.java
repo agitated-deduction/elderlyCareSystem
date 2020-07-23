@@ -4,19 +4,16 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.IBinder;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.elderlycaresystem.ui.info.InfoActivity;
 import com.example.elderlycaresystem.ui.main.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -44,23 +41,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String body = remoteMessage.getData().get("body");
         String ekey = remoteMessage.getData().get("ekey");
         String ename = remoteMessage.getData().get("ename");
-        String homeIot = remoteMessage.getData().get("homeIot");
 
         if (title != null && body != null && ekey != null && ename != null){
             Log.d(TAG,"Title: "+title+", body: "+body+", ekey: "+ekey);
 
             sendNotification(title,body);
-            newActivityIntent(ekey,ename,homeIot);
+            newActivityIntent(ekey,ename);
         }
     }
 
-    private void newActivityIntent(String key,String name,String homeIot){
+    private void newActivityIntent(String key,String name){
         Log.d(TAG, "sendToActivity() 호출됨. ekey: " +key);
-        Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
         intent.putExtra("ekey",Integer.valueOf(key));
         intent.putExtra("ename",name);
-        intent.putExtra("homeIot",homeIot);
 
         // Service에서 Activity 띄우려면 Intent에 Flag를 주어야 됨..!!
         // MainActivity가 이미 메모리에 올라가 있을경우 MainActivity의 onNewIntent()메서드로 데이터가 전달됨!!
@@ -83,7 +78,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(text)

@@ -45,10 +45,6 @@ public class ElderlyData {
 
     public void setEkcal(double ekcal) { this.ekcal = ekcal; }
 
-    public double getElatitude() { return ealtitude; }
-
-    public void setElatitude(double elatitude) { this.ealtitude = elatitude; }
-
     public double getElongitude() { return elongitude; }
 
     public void setElongitude(double elongitude) { this.elongitude = elongitude; }

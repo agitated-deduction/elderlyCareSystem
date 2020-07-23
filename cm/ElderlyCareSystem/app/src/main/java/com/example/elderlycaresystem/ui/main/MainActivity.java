@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<ElderlyInfo>> call, Response<List<ElderlyInfo>> response) {
                 if (response.isSuccessful() && response.body() != null) {
 //                    Log.d("Main_getList_Success", "Get Data(0).home : "+ response.body().get(0).getHomeIoT());
+                    Toast.makeText(MainActivity.this, "Data get! : " + response.body().get(0).getEname(), Toast.LENGTH_SHORT).show();
                     adapter.addItems(response.body());
                     adapter.notifyDataSetChanged();// 어댑터로 화면 내 데이터 새로고침
                 } else {

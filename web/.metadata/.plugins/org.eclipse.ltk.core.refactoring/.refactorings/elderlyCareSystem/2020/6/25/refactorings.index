@@ -1,9 +1,0 @@
-1592183422875	Rename type 'DeviceUserDAO'
-1592183433804	Rename type 'DeviceUserDAOImpl'
-1592183453310	Rename type 'DeviceUserService'
-1592183468025	Rename type 'DeviceUserServiceImpl'
-1592183479813	Rename type 'DeviceUserController'
-1592188091922	Delete element
-1592282207789	Rename type 'DeviceUserDTO'
-1592282385011	Rename type 'DeviceDTO'
-1592283937576	Rename resource 'deviceUser'

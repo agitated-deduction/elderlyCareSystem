@@ -19,13 +19,15 @@
     <div class="main">
         <div class="main-inner">
             <div class="container">
-             
+             <div class="row">
+                    <div class="span6">
+                        <div class="widget widget-nopad">
  <div class="widget">
                             <div class="widget-header">
                                 <i class="icon-bar-chart"></i>
-                                <h3>Home</h3>
+                                <h3>Monitoring</h3>
                             </div>
-                            <div class="widget-content">
+                            <div class="widget-content" id = "streaming">
                             
                             
  								<iframe></iframe>
@@ -35,7 +37,23 @@
                         
                     
 
+                </div>
+                <!-- widget widget-nopad -->
+                </div>
+                <!-- span6 -->
+                <div class = "span6">
+                <div class = "widget">
+                <div class = "widget-header">
+                <i class = "icon-map-marker"></i>
+                <h3>GPS</h3>
+                </div>
+                <div class = "widget-content" id = "map" style = "width:100%;height:350px;">
                 
+                </div>
+                </div>
+                </div>
+                </div>
+                <!-- row -->
             </div>
             <!-- /container -->
         </div>
@@ -125,6 +143,23 @@
 
  
 <script src="<c:url value='/resources/js/base.js'/>"></script> 
-
+<script>
+$(function(){
+	var ip = sessionStorage.getItem("ip");
+	var mapX = sessionStorage.getItem("mapX");
+	var mapY = sessionStorage.getItem("mapY");
+	
+	console.log("ekey:"+sessionStorage.getItem("ekey"));
+	console.log("ip:"+ip);
+	var url = "http://"+ip+":8090/?action=stream";
+	
+	var streaming = '<center><iframe src ="'+url+'" width="325" height="240">이 브라우저는 iframe을 지원하지 않습니다.</iframe></center>';
+	$('#streaming').html(streaming);
+	
+	var map = '';
+	$('#map').html(map);
+	
+});
+</script>
 </body>
 </html>

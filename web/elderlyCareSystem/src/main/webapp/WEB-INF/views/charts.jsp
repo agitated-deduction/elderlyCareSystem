@@ -250,10 +250,11 @@
 <script src="<c:url value='/resources/js/base.js'/>"></script> 
 <script>
 $(function(){
-  	var key = sessionStorage.getItem('ekey');//'<c:out value = '${edto.ekey}'/>';
+	var ekey = sessionStorage.getItem("ekey");
+  	//var eld = sessionStorage.getItem('elderly');//'<c:out value = '${edto.ekey}'/>';
 	
   	var html = '';
-  	$.getJSON(key+'/curdata', function(data){
+  	$.getJSON(ekey+'/curdata', function(data){
      		
 		//$.each(data, function(index, item){
 		//html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
@@ -341,7 +342,7 @@ $(function(){
     // Load in data and draw line graph
     //var tsv_url = "sample_data.tsv";
     //d3.tsv(tsv_url, function(error, data) {
-     $.getJSON(key+'/htdatas', function(data){   
+     $.getJSON(ekey+'/htdatas', function(data){   
      	 // preprocess tsv data
         data.forEach(function(d) {
         	d.timestamp = iso.parse(d.measuredtime+"+0900");
@@ -405,7 +406,7 @@ $(function(){
     	        .attr("d", lineHumid);
     	}); 
     	 
-    $.getJSON(key+'/banddatas', function(dd){
+    $.getJSON(ekey+'/banddatas', function(dd){
     	
   		var label = '"labels": [';
   		var datas = ' "datasets": [{"fillColor": "rgba(151,187,205,0.5)",'
@@ -430,8 +431,13 @@ $(function(){
  		datas +=']}]';
  		steps +=']}]';
  		var barChartData = JSON.parse('{'+label+datas+'}');
+ 		barChartData.labels.reverse();
+ 		barChartData.datasets[0].data.reverse();
  		console.log(barChartData);
+ 		
  		var lineChartData = JSON.parse('{'+label+steps+'}');
+ 		lineChartData.labels.reverse();
+ 		lineChartData.datasets[0].data.reverse();
  		console.log(lineChartData);
  		 /* var barChartData = {
 		            labels: [],

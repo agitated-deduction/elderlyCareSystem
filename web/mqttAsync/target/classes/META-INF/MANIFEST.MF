@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: bit34
-Build-Jdk: 11.0.6
+Built-By: BIT
+Build-Jdk: 1.8.0_151
 Created-By: Maven Integration for Eclipse
 

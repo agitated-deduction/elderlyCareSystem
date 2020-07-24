@@ -30,7 +30,7 @@ class mainGUI(QDialog):
 
     def __init__(self, parent=None):
         QDialog.__init__(self, parent)
-        # self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
+        
         
         ##---- PyQt관련 
         self.ui = uic.loadUi("main.ui")  # ui불러오기 
@@ -132,12 +132,12 @@ class mainGUI(QDialog):
  
         self.ui.label_weather_6.setText('현재온도 : '+NowTemp+'\n')
         self.ui.label_weather_5.setText(WeatherCast+'\n')
-        if (WeatherCast.startswith('비')==True):
+        if (WeatherCast.startswith('비')==True or WeatherCast.startswith('흐림')==True):
             self.ui.label_weather_4.setText(rain+'\n')
         else:
             self.ui.label_weather_4.setText('자외선 : '+TodayUV+'\n')
         # self.ui.label_weather_4.setText('자외선 : '+TodayUV+'\n')
-        
+
         self.ui.label_weather_3.setText('미세먼지 : '+FineDust+'\n')
         self.ui.label_weather_2.setText('초미세먼지 : '+UltraFineDust+'\n')
         self.ui.label_weather.setText('오존 지수 : '+Ozon+'\n')
@@ -163,11 +163,13 @@ class Thread_dht(QThread):
 
             ht = str("{0}/{1}".format(h,t))
             client.publish("home/1/ht", ht)
-            print('...')
+            print('...ht')
 
             self.change_value1.emit(t)
             self.change_value2.emit(h)
-            time.sleep(60*2)
+            time.sleep(60)
+            # time.sleep(10)
+
 
             # client.publish("home/11/temp", str(t))  # home 의 온도 토픽
             # print("Temperature = {0:0.1f}*C".format(t))

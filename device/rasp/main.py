@@ -161,6 +161,8 @@ class Thread_dht(QThread):
             # thingspeak 시각자료를 위한 센서값 보내기 : API사용
 
 
+
+
             ht = str("{0}/{1}".format(h,t))
             client.publish("home/1/ht", ht)
             print('...ht')

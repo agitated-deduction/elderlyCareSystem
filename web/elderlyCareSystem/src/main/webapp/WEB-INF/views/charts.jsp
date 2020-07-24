@@ -127,7 +127,7 @@
                             <div class="widget-header">
                                 <i class="icon-bar-chart"></i>
                                 <h3>
-                                    Bar Chart</h3>
+                                    Pulse graph</h3>
                             </div>
                             <!-- /widget-header -->
                             <div class="widget-content">
@@ -142,7 +142,7 @@
                             <div class="widget-header">
                                 <i class="icon-bar-chart"></i>
                                 <h3>
-                                    Line Chart</h3>
+                                    Step accumulate graph</h3>
                             </div>
                             <!-- /widget-header -->
                             <div class="widget-content">
@@ -250,10 +250,11 @@
 <script src="<c:url value='/resources/js/base.js'/>"></script> 
 <script>
 $(function(){
-  	var key = sessionStorage.getItem('ekey');//'<c:out value = '${edto.ekey}'/>';
+	var ekey = sessionStorage.getItem("ekey");
+  	//var eld = sessionStorage.getItem('elderly');//'<c:out value = '${edto.ekey}'/>';
 	
   	var html = '';
-  	$.getJSON(key+'/curdata', function(data){
+  	$.getJSON(ekey+'/curdata', function(data){
      		
 		//$.each(data, function(index, item){
 		//html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
@@ -285,10 +286,10 @@ $(function(){
 	//num = "2000";
     //if (mode=="desktop"){
         //$("body").addClass("desktop");
-        var num_ticks = 6;
-        var full_width = 540;
-        var full_height = 500;
-        var margin = {top: 30, right: 50, bottom: 40, left: 50};
+    var num_ticks = 6;
+    var full_width = 540;
+    var full_height = 500;
+    var margin = {top: 30, right: 50, bottom: 40, left: 50};
     /* } else {
         $("body").addClass("mobile");
         var num_ticks = 3;
@@ -341,15 +342,15 @@ $(function(){
     // Load in data and draw line graph
     //var tsv_url = "sample_data.tsv";
     //d3.tsv(tsv_url, function(error, data) {
-     $.getJSON(key+'/htdatas', function(data){   
+     $.getJSON(ekey+'/htdatas', function(data){   
      	 // preprocess tsv data
         data.forEach(function(d) {
-        d.timestamp = iso.parse(d.measuredtime+"+0900");
-        d.date = date_format(d.timestamp);
-        d.time = time_format(d.timestamp);
-        d.temp = parseFloat(d.temp);
-        d.humid = parseFloat(d.humid);
-    });
+        	d.timestamp = iso.parse(d.measuredtime+"+0900");
+        	d.date = date_format(d.timestamp);
+        	d.time = time_format(d.timestamp);
+        	d.temp = parseFloat(d.temp);
+        	d.humid = parseFloat(d.humid);
+    	});
 
     // update current temp, humid
     //$("#temp").text(data[0].temp + '\u2103');
@@ -358,57 +359,110 @@ $(function(){
     //$("#time").text(data[0].time);
 
     // domain for y axes
-    var temp_margin = 3.0, humid_margin = 5.0;
-    var temp_min    = d3.min(data, function(d){return d.temp-temp_margin;});
-    var temp_max    = d3.max(data, function(d){return d.temp+temp_margin;});
-    var humid_min   = d3.min(data, function(d){return d.humid-humid_margin;});
-    var humid_max   = d3.max(data, function(d){return d.humid+humid_margin;});
-
-    x.domain(d3.extent(data, function(d){return d.timestamp;}));
-    yTemp.domain([temp_min, temp_max]);
-    yHumid.domain([humid_min, humid_max]);
-
-    // bind data with line
-    var lineTemp = d3.svg.line()
-            .interpolate("basis")
-            .x(function(d) { return x(d.timestamp); })
-            .y(function(d) { return yTemp(d.temp); });
-         
-    var lineHumid = d3.svg.line()
-            .interpolate("basis")
-            .x(function(d) { return x(d.timestamp); })
-            .y(function(d) { return yHumid(d.humid); });
-
-             // Draw the x axis
-    svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0,"+height+")")
-            .call(xAxis);
-    // Draw the y axis
-    svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxisTemp);
-   svg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate("+width+",0)") // right side
+    	var temp_margin = 3.0, humid_margin = 5.0;
+    	var temp_min    = d3.min(data, function(d){return d.temp-temp_margin;});
+    	var temp_max    = d3.max(data, function(d){return d.temp+temp_margin;});
+    	var humid_min   = d3.min(data, function(d){return d.humid-humid_margin;});
+    	var humid_max   = d3.max(data, function(d){return d.humid+humid_margin;});
+	
+	    x.domain(d3.extent(data, function(d){return d.timestamp;}));
+    	yTemp.domain([temp_min, temp_max]);
+    	yHumid.domain([humid_min, humid_max]);
+	
+	    // bind data with line
+    	var lineTemp = d3.svg.line()
+    	        .interpolate("basis")
+    	        .x(function(d) { return x(d.timestamp); })
+    	        .y(function(d) { return yTemp(d.temp); });
+    	     
+    	var lineHumid = d3.svg.line()
+    	        .interpolate("basis")
+    	        .x(function(d) { return x(d.timestamp); })
+    	        .y(function(d) { return yHumid(d.humid); });
+	
+	             // Draw the x axis
+	    svg.append("g")
+	            .attr("class", "x axis")
+	            .attr("transform", "translate(0,"+height+")")
+	            .call(xAxis);
+	    // Draw the y axis
+	    svg.append("g")
+	            .attr("class", "y axis")
+	            .call(yAxisTemp);
+	    svg.append("g")
+	            .attr("class", "y axis")
+	            .attr("transform", "translate("+width+",0)") // right side
             .call(yAxisHumid);
 
     // Draw the line
-    svg.append("path")
-            .datum(data)
-            .attr("class", "line")
-            .attr("d", lineTemp);
-    svg.append("path")
-            .datum(data)
-            .attr("class", "line")
-            .style("stroke", "steelblue")
-            .attr("d", lineHumid);
-    }); 
+    	svg.append("path")
+    	        .datum(data)
+    	        .attr("class", "line")
+    	        .attr("d", lineTemp);
+    	svg.append("path")
+    	        .datum(data)
+    	        .attr("class", "line")
+    	        .style("stroke", "steelblue")
+    	        .attr("d", lineHumid);
+    	}); 
+    	 
+    $.getJSON(ekey+'/banddatas', function(dd){
+    	
+  		var label = '"labels": [';
+  		var datas = ' "datasets": [{"fillColor": "rgba(151,187,205,0.5)",'
+  			+'"strokeColor": "rgba(151,187,205,1)",'
+		    +'"data": [';
+		var steps = ' "datasets": [{"fillColor": "rgba(151,187,205,0.5)",'
+  			+'"strokeColor": "rgba(151,187,205,1)",'
+		    +'"data": [';
+ 		$.each(dd,function(index, item){
+ 			item.timestamp = iso.parse(item.measuredtime+"+0900");
+ 			//d.date = date_format(d.timestamp);
+ 	        item.time = time_format(item.timestamp);
+ 	        label += '"'+item.time+'",';
+ 	        datas += parseInt(item.epulse)+',';
+ 	        steps += parseInt(item.estep)+',';
+ 		});
+		label = label.substr(0, label.length-1);
+		datas = datas.substr(0, datas.length-1);
+		steps = steps.substr(0, steps.length-1);
+
+		label+='],';
+ 		datas +=']}]';
+ 		steps +=']}]';
+ 		var barChartData = JSON.parse('{'+label+datas+'}');
+ 		barChartData.labels.reverse();
+ 		barChartData.datasets[0].data.reverse();
+ 		console.log(barChartData);
+ 		
+ 		var lineChartData = JSON.parse('{'+label+steps+'}');
+ 		lineChartData.labels.reverse();
+ 		lineChartData.datasets[0].data.reverse();
+ 		console.log(lineChartData);
+ 		 /* var barChartData = {
+		            labels: [],
+		            datasets: [
+						{
+						    fillColor: "rgba(151,187,205,0.5)",
+						    strokeColor: "rgba(151,187,205,1)",
+						    data: []
+						}
+						]
+		        };
+ 		barChartData.labels.push(dd[0].time);
+ 		barChartData.labels.push(dd[1].time);
+ 		barChartData.datasets[0].data.push(dd[0].epluse);
+ 		barChartData.datasets[0].data.push(dd[1].epluse);
+ 		console.log(barChartData.datasets[0].data[0]); */
+		var myLine = new Chart(document.getElementById("area-chart").getContext("2d")).Line(lineChartData);
+		var myLine = new Chart(document.getElementById("bar-chart").getContext("2d")).Bar(barChartData);
+		
+     });
      
      
 });
 
-        var lineChartData = {
+       /*  var lineChartData = {
             labels: ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"],
             datasets: [
 				{
@@ -428,28 +482,13 @@ $(function(){
 			]
 
         }
+ */
+        
 
-        var myLine = new Chart(document.getElementById("area-chart").getContext("2d")).Line(lineChartData);
+
+        
 
 
-        var barChartData = {
-            labels: ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"],
-            datasets: [
-				{
-				    fillColor: "rgba(220,220,220,0.5)",
-				    strokeColor: "rgba(220,220,220,1)",
-				    data: [65, 65, 65, 70, 72, 70, 71, 81, 85, 80, 75,77 , 77, 77,84, 80, 76,72]
-				}//,
-				/* {
-				    fillColor: "rgba(151,187,205,0.5)",
-				    strokeColor: "rgba(151,187,205,1)",
-				    data: [28, 48, 40, 19, 96, 27, 100]
-				} */
-			]
-
-        }
-
-var myLine = new Chart(document.getElementById("bar-chart").getContext("2d")).Bar(barChartData);
 
 				
 				

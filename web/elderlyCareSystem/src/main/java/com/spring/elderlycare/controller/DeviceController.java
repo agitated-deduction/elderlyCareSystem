@@ -31,7 +31,7 @@ public class DeviceController {
 	@Autowired private DeviceService service;
 	@Autowired private DataService dataservice;
 	//@Autowired private MqttTaskService mqtt;
-	@Autowired private ElderlyDTO edto;
+	//@Autowired private ElderlyDTO edto;
 	@Autowired private Datas2DTO datadto;
 	private final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
@@ -149,6 +149,12 @@ public class DeviceController {
 	public ModelAndView datasPage(ModelAndView mav) {
 		
 		mav.setViewName("charts");
+		return mav;
+	}
+	@RequestMapping("/monitoring")
+	public ModelAndView monitoringPage(ModelAndView mav) {
+		
+		mav.setViewName("monitoring");
 		return mav;
 	}
 }

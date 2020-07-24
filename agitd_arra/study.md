@@ -2148,4 +2148,108 @@ var key = ${edto.ekey}
 
 7.23. 맥박 그래프, 걸음 수 그래프, 삐죽 튀어나오는 데이터들 거르기(mqtt)
 
-7.24. 현재 상태 (stat) 이상 있을때 목록에 체크표시, 회원가입, 기기등록
+7.24. 현재 상태 (stat) 이상 있을때 목록에 체크표시, 회원가입, 기기등록, 동영상
+
+
+20200723
+
+```json
+{
+	labels: 
+	["17:45","17:45","17:45","17:45","17:45","17:44","17:44","17:44","17:44","17:44","17:44","17:43","17:43","17:43","17:43","17:43","17:42","17:42","17:42","17:42"],
+
+	datasets: 
+	{
+		fillColor: "rgba(151,187,205,0.5)",
+		strokeColor: "rgba(151,187,205,1)",
+		data: [76,62,74,68,67,72,66,74,72,67,79,65,74,68,67,72,63,79,65,74]
+	}
+}
+```
+
+
+
+24***** 급!!
+1. 걸음 수 그래프
+2. 동영상 스트리밍
+3. gps
+4. stat 0이라면 데이터를 보낸다. rest로 받아서 바로 화면 처리한다 실시간 처리.
+5. 2일 움직임 없으면 mqtt -> //alone 이걸 어떻게 처리하지...
+
+
+안 급
+1. home elderly list 크기 키우기 or 글씨 줄이기.
+2. chart current status 에서 개인정보 적기.
+
+20200724
+
+
+javascript에서 json을 sessionStorage에 저장하려고 했더니 오류
+`Uncaught TypeError: Cannot read property 'ekey' of null`
+
+json을 string형식으로 만들어 저장
+사용시에 json 변환
+```javascript
+sessionStroage.setItem("elderly", JSON.stringify(elderly));
+var eld = JSON.parse(sessionStorage.getItem("elderly"));
+```
+
+
+```
+function selectDev(key, dev){
+		sessionStorage.setItem("ekey", key);
+		sessionStorage.setItem("dev", dev);
+		window.location.replace('');
+	}
+	 $(document).ready(function() {
+	 	var html = '';
+	 	$.getJSON('/elderlycare/devices', function(data){
+	 		$.each(data, function(index, item){
+	 			//html +="<li><a href = 'devices/"+item.ekey+"'>";
+	 			var param = JSON.stringify(item)
+	 			console.log(param);
+	 			html+="<li><a href='#' onclick='selectDev("+item.ekey+", \""+item.homeIoT.toString() +"\"); return false;'>"
+	 			html +=item.ename+"</a></li>";
+	 			console.log(html);
+	 		});
+	 		$('#eld-list').html(html);
+	 	});
+```
+
+```
+var dev = sessionStorage.getItem("dev");
+	
+	console.log("ekey:"+sessionStorage.getItem("ekey"));
+	console.log("add:"+dev);
+	console.log(sessionStorage["iot"])
+	var url = "http://"+ipaddr+":8090/?action=stream";
+```
+
+저게 안 보내져서 2-3시간 삽질함.
+지금은 잘 보내짐 왜그런지 모르겠음 아마 오타인 것 같음.
+
+
+
+```js
+var html = '<iframe src ="'+url+'" width="325" height="240">이 브라우저는 iframe을 지원하지 않습니다.</iframe>';
+	console.log(html);
+	$('#streaming').html(html);
+```
+
+`jquery-1.7.2.min.js:4 Resource interpreted as Document but transferred with MIME type multipart/x-mixed-replace: "http://121.138.83.121:8090/?action=stream".`
+오류
+
+
+
+3. gps
+4. stat 0이라면 데이터를 보낸다. rest로 받아서 바로 화면 처리한다 실시간 처리.
+5. 2일 움직임 없으면 mqtt -> //alone 이걸 어떻게 처리하지...
+
+안 급
+1. home elderly list 크기 키우기 or 글씨 줄이기.
+2. chart current status 에서 개인정보 적기.
+
+
+카카오 지도 api
+https://apis.map.kakao.com/web/sample/basicMap/
+app key 발급받기

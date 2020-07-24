@@ -69,14 +69,15 @@
       <ul class="mainnav">
         <li class="active"><a href="${contextPath}/"><i class="icon-dashboard"></i><span>Home</span> </a> </li>
         <li><a href="${contextPath }/devices/datas"><i class="icon-bar-chart"></i><span>Datas</span> </a> </li>
-        <li><a href="guidely.html"><i class="icon-facetime-video"></i><span>Home CCTV</span> </a></li>
-
+        <li><a href="${contextPath }/devices/monitoring"><i class="icon-facetime-video"></i><span>Home monitoring</span> </a></li>
+<c:if test = '${auth eq 1}' >
       <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Drops</span> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="signup.html">기기 등록</a></li>
             <li><a href="error.html">가입 승인</a></li>
           </ul>
         </li>
+        </c:if>
 
         
       </ul>
@@ -90,14 +91,17 @@
 
 
 <script src="<c:url value='/resources/js/jquery-1.7.2.min.js'/>"></script> 
-<script>	
+
+<script>
+
 	function logout(){
 		$.getJSON('/elderlycare/users/logout', function(data){
 			window.location.replace('');
 		});
 	}
-	function selectDev(ekey){
-		sessionStorage.setItem('ekey', ekey);
+	function selectDev(key, ip){
+		sessionStorage.setItem("ekey", key);
+		sessionStorage.setItem("ip", ip);
 		window.location.replace('');
 	}
 	 $(document).ready(function() {
@@ -105,8 +109,11 @@
 	 	$.getJSON('/elderlycare/devices', function(data){
 	 		$.each(data, function(index, item){
 	 			//html +="<li><a href = 'devices/"+item.ekey+"'>";
-	 			html+="<li><a href='#' onclick='selectDev("+item.ekey+"); return false;'>"
+	 			var param = JSON.stringify(item)
+	 			console.log(param);
+	 			html+="<li><a href='#' onclick='selectDev("+item.ekey+", \""+item.homeIoT.toString() +"\"); return false;'>"
 	 			html +=item.ename+"</a></li>";
+	 			console.log(html);
 	 		});
 	 		$('#eld-list').html(html);
 	 	});

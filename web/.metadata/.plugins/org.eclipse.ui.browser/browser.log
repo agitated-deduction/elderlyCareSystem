@@ -16,3 +16,16 @@
 
 7월 10, 2020 16:51:44.43 NEW SESSION
 7월 10, 2020 16:51:44.43 [10032:584:0710/165144.396:ERROR:mcs_client.cc(755)] Received close command, resetting connection.
+
+7월 24, 2020 09:30:16.57 NEW SESSION
+7월 24, 2020 09:30:16.57 [9964:6068:0724/093016.576:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.306 s for first_image_paint 0.259 s
+7월 24, 2020 09:30:17.70 [9964:6068:0724/093017.702:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.306 s for first_image_paint 0.259 s
+7월 24, 2020 09:30:19.91 [9964:6068:0724/093019.918:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.306 s for first_image_paint 0.259 s
+7월 24, 2020 09:30:20.99 [9964:6068:0724/093020.993:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.306 s for first_image_paint 0.259 s
+7월 24, 2020 13:09:08.29 [9964:6068:0724/130908.290:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.343 s for first_image_paint 0.298 s
+7월 24, 2020 13:09:09.50 [9964:6068:0724/130909.501:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.343 s for first_image_paint 0.298 s
+7월 24, 2020 13:09:11.66 [9964:6068:0724/130911.666:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.343 s for first_image_paint 0.298 s
+7월 24, 2020 13:09:12.82 [9964:6068:0724/130912.822:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.343 s for first_image_paint 0.298 s
+7월 24, 2020 16:33:48.19 [9964:6068:0724/163348.192:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.338 s for first_image_paint 0.29 s
+7월 24, 2020 16:33:49.30 [9964:6068:0724/163349.302:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.338 s for first_image_paint 0.29 s
+7월 24, 2020 17:52:52.81 [9964:6068:0724/175252.819:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.356 s for first_image_paint 0.324 s

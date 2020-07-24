@@ -1,3 +1,0 @@
-AIzaSyBVs-IFGoNKc2dUYmqcugtZSHNvpgCF0G4
-
-keytool -v -list -keystore debug.keystore -storepass android

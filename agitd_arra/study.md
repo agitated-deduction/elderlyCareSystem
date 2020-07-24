@@ -637,7 +637,7 @@ login
 
 
 
-6/19
+### 6/19
 * ajax success error 함수 실행 안 됨
 * member delete member modify 만들기 일단 버튼은 홈 화면에.
 * 가입 승인 만들기
@@ -711,16 +711,6 @@ root-context.xml
 최정민. "작물 생육 환경 모니터링을 위한 비동기 IoT 브로커 설계 및 구현." 국내석사학위논문 인천대학교 정보기술대학원, 2017. 인천
 
 
-## 시계열 DB?
-mysql + redis
-mysql + mongodb
-mysql + influxdb
-influxdb
-mongodb
-
-일단은 그냥 mysql로 구현하고 시간이 남으면 다른 db로도 테스트 해보기
-
-
 ```sql
 create table realtimedata(
 	measuredtime timestamp default current_timestamp on update current_timestamp,
@@ -786,7 +776,7 @@ The Spring Framework provides abstractions for the asynchronous execution and sc
 
 
 
-20200625
+### 20200625
 
 INFO : org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'appServlet'
 INFO : org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'executor' of type [org.springframework.core.task.SimpleAsyncTaskExecutor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
@@ -1003,9 +993,8 @@ private void insertData(String topic, MqttMessage message) {
 `sqlSession.insert(ns+"log", obj);`부분에서 같은 오류 발생.
 
 
-20200702
-시계열 데이터 분석 라이브러리
-https://github.com/signaflo/java-timeseries
+### 20200702
+
 
 1. 웹, MQTT-외부 프로젝트로 따로 구현함- 붙이기. 웹 서버 실행시 MQTT프로그램 실행되도록.
 2. 비밀번호 SHA256암호화 코드 
@@ -1025,7 +1014,7 @@ message비어있으면 없는거
 그 담에 프론트 시작
 <<<<<<< HEAD
 
-20200703
+### 20200703
 
 ## json and ajax
 https://www.youtube.com/watch?v=rJesac0_Ftw
@@ -1128,3 +1117,1035 @@ ${'#navigation li'}.live('click', function(){
 * 프론트 공부 조금
 =======
 >>>>>>> cab01cc4f124b3604d6fb363582c4ab9fcde2ae0
+
+
+
+### 20200706
+
+@EventListener
+
+```java
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StartupHousekeeper {
+
+  @EventListener(ContextRefreshedEvent.class)
+  public void contextRefreshedEvent() {
+    // do whatever you need here 
+  }
+}
+```
+https://www.it-swarm.dev/ko/java/spring-%EC%8B%9C%EC%9E%91%EC%8B%9C-%EB%A9%94%EC%86%8C%EB%93%9C-%EC%8B%A4%ED%96%89/968099933/
+
+https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/event/EventListener.html
+
+가장 나은 방법 사용
+
+* init-method = "..." 사용
+
+* InitializingBean 인터페이스 구현 -> ApplicationContext에 배포되면 bean 생성 시 afterPropertiesSet() 메서드 호출
+
+* @PostConstruct Bean에 메소드에 주석 달기. Bean 작성 시 주석 달린 메소드 호출
+
+* Spring 라이프사이클에 묶일 인프라 Bean이 많으면 ApplicationListener<ContextRefreshedEvent>를 구현.
+onApplicationEvent(..)메소드는 Spring 시작되는 동안 호출
+
+<bean name = "starter" init-mehtod = "start" class = "com.example.StartBean" lazy = "false" />
+
+https://www.it-swarm.dev/ko/java/spring-mvc%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EC%95%A0%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98-%EC%8B%9C%EC%9E%91%EC%8B%9C-java-%ED%81%B4%EB%9E%98%EC%8A%A4-%EC%8B%A4%ED%96%89/972322251/
+
+빈에 등록하는 방법 써봤는데 여전히 sqlSession.어쩌구 호출부에서 Nullpointerexception오류 남. 외부 실행 프로젝트로 만들어서 불러오는 방법 써봐야지
+코드 먼저 다듬기
+
+외부 실행파일 실행하는법
+Runtime
+
+
+바로 db에 입력이 안 되고 \
+
+
+데이터는 10초마다 주는데 몰아서 들어감.
+
+
+WARN : org.springframework.web.servlet.PageNotFound - No mapping for GET /elderlycare/resource/jquery-3.5.1.js
+WARN : org.springframework.web.servlet.PageNotFound - No mapping for GET /elderlycare/jquery-3.5.1.js
+
+The method getContextpath() is undefined for the type HttpServletRequest
+
+<script type = "text/javascript" src = "${pageContext.request.contextpath}/resources/jquery-3.5.1.js"></script>
+
+
+### 20200707
+
+한 일
+7. 3. 로그인 시 권한 받기, 프론트 다듬기, 비밀번호 암호화
+7. 6. 서버 실행 시 mqtt 실행 되도록 하기 //db에 바로 안 들어가짐
+
+할 일
+*
+7. 7. mqtt connection lost시 reconnect 시도. background mqtt db에 바로 insert. 홈 화면에 device목록 띄우기. 새로운 기기 등록 시 connect.
+7. 8. 대시보드 플랫폼 정하기. device 목록에서 device 정보 버튼 클릭 정보 띄우기. 로그아웃 홈으로 리다이렉트. 회원가입 성공 시 홈으로 리다이렉트 실패시 실패 alert
+7. 9 - 7. 10. 안드로이드에서 데이터 받기 rest api polling? 공부
+
+**
+7. 13. 안드 데이터 받기. 보호자 가입 승인 기능. 
+7. 14. 안드 데이터 받기. home/{num}/video 받아 폴더에 영상 저장하기.
+7. 15. 안드 데이터 받기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 16. 안드 데이터 받기. data 보여주기 화면 구성. 현재 온습도, 맥박 출력하기
+7. 17. 안드 데이터 받기. 온습도 그래프. GPS 지도
+
+**
+7. 20. 화면 동작 체크.
+7. 21 -. push 알림.
+
+
+오류 수정
+WARN : org.springframework.web.servlet.PageNotFound - No mapping for GET /elderlycare/resource/jquery-3.5.1.js
+
+root-context.xml에 추가
+<mvc:resources mapping = "/js/**" location = "/resources/js/"></mvc:resources>
+
+경로 수정
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+
+
+1. reconnect callback으로 부른다. reconnect시 subscribe 필요.
+
+
+reconnect 못함ㅜㅜ
+내일 reconnect랑 db 넣는거. 오전에는 화면 구성 먼저 다 해놓고 오후에 mqtt 끝내기
+
+20200708
+
+오전 : 
+홈 화면에 device목록 띄우기.
+대시보드 플랫폼 정하기.
+device 목록에서 device 정보 버튼 클릭 정보 띄우기.
+로그아웃 홈으로 리다이렉트.
+회원가입 성공 시 홈으로 리다이렉트 실패시 실패 alert
+
+
+jquery 경로
+$(location).attr('pathname'); /elderlycare/
+$(location).attr('host'); localhost:9090
+$(location).attr('hostname'); localhost
+$(location).attr('href'); http://localhost:9090/elderlycare/
+
+
+오후 : 
+mqtt reconnect, mqtt data store into db. < 안되면 마지막으로 미루기
+오늘 온습도 불러오기 갑자기 안 됨.
+프론트 추가 공부
+
+
+reconnect
+`options.setAutomaticReconnect(true);` 설정 하면 reconnect는 됨.
+MqttCallbackExtended implements 한 후, `connectComplete()` 에서 `subscribe()`호출 시 connection lost 발생함. null pointer exception.
+
+실행파일로 만들기
+* 프로젝트 우클릭
+* export
+* runnable jar file
+* java -jar [파일]
+
+
+오늘 발견한 오류
+서버가 종료돼도 mqtt가 종료 안됨.
+근데 종료 안 되는게 맞는 것 같긴 함.
+근데 모르겠음.
+
+그럼 저걸 따로 돌려야 되나.
+spring에 붙일 필요가 없었나
+
+spring 실행 시 시작되도록 하면
+event 발생 시 - 기기등록 - disconnect - 재구동? 아니면 메인에서 옵션 줘서 나눠? 하나만 추가로 구동시키는 옵션 줘서 이벤트 발생시 
+Runtime.getRuntime().exec("java -jar "+mqttProcess+" \"[ip번호]\"");
+이런 식으로?
+
+따로 구동하는 게 나을 것 같다는 결론.
+나중에 보완
+
+
+### 20200709
+
+* 안드로이드에서 데이터 받기! mqtt 
+
+스프링 MVC 비동기 처리 https://12bme.tistory.com/565
+
+비동기 처리 방법
+* 컨트롤러 핸들러 메서드에서 callable타입 반환
+* WebAsyncTask 타입 반환
+
+web.xml 설정에서 활성화 해야 쓸 수 있음
+```xml
+<servlet>
+  <!-- ASYNC -->
+  <async-supported>true</async-supported>
+</servlet>
+
+<filter>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+
+    <!-- ASYNC -->
+    <async-supported>true</async-supported>
+
+    <init-param>
+        <param-name>encoding</param-name>
+        <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+        <param-name>forceEncoding</param-name>
+        <param-value>true</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+
+    <!-- ASYNC -->
+    <dispatcher>ASYNC</dispatcher>
+</filter-mapping>
+```
+
+스프링 MVC에서 비동기 요청 처리를 사용하ㅕㄹ면 필터/서블릿 등록시 `setAsyncSupported()`메서드 호출.
+WebApplicationInitializer
+```java
+public class MWebApplicationInitializer implements WebApplicationInitializer{
+	@Override
+	public void onStartup(ServletContext ctx){
+		DispatcherServlet servlet = new DispatcherServlet();
+		ServletRegistration.Dynamic registration = ctx.addServlet("dispatcher", servlet);
+		registration.setAsyncSupported(true);
+	}
+}
+```
+
+MVC구성 클래스에 설정
+```java
+@Configuration
+public class AsyncConfiguration extends WebMvcConfiguratijonSupport{
+	@Override
+	protected void configurationAsyncSupport(AsyncSupportConfigurer configurer){
+		configurer.setDefaultTimeout(5000);
+		configurer.setTaskExecutor(mvcTaskExecutor());
+	}
+	@Bean
+	public ThreadPoolTaskExecutor mvcTaskExecutor(){
+		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setThreadGroupName("mvc-executor");
+		return taskExecutor;
+	}
+}
+```
+
+비동기 컨트롤러
+: 핸들러 메서드의 반환형만 바꾸면 비동기 처리 컨트롤러로 사용 가능
+* Callable
+```java
+@Controller
+@RequestMapping("/exQuery")
+public class ExQueryController{
+	private final ExService exService;
+
+	public ExServiceController(ExService exService){
+		this.exService = exService;
+	}
+
+	@GetMapping
+	public void setupForm(){}
+
+	@PostMapping
+	public Callable<String> submitForm(@RequestParam("name")String name, Model model){
+		return()->{
+			List<ex> list = java.util.Collection.emptyList();
+			if(courtName != null){
+				Delayer.randomDelay();
+				list = exService.query(name);
+			}
+			model.addAttribute("list", ex);
+			return "exQuery";
+		};
+	}
+}
+```
+* DeferredResult
+ 클래스 인스턴스를 만들어 비동기 처리작업(Runnable)을 전송 후, setResult()메서드를 이용해 DeferredResult결괏값 설정
+```java
+@Controller
+@RequestBody("/exQuery")
+public class ExQueryController{
+	private final ExService exService;
+	private final TaskExecutor taskExecutor;
+
+	public ExQueryCotroller(ExQueryService exQueryService, AsyncTaskExecutor taskExecutor){
+		this.exService = exService;
+		this.taskExecutor = taskExecutor;
+	}
+
+	@GetMapping
+	public void setupForm(){}
+
+	@PostMapping
+	public DeferredResult<String> submitForm(@RequestParam("name")String name, Model model){
+		final DeferredResult<String> result = new DeferredResult<>();
+
+		taskExecutor.execute(()->{
+			List<Ex> list = java.util.Collections.emptyList();
+			if(name !=null){
+				Delayer.randomDelay();
+				list = exService.query(name);
+			}
+			model.addAttribute("list", ex);
+			result.setResult("exQuery");
+		});
+		return result;
+	}
+}
+```
+
+mqttclient는 비동기임. 커ㄴ[ㄱ션  구독을 비동기로 함.
+클라이언트 여러개 돌림 가능함
+별개의 어플리케이션으로 실시간 db 적재 가능함
+\스프링에서 부르면 db적재 안 됨. 기기가 하나인 경우 가능함.
+혹시 mqtt starter자체를 비동기로 불러야 되는건지.
+이따가 5시에 만들어보기.
+
+
+데이터 오면 받아서 넣는 비동기 컨트롤러.
+
+
+안드로이드쪽
+```java
+package com.example.mybtchat.data;
+
+public class ElderlyData {
+    private String elderlyName;
+    private String elderlyStep;
+    private String elderlyPulse;
+    private String elderlyKcal;
+    private String elderlyLatitude;
+    private String elderlyLongitude;
+
+    public ElderlyData(String name, String step, String pulse, String kcal, String latitude, String longitude){
+        elderlyName = name;
+        elderlyStep = step;
+        elderlyPulse = pulse;
+        elderlyKcal = kcal;
+        elderlyLatitude = latitude;
+        elderlyLongitude = longitude;
+    }
+
+    public String getElderlyName() { return elderlyName; }
+
+    public void setElderlyName(String elderlyName) { this.elderlyName = elderlyName; }
+
+    public String getElderlyStep() { return elderlyStep; }
+
+    public void setElderlyStep(String elderlyStep) { this.elderlyStep = elderlyStep; }
+
+    public String getElderlyPulse() { return elderlyPulse; }
+
+    public void setElderlyPulse(String elderlyPulse) { this.elderlyPulse = elderlyPulse; }
+
+    public String getElderlyKcal() { return elderlyKcal; }
+
+    public void setElderlyKcal(String elderlyKcal) { this.elderlyKcal = elderlyKcal; }
+
+    public String getElderlyLatitude() { return elderlyLatitude; }
+
+    public void setElderlyLatitude(String elderlyLatitude) { this.elderlyLatitude = elderlyLatitude; }
+
+    public String getElderlyLongitude() { return elderlyLongitude; }
+
+    public void setElderlyLongitude(String elderlyLongitude) { this.elderlyLongitude = elderlyLongitude; }
+}
+```
+*
+7. 9. 비동기 데이터 받기. 밴드 데이터 보내기. mqtt
+7. 10. 오전 - rest 전체 구성도 확인 naming 점검 보완 / 오후 - 7.9와 동일
+
+
+**
+7. 13. 보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 14. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 15. data 보여주기 화면 구성. 현재 온습도, 맥박 출력하기. 온습도 그래프. GPS 지도
+7. 16 - 7. 17. 화면 동작 체크. 오류 수정. 필요 기능 추가
+
+
+
+
+내일 와서 할 거:
+이거 읽어보고 수정
+```
+WARN : org.springframework.web.context.request.async.WebAsyncManager - 
+!!!
+An Executor is required to handle java.util.concurrent.Callable return values.
+Please, configure a TaskExecutor in the MVC config under "async support".
+The SimpleAsyncTaskExecutor currently in use is not suitable under load.
+-------------------------------
+Request URI: '/elderlycare/datas/1'
+!!!
+```
+
+mqtt starter async로 돌려보기.
+실시간 db 넣는거 async 문제인거 같음.
+https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling-task-executor-types
+You can not use @Async in conjunction with lifecycle callbacks such as @PostConstruct. To asynchronously initialize Spring beans, you currently have to use a separate initializing Spring bean that then invokes the @Async annotated method on the target, as the following example shows:
+```java
+public class SampleBeanImpl implements SampleBean {
+
+    @Async
+    void doSomething() {
+        // ...
+    }
+
+}
+
+public class SampleBeanInitializer {
+
+    private final SampleBean bean;
+
+    public SampleBeanInitializer(SampleBean bean) {
+        this.bean = bean;
+    }
+
+    @PostConstruct
+    public void initialize() {
+        bean.doSomething();
+    }
+
+}
+```
+
+
+### 20200710
+
+@async종료하기.
+https://stackoverflow.com/questions/38880069/spring-cancel-async-task
+
+destroy-method로
+```java
+public void mqttdestroy() {
+		future.cancel(true);
+		try {
+			Runtime.getRuntime().exec("taskkill /F /IM java.exe");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+```
+잉거 등록했는데 disconnect 안됨. 근데 disconnect 안 해도 될 거 ㅅ같기도 함.
+만약 reconnect 기능 생기면?
+일단은 서버 꺼져도 계속 mqtt 데이터 적재됨.
+
+
+```
+WARN : org.springframework.web.context.request.async.WebAsyncManager - 
+!!!
+An Executor is required to handle java.util.concurrent.Callable return values.
+Please, configure a TaskExecutor in the MVC config under "async support".
+The SimpleAsyncTaskExecutor currently in use is not suitable under load.
+-------------------------------
+Request URI: '/elderlycare/datas/1'
+!!!
+```
+ 위 오류 simpleasynctaskexecutor등록했던거 지우고 아래 threadpooltaskexecutor 등록함.
+
+```xml
+<bean id = "taskExecutor" class = "org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
+		<property name = "corePoolSize" value = "5" />
+		<property name = "maxPoolSize" value = "10"/>
+		<property name = "queueCapacity" value = "25"/>
+	</bean>	
+```
+
+참고로 코드로는 이렇게
+```java
+@Configuration
+@EnableWebMvc
+public class WebMvcConfig extends WebMvcConfigurerAdapter {
+
+  @Override
+  public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+      configurer.setDefaultTimeout(5000);
+      // == 스레드풀을 이용하도록 커스터마이징한 TaskExecutor를 설정 ==
+      configurer.setTaskExecutor(mvcTaskExecutor());
+  }
+
+  @Bean
+  public TaskExecutor mvcTaskExecutor() {
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(5);
+    executor.setMaxPoolSize(10);
+    executor.setQueueCapacity(25);
+    return executor;
+  }
+}
+```
+
+mqtt async로 했는데도 데이터 넣는거 안 됨.
+
+안드에서 데이터 주고받기 테스트 해봐야 됨.
+
+
+
+**
+7. 13. mqtt db입력 오류 해결. mqtt reconnect 구현. 안드로이드에서 json 데이터 받기 테스트.
+7. 14. 보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 15. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 16. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+7. 17. 못 끝낸 거 추가 작업. 화면 동작 체크. 오류 수정. 필요 기능 추가.
+
+
+### 20200713
+
+**
+7. 13. mqtt db입력 오류 해결. mqtt reconnect 구현. 안드로이드에서 json 데이터 받기 테스트.
+7. 14. 보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 15. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 16. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+7. 17. 못 끝낸 거 추가 작업. 화면 동작 체크. 오류 수정. 필요 기능 추가.
+
+
+
+mqtt db입력 오류 해결. mqtt reconnect 구현. 안드로이드에서 json 데이터 받기 테스트.
+
+mqtt reconnect 구현. 이건 나중에
+
+가입승인:
+보호자 - 
+회원가입 시, 노인의 이름과 생년월일을 입력받는다.
+user table insert.
+manage table update.
+
+관리자 -
+로그인 시, manage하는 device list에서 manage의 relative중 role이 -1인 사람 리스트를 가져옴
+리스트를 보여줌. 옆에 가입 승인 버튼
+승인 버튼 누르면 role++;
+
+spring, mybatis, jpa, herinate?
+
+
+### 20200714
+보호자 가입 승인. home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+
+```sql
+UPDATE manage SET relative = "ddd" 
+	WHERE elderly = (
+	SELECT ekey FROM elderly 
+	WHERE ename = "노인1" AND ebirth = "19330202");
+```
+```sql
+UPDATE manage SET relative = "ddd" 
+	WHERE elderly = (
+	SELECT ekey FROM elderly 
+	WHERE ename = "노인1" AND ebirth = "19330201");
+```
+
+Transaction
+
+Atomicity
+Consistency
+Isolation
+Durability
+세로 읽기 ACID : 대충 힘들다는 뜻
+
+@Transactional
+```xml
+<!-- 트랜잭션 관련 설정 -->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"></property>
+</bean>
+	
+<!-- 트랜잭션 어노테이션 인식 -->
+<tx:annotation-driven/>
+```
+<<이거 했는데 왜 안되냐
+
+그냥 직접 롤백 하는거 시도
+
+트랜잭션, deletecascade 없애기
+
+
+**
+7. 15. 오전 - join 부분 수정. db 수정. / 오후 - home cctv 실시간 스트리밍(homeiot:8090/?action=stream)
+7. 16. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 17. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+
++ 트랜잭션ㅜㅜ
+
+iframe
+
+기기 등록 시, mqtt
+
+동영상 저장.
+
+파일 업로드
+```java
+File targetFile = new File("/경로"+multipartFile.getOriginalFilename());
+try{
+	InputStream fileStream = multipartFile.getInputStream();
+	FileUtils.copyInputStreamToFile(fileStream, targetFile);
+}catch(IOException e){
+	FileUtils.deleteQuietly(targetFile);
+	e.printStackTrace();
+}
+return "redirect:/";
+```
+
+### 20200716
+
+**
+7. 16. home/{num}/video 받아 폴더에 영상 저장하기. home/{num}/video 받아 폴더에 저장한 영상 정보 db에 저장하기.
+7. 17. data view 화면 구상. 현재 정보(온습도, 맥박, 걸음). 오늘 정보 그래프(온습도, 맥박, 걸음). GPS 지도. 이상 데이터 범위 설정, 관리하는 노인 목록에 표시. 등등
+
+encoding 된 byte[] 를 mqttmessage로 받음. 
+message.toString
+byte string to byte array
+decoding
+decoding byte to file
+file save
+
+
+
+DATA에 온습도 추가할거면
+DTO 새로 만들기
+db는 그대로 나눠둠
+
+
+root-context.xml
+datasource bean
+
+```sql
+select * FROM(select * FROM banddata
+where ekey = #{value}
+order by measuredtime DESC limit 1)b
+cross join (SELECT humid, temp FROM realtimedata
+where elderly = #{value}
+order by measuredtime DESC limit 1)a;
+```
+
+
+Error Code: 1248. Every derived table must have its own alias
+
+b
+```
+select * FROM(select * FROM banddata
+where ekey = #{value}
+order by measuredtime DESC limit 1)b
+```
+
+
+datas2dto에 humid temp 추가 안하고 map으로 전달할 지
+그냥 할 지
+
+list로 받을때는 따로 주니까
+그건 또 어떻게 하지
+일단 냅두고
+
+내일은 프론트부터 만들어야겠다
+
+
+20200717
+
+
+https://www.egrappler.com/templatevamp-twitter-bootstrap-admin-template-now-available/
+
+
+
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+
+<script type = "text/javascript">
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+
+</script>
+
+
+
+
+
+**
+7.20. 전체 화면 틀 만들기
+7.21 - 7.22. 현재 데이터, 데이터 그래프 만들기.
+7.23. 기기 목록, 현재 상태
+7.24. 로그인, 로그아웃, 회원가입, 기기등록.
+
+20200720
+
+<!DOCTYPE html5>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ page session="true" %>
+<html>
+<head>
+	<title>Home</title>
+
+</head>
+<body>
+<%@ include file="header.jsp" %>
+
+<h1>
+	Hello world!  
+</h1>
+<p>session id : <%=session.getAttribute("uid") %></p>
+<p>test ${uid }</p>
+<P>  The time on the server is ${serverTime}. </P>
+<div id = "list">
+</div>
+
+</body>
+
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+<script type = "text/javascript">
+ 	$(document).ready(function(){
+		var html = '';
+		$.getJSON('devices', function(data){
+			$.each(data, function(index, item){
+				html+='<p>';
+				html+=item.ename+', '+item.ebirth+', '+item.etel+', '+item.eaddr;
+				//html += '<button type = \"button\" onClick = \"location.href=\'http://'; //현재창
+				html += '<button type = \"button\" onClick = \"window.open(\'http://';	//새창
+				html +=item.homeIoT;
+				html +=':8090/?action=stream\')\">';
+				html +=item.homeIoT+'</button>'
+				
+				//data 보기 button
+				
+				html+='</p>';
+				
+			});
+			$('div').html(html);
+		});
+		/*$(데이터 보기 버튼).click(function(){
+			포워드 , 데이터  화면
+		});*/
+		
+	});
+	 
+</script>
+
+</html>
+
+
+
+Spring mvc에서 js, css 파일 사용하기
+
+root-context.xml
+```xml
+<mvc:resource mapping = "/resources/**" location = "/resources/" />
+```
+/resource/js, /resource/css와 같은 경로를 명시하는 경우에 /resources/ 경로로 해석하겠다는 의미. resources는 webapp/resources를 의미한다.
+
+```
+<c:url value = "/resources/css/main.css" />" rel = "stylesheet">
+```
+이런 식으로 사용 가능.
+
+a태그에 js function 사용하기.
+`<a href="javascript:함수();">`
+url에 자동으로 #이 붙는ㄴ 경우가 생김
+
+`<a href = "#" onClick=함수();return false;>`
+	로 해결
+
+```js
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+```
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ page session="true" %>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="<c:url value = '/resources/css/bootstrap.min.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/bootstrap-responsive.min.css'/>" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+<link href="<c:url value = '/resources/css/font-awesome.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/style.css'/>" rel="stylesheet">
+<link href="<c:url value = '/resources/css/pages/dashboard.css'/>" rel="stylesheet">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+<c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
+
+<a href = "${contextPath}/">HOME</a>
+<c:if test = "${empty uid }">
+	<a href = "${contextPath}/users/login" class = "btn btn-default" role = "button">로그인</a>
+	<a href = "${contextPath}/users/join" class = "btn btn-default" role = "button">회원가입</a>
+</c:if>
+<c:if test = "${not empty uid }">
+	<a href = "${contextPath}/users/info" class = "btn btn-default" role = "button">내 정보</a>
+	<a class = "btn btn-default" id = "btn-logout" role = "button">로그아웃</a>
+	<c:if test = "${auth == 1 }">
+	<a href = "${contextPath}/devices/form" class = "btn btn-default" role = "button">기기등록</a>
+	<a href  = "" class = "btn btn-default" role = "button">가입 승인</a>
+	</c:if>
+	<br/>
+	<form class = 'delete-form' action = "${contextPath}/users/info" method = "post">
+	<input type = "hidden" name = "_method" value = "delete"/>
+	<button type = "submit">회원 탈퇴</button>
+	</form>
+	<a href = "${contextPath}/users/mod-form" class = "btn btn-default" role = "button">정보 수정</a>
+	
+
+</c:if>
+
+</body>
+<script type = "text/javascript" src = "<c:url value = '/resources/js/jquery-3.5.1.js'/>"></script>
+
+<script type = "text/javascript">
+$(document).ready(function(){
+	
+	$('#btn-logout').click(function(){
+		$.getJSON('/elderlycare/users/logout', function(data){
+			window.location.replace('');
+		});
+	});
+});
+
+</script>
+
+</html>
+
+
+
+자바스크립트에서 context path 사용하기
+
+<script type = "text/javascript" charset="utf-8">
+	sessionStorage.setItem("contextpath", "${pageContext.request.contextPath}");
+</script>
+처음에 세션에 저장해두고 필요할때
+var ctx = sessionStorage.getItem("contextpath");
+
+
+<tr>
+                    <td> 노인1 </td>
+                    <td> 주소주소 주소 주소 주소주소</td>
+                    <td> 0313333333</td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-ok"> </i></a><a href="javascript:;" class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></td>
+                  </tr>
+
+
+
+
+ <mvc:annotation-driven ignoreDefaultModelOnRedirect="true" />
+
+
+
+
+
+**
+7.21 - 7.22. 현재 데이터, 데이터 그래프 만들기.
+7.23. 현재 상태
+7.24. 로그인, 로그아웃, 회원가입, 기기등록.
+
+
+
+헤더 분리 or 합체?????????????
+
+
+
+20200721
+
+
+
+
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+<%@ include file="../header.jsp" %>
+<h1>login page</h1>
+<form action = "login" id ="login-form" method = "POST">
+<div>
+	<label for = "uid">ID:</label>
+	<input id = "uid" type = "text" name = "uid" >
+	</div>
+	<div>
+	<label for = "upwd">PASSWORD:</label>
+	<input id = "upwd" type = "password" name = "upwd" >
+</div>
+<button type = "submit">로그인</button>
+</form>
+</body>
+<script type = "text/javascript" src = "/elderlycare/resources/jquery-3.5.1.js"></script>
+<script type = "text/javascript">
+$(function(){
+	$('#login-form').submit(function(event){
+		event.preventDefault();
+		
+		//var data = {"uid": "staff101058", "upwd": "staff101058"};
+		var data = {uid: $("#uid").val(), upwd: $('#upwd').val()};
+
+		$.ajax({
+				type : 'POST',                            
+				url : 'login',                        
+				dataType : 'json',                          
+				contentType : 'application/json',            
+				data : JSON.stringify(data),            
+				success : function(response){
+					if(response.result){
+						alert(response.uid+'님 환영합니다.');
+						$(location).attr("href", "${contextPath}/");
+					}else
+						alert("아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다.");
+				},                      
+				error   : function(response){
+					alert(response.uid);
+				}
+		});
+	});
+});
+	
+
+
+</script>
+</html>
+```
+
+```js
+var key = ${edto.ekey}
+		//alert(key);
+		//html = "<div class ='stat'><i class = 'icon-asterisk'></i><span class = 'value'>33</span></div>";
+		//$('#test').html(html);
+		var html = '';
+     	 $.getJSON(key+'/curdata', function(data){
+     		alert(data.temp);
+     		//$.each(data, function(index, item){
+     			html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
+     			html+= data.temp;
+     			html+= "</span> </div>";
+     			
+     			html += "<div class='stat'> <i class='icon-tint'></i> <span class='value'>";
+	     		html+= data.humid;
+	     		html+= "</span> </div>";
+	     			
+	     		html += "<div class='stat'> <i class='icon-heart'></i> <span class='value'>";
+		     	html+= data.epulse;
+		     	html+= "</span> </div>";
+		     		
+		     	html += "<div class='stat'> <i class='icon-shopping-cart'></i> <span class='value'>";
+			    html+= data.estep;
+			    html+= "</span> </div>";
+     		//});
+     		$('#cur-data').html(html); 
+     	}); 
+```
+이렇게 통째로 넣으려니까 안 됨 왜 그런지 모르겠음
+
+```
+<div id="big_stats" class="cf" id = "cur-data">
+                  
+                      
+                    <div class="stat"> <i class="icon-asterisk"></i> <span class="value" id = "temp"></span> </div>
+                
+                    
+                    <div class="stat"> <i class="icon-tint"></i> <span class="value"id = humid></span> </div>
+             
+                    
+                    <div class="stat"> <i class="icon-heart"></i> <span class="value"id = "epulse"></span> </div>
+              
+                    
+                    <div class="stat"> <i class="icon-shopping-cart"></i> <span class="value"id = "estep"></span> </div>
+               
+                </div>
+```
+```js
+var key = ${edto.ekey}
+		//alert(key);
+		//html = "<div class ='stat'><i class = 'icon-asterisk'></i><span class = 'value'>33</span></div>";
+		//$('#test').html(html);
+		var html = '';
+     	 $.getJSON(key+'/curdata', function(data){
+     		
+     		//$.each(data, function(index, item){
+     			//html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
+     			html= data.temp;
+     			//html+= "</span> </div>";
+     			$('#temp').html(html);
+     			
+     			//html += "<div class='stat'> <i class='icon-tint'></i> <span class='value'>";
+	     		html= data.humid;
+	     		//html+= "</span> </div>";
+	     		$('#humid').html(html);
+	     			
+	     		//html += "<div class='stat'> <i class='icon-heart'></i> <span class='value'>";
+		     	html= data.epulse;
+		     	//html+= "</span> </div>";
+		     	$('#epulse').html(html);
+		     		
+		     	//html += "<div class='stat'> <i class='icon-shopping-cart'></i> <span class='value'>";
+			    html= data.estep;
+			    //html+= "</span> </div>";
+			    $('#estep').html(html);
+     		//});
+     		//$('#cur-data').html(html);
+     	});
+```
+
+하나씩 넣어줬음
+
+
+
+
+그래프!!!!!!!!
+이상 데이터 처리!!!!!!!!!!!
+실시간 스트리밍!!!!!!
+녹화비디오!!!!!!
+
+
+20200722
+
+** 데이터 받을때 범위 많이 벗어나는 예외 데이터 지우기.
+
+
+
+7.23. 맥박 그래프, 걸음 수 그래프, 삐죽 튀어나오는 데이터들 거르기(mqtt)
+
+7.24. 현재 상태 (stat) 이상 있을때 목록에 체크표시, 회원가입, 기기등록

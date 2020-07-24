@@ -257,3 +257,19 @@ references `user`(uid) on delete cascade;
 alter table manage add constraint fk_constraint_4 foreign key(relative) 
 references `user`(uid) on delete cascade;
 ```
+
+```sql
+create table banddata(
+    measuredtime timestamp default current_timestamp on update current_timestamp,
+    ekey int,
+    estep int,
+    epulse int,
+    ekcal double,
+    ealtitude double,
+    elongitude double,
+    constraint fk_constraint_5 foreign key (ekey) references elderly(ekey) on delete cascade
+);
+```
+```sql
+alter table banddata add stat int;
+```

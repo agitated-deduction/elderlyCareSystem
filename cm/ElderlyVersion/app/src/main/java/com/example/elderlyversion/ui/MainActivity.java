@@ -44,7 +44,6 @@ import com.example.elderlyversion.utils.RecycleUtils;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -108,6 +107,8 @@ public class MainActivity extends Activity {
         AppSettings.initializeAppSettings(this);
         setContentView(R.layout.activity_main);
 
+        elderlyData = new ElderlyData(1, 12, 65,0, 6.54, 36.184718283949, 127.801093940);
+
         // Get & Set Username from LoginActivity
         Intent intent = getIntent();
         processIntent(intent);
@@ -117,6 +118,13 @@ public class MainActivity extends Activity {
 
         // Do data initialization after service started and binded
         doStartService();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sendEmergancyData();
+        sendData(elderlyData);
     }
 
     @Override
@@ -218,6 +226,7 @@ public class MainActivity extends Activity {
             startActivityForResult(enableIntent, Constants.REQUEST_ENABLE_BT);
         }
     }
+
     private void finalizeActivity() {
         Logs.d(TAG, "# Activity - finalizeActivity()");
 
@@ -373,14 +382,14 @@ public class MainActivity extends Activity {
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Log.d("PUT_SUCCESS", response.message()); // 성공 : OK(200)
-                    try {
-                        Toast.makeText(getApplicationContext(), "Put Success:" + response.body().string(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        Toast.makeText(getApplicationContext(), "Put Success:" + response.body().string(), Toast.LENGTH_SHORT).show();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                 } else {
                     Log.d("PUT_NOT_SUCCESS", response.message()); // 실패
-                    Toast.makeText(getApplicationContext(), "PUT_FAIL:" + response.message() + ", " + response.body(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "PUT_FAIL:" + response.message() + ", " + response.body(), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -402,9 +411,9 @@ public class MainActivity extends Activity {
             String url = "https://fcm.googleapis.com/fcm/send";
             JSONObject pushData = new JSONObject();
 
-            pushData.put("ekey", elderlyData.getEkey());
-            pushData.put("ename", name);
-            pushData.put("homeIot", homeIot);
+            pushData.put("KEY", elderlyData.getEkey());
+            pushData.put("NAME", name);
+            pushData.put("HOME", homeIot);
 
             pushData.put("title", name);
             pushData.put("body", "위험");
@@ -437,6 +446,15 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
         Log.d("PUSH","End");
+    }
+
+    public void dataPushNPut(ElderlyData elderlyData) throws InterruptedException {
+        int i = 1;
+        Thread.sleep(10000);
+        while(i==1){
+            sendEmergancyData();
+            sendData(elderlyData);
+        }
     }
 
     // TODO : Arduino Message parsing

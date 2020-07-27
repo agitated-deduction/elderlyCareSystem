@@ -1,5 +1,6 @@
 package com.example.elderlycaresystem;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,7 +15,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.elderlycaresystem.ui.main.MainActivity;
+import com.example.elderlycaresystem.ui.info.InfoActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -52,7 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void newActivityIntent(String key,String name){
         Log.d(TAG, "sendToActivity() 호출됨. ekey: " +key);
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
 
         intent.putExtra("ekey",Integer.valueOf(key));
         intent.putExtra("ename",name);
@@ -67,7 +68,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     public void sendNotification(String title, String text) {
-        Intent intent1 = new Intent(getApplicationContext(),MainActivity.class);
+        Intent intent1 = new Intent(getApplicationContext(),InfoActivity.class);
         Log.d(TAG, "sendNotification호출됨");
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent1,

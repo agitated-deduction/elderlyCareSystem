@@ -58,10 +58,11 @@ public class InfoActivity extends AppCompatActivity {
         humidText = findViewById(R.id.humidText);
 
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        ekey = bundle.getInt("KEY");
-        name = bundle.getString("NAME");
-        home = bundle.getString("HOME");
+        if (intent != null) {
+            ekey = intent.getIntExtra("KEY", -1);
+            name = intent.getStringExtra("NAME");
+            home = intent.getStringExtra("HOME");
+        }
 
         latitude = 0;
         longitude = 0;
@@ -199,12 +200,12 @@ public class InfoActivity extends AppCompatActivity {
         String title = bundle.getString("title");
         String text = bundle.getString("text");
         if (title == null || text == null){
-            Log.d("InfoActivity New Intent","title & text is null");
+            Log.d("FMS Info Activity","title & text is null");
             return ;
         }
         nameText.setText(title);
         statText.setText(text);
-        Log.d("InfoActivity New Intent","title: "+ title + ", text: "+text);
+        Log.d("FMS Info Activity","title: "+ title + ", text: "+text);
         super.onNewIntent(intent);
     }
 }

@@ -18,13 +18,13 @@ public class TestActivity extends AppCompatActivity {
 
     TextView textView;
     TextView textView2;
-    String newToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        Log.d("FMS_MAIN", "onCreate() 호출됨");
+        Log.v("FMS_MAIN", "onCreate() 호출됨");
+        boolean isLogable = Log.isLoggable("TTT", Log.VERBOSE);
 
         textView = findViewById(R.id.textView);
         textView2 = findViewById(R.id.textView2);
@@ -33,24 +33,19 @@ public class TestActivity extends AppCompatActivity {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
-                newToken = instanceIdResult.getToken();
+                String newToken = instanceIdResult.getToken();
 
-                println("등록 id: " + newToken);
-                Log.d("Mytoken", "등록 id: " + newToken);
-
+                println("등록 id: "+newToken);
+                Log.d("FMS token_ID","등록 id: "+newToken);
             }
         });
-        Log.d("Mytoken", "등록 id: " + newToken);
 
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Mytoken", "버튼 클릭!");
                 String instancedId = FirebaseInstanceId.getInstance().getId(); // 등록 ID값 확인을 위한 메서드 호출하기
-                println("확인된 인스턴스 id: " + instancedId);
-                Log.d("Mytoken", "등록 id: " + instancedId);
-                Toast.makeText(TestActivity.this,instancedId,Toast.LENGTH_SHORT).show();
+                println("확인된 인스턴스 id: "+instancedId);
             }
         });
     }

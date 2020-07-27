@@ -138,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     if (response.body().getUid()!=null){
                         intent.putExtra(MainActivity.INTENT_ID, response.body().getUid());
+                        Log.e("LoginActivity",response.body().getUid());
                         startActivity(intent);
                     }
                     else{

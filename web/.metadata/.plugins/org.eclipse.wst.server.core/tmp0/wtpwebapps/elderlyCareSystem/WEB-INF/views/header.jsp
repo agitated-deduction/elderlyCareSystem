@@ -110,10 +110,16 @@
 	 		$.each(data, function(index, item){
 	 			//html +="<li><a href = 'devices/"+item.ekey+"'>";
 	 			var param = JSON.stringify(item)
-	 			console.log(param);
-	 			html+="<li><a href='#' onclick='selectDev("+item.ekey+", \""+item.homeIoT.toString() +"\"); return false;'>"
+	 			//console.log(param);
+	 			//html+="<li><a href='#' onclick='selectDev("+item.ekey+", \""+item.homeIoT.toString() +"\"); return false;'>";
+	 			
+	 			html+="<li><a href='#' onclick='selectDev(";
+	 			html+=item.ekey+", ";
+	 			html+='"'+item.homeIoT+'"';
+	 			html+="); return false;'>";
 	 			html +=item.ename+"</a></li>";
-	 			console.log(html);
+	 			
+	 			//console.log(html);
 	 		});
 	 		$('#eld-list').html(html);
 	 	});

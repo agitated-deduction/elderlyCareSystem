@@ -327,29 +327,26 @@ function selectDev(ekey){
             }
           ]
         });
-        var html1 = '';
-     	$.getJSON('devices', function(data){
+        var html1 = '', html2 = '';
+     	$.getJSON('/elderlycare/devices', function(data){
      		$.each(data, function(index, item){
      			html1+="<li><a href='#' onclick='selectDev("+item.ekey+"); return false;'>"
 	 			//html1 +="<li><a href = 'devices/"+item.ekey+"'>";
      			html1 +=item.ename+"</a></li>";
-     		});
-     		$('#eld-list').html(html1);
-     	});
-        var html2 = '';
-	 	$.getJSON('devices', function(data){
-	 		$.each(data, function(index, item){
+     		
 	 			html2+="<tr>";
 	 			html2 +="<td>"+item.ename+"</td>";
 	 			html2+="<td>"+item.ebirth+"</td>";
 	 			html2 +="<td>"+item.eaddr+"</td>";
 	 			html2 +="<td>"+item.etel+"</td>";
-	 			
-	 			html2 += 
-	 				item.stat?'<td class="td-actions"><a class="btn btn-small btn-success"><i class="btn-icon-only icon-ok"> </i></a></td>'
-	 			:'<td class="td-actions"> <a class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></td>';
+	 			console.log(item.stat);
+	 			if(item.stat== 1)
+	 				html2+= '<td class="td-actions"><a class="btn btn-small btn-success"><i class="btn-icon-only icon-ok"> </i></a></td>';
+	 			else
+	 				html2+='<td class="td-actions"> <a class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></td>';
 	 			html2+="</tr>";
 	 		});
+	 		$('#eld-list').html(html1);
 	 		$('#eld-table').html(html2);
 	 	});
       });

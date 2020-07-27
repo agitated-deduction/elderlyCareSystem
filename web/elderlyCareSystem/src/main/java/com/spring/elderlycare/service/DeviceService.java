@@ -5,11 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.spring.elderlycare.dto.DevicesDTO;
+import com.spring.elderlycare.dto.Elderly2DTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
 
 @Component
 public interface DeviceService {
-	public List<ElderlyDTO>devicesList(String id);
+	public List<Elderly2DTO>devicesList(String id);
 	public void deviceRegistration(ElderlyDTO edto, String id);
 	public ElderlyDTO elderlyInfo(int dnum);
 	public DevicesDTO deviceInfo(int dnum);

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.elderlycare.dao.DeviceDAO;
 import com.spring.elderlycare.dto.DevicesDTO;
+import com.spring.elderlycare.dto.Elderly2DTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
 
 @Service
@@ -16,9 +17,9 @@ public class DeviceServiceImpl implements DeviceService{
 	
 	
 	@Override
-	public List<ElderlyDTO> devicesList(String id) {
+	public List<Elderly2DTO> devicesList(String id) {
 		// TODO Auto-generated method stub
-		List<ElderlyDTO> list = ddao.selectList(id);
+		List<Elderly2DTO> list = ddao.selectList(id);
 		return list;
 	}
 

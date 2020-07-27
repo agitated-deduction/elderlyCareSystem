@@ -2,10 +2,6 @@ package com.maven.mqtt.asyncmqtt;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.util.Base64;
-import java.util.Base64.Decoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,14 +117,15 @@ public class MqttService implements MqttCallbackExtended {
 				dao.insert(obj);
 			}else if(tp[2].equals("vid")) {
 				//"home/{num}/vid"
-				byte[] vid = message.toString().getBytes();
-				Decoder decoder = Base64.getDecoder();
-				
-				byte[] dvid = decoder.decode(vid);
-				SimpleDateFormat forma = new SimpleDateFormat("yyyyMMdd");
-				Date time = new Date();
-				
-				writeFile(forma.format(time),dvid);
+				/*
+				 * byte[] vid = message.toString().getBytes(); Decoder decoder =
+				 * Base64.getDecoder();
+				 * 
+				 * byte[] dvid = decoder.decode(vid); SimpleDateFormat forma = new
+				 * SimpleDateFormat("yyyyMMdd"); Date time = new Date();
+				 * 
+				 * writeFile(forma.format(time),dvid);
+				 */
 			}else {
 				myAlert(tp[2]);
 			}
@@ -147,7 +144,7 @@ public class MqttService implements MqttCallbackExtended {
 		try {
 			File outFile = new File("./"+filename);
 			FileOutputStream outStream = new FileOutputStream(outFile);
-			outStream.write(data);;
+			outStream.write(data);
 			outStream.close();
 		}catch(Throwable e) {
 			e.printStackTrace();

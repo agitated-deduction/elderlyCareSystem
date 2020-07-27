@@ -2253,3 +2253,70 @@ var html = '<iframe src ="'+url+'" width="325" height="240">이 브라우저는 
 카카오 지도 api
 https://apis.map.kakao.com/web/sample/basicMap/
 app key 발급받기
+
+
+20200727
+
+A cookie associated with a cross-site resource at http://jquery.com/ was set without the `SameSite` attribute. A future release of Chrome will only deliver cookies with cross-site requests if they are set with `SameSite=None` and `Secure`. You can review cookies in developer tools under Application>Storage>Cookies and see more details at https://www.chromestatus.com/feature/5088147346030592 and https://www.chromestatus.com/feature/5633521622188032.
+
+Indicate whether to send a cookie in a cross-site request by specifying its SameSite attribute
+
+sessionStorage 문제.
+홈에서 리스트 선택 후 모니터링 창으로 왔을때 저장 x
+모니터링 창에서 리스트 선택 후 로그아웃시 sessionStorage 저장 되어 있음
+1. 홈에서 리스트 선택 시 ip 정보 저장.
+2. 로그아웃시 ip 정보 삭제
+
+ekey 같은 경우 1번은 제대로 작동
+로그아웃시 정보 삭제는 되지 않음. function logout에 sessionStorage.remove()쓰면 될 것 ㅏㄱㅌㄴ음
+
+27 gps, stat
+28 stat
+29 mqtt alone
+30 31 전체 점검
+
+구글맵 (유료) 무료 평가판 사용.
+https://developers.google.com/maps/documentation/javascript/get-api-key?hl=ko
+
+### SSE Server-Sent Events
+폴링처럼 주기적인 요청은 쓸모없는 요청으로 인한 낭비. HTTP오버헤드
+sse는 서버가 필요할 때, 클라이언트에게 데이터를 줄 수 있게 해주는 서버 푸시 기술
+
+* HTTP통신
+* 간편함
+
+SseEmitter클래스를 사용하여 http응답을 text/event-stream 타입으로 리턴
+
+```xml
+<servlet>
+	<servlet-name>community-servlet</servlet-name>
+	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/servlet-config/community-servlet-context.xml
+        </param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
+</servlet>
+```
+async-support를 반드시 추가해줘야 한다.
+
+이슈를 저장하는 서비스 단에서는 이슈 저장이 완료되면 EventPublisher를 사용하여 이벤트를 발생시킨다.
+
+
+elderly dto 에 stat 추가
+
+
+key 별로 가장 최근의 데이터 가져오기
+```sql
+select * from(
+    select * from banddata
+    where (ekey, measuredtime)in(
+		select ekey, max(measuredtime) as measuredtime
+		from banddata group by ekey
+    )
+    order by measuredtime desc
+)t;
+```

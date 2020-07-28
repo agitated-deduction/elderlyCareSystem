@@ -36,28 +36,18 @@
           
           <!-- /widget -->
           <div class="widget widget-nopad">
-            <div class="widget-header"> <i class="icon-list-alt"></i>
-              <h3> Recent News</h3>
-            </div>
-            <!-- /widget-header -->
-            <div class="widget-content">
-              <div id='calendar'>
-              </div>
-            </div>
+          	
+            	<div class="widget-header"> <i class="icon-list-alt"></i>
+              		<h3> Recent News</h3>
+            	</div>
+            	<!-- /widget-header -->
+            	<div class="widget-content">
+              		<div id='calendar'></div>
+            	</div>
             <!-- /widget-content --> 
+          
           </div>
-          <div class="widget">
-            <div class="widget-header"> <i class="icon-signal"></i>
-              <h3> Area Chart Example</h3>
-            </div>
-            <!-- /widget-header -->
-            <div class="widget-content">
-              <canvas id="area-chart" class="chart-holder" height="250" width="538"> </canvas>
-              <!-- /area-chart --> 
-            </div>
-            <!-- /widget-content --> 
-          </div>
-          <!-- /widget -->
+          
           
           
           <!-- /widget --> 
@@ -92,22 +82,7 @@
             </div>
             <!-- /widget-content --> 
           </div>
-          <div class="widget">
-            <div class="widget-header"> <i class="icon-bookmark"></i>
-              <h3>Important Shortcuts</h3>
-            </div>
-            <!-- /widget-header -->
-            <div class="widget-content">
-              <div class="shortcuts"> <a href="javascript:;" class="shortcut"><i class="shortcut-icon icon-list-alt"></i><span
-                                        class="shortcut-label">Apps</span> </a><a href="javascript:;" class="shortcut"><i
-                                            class="shortcut-icon icon-bookmark"></i><span class="shortcut-label">Bookmarks</span> </a><a href="javascript:;" class="shortcut"><i class="shortcut-icon icon-signal"></i> <span class="shortcut-label">Reports</span> </a><a href="javascript:;" class="shortcut"> <i class="shortcut-icon icon-comment"></i><span class="shortcut-label">Comments</span> </a><a href="javascript:;" class="shortcut"><i class="shortcut-icon icon-user"></i><span
-                                                class="shortcut-label">Users</span> </a><a href="javascript:;" class="shortcut"><i
-                                                    class="shortcut-icon icon-file"></i><span class="shortcut-label">Notes</span> </a><a href="javascript:;" class="shortcut"><i class="shortcut-icon icon-picture"></i> <span class="shortcut-label">Photos</span> </a><a href="javascript:;" class="shortcut"> <i class="shortcut-icon icon-tag"></i><span class="shortcut-label">Tags</span> </a> </div>
-              <!-- /shortcuts --> 
-            </div>
-            <!-- /widget-content --> 
-          </div>
-          <!-- /widget --> 
+          
           
           <!-- /widget -->
         </div>
@@ -200,56 +175,7 @@
  
 <script src="<c:url value='/resources/js/base.js'/>"></script> 
 <script>     
-function logout(){
-	$.getJSON('/elderlycare/users/logout', function(data){
-		window.location.replace('');
-	});
-}
-function selectDev(ekey){
-	sessionStorage.setItem('ekey', ekey);
-	window.location.replace('');
-}
 
-        var lineChartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-				{
-				    fillColor: "rgba(220,220,220,0.5)",
-				    strokeColor: "rgba(220,220,220,1)",
-				    pointColor: "rgba(220,220,220,1)",
-				    pointStrokeColor: "#fff",
-				    data: [65, 59, 90, 81, 56, 55, 40]
-				},
-				{
-				    fillColor: "rgba(151,187,205,0.5)",
-				    strokeColor: "rgba(151,187,205,1)",
-				    pointColor: "rgba(151,187,205,1)",
-				    pointStrokeColor: "#fff",
-				    data: [28, 48, 40, 19, 96, 27, 100]
-				}
-			]
-
-        }
-
-        var myLine = new Chart(document.getElementById("area-chart").getContext("2d")).Line(lineChartData);
-
-
-        var barChartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-				{
-				    fillColor: "rgba(220,220,220,0.5)",
-				    strokeColor: "rgba(220,220,220,1)",
-				    data: [65, 59, 90, 81, 56, 55, 40]
-				},
-				{
-				    fillColor: "rgba(151,187,205,0.5)",
-				    strokeColor: "rgba(151,187,205,1)",
-				    data: [28, 48, 40, 19, 96, 27, 100]
-				}
-			]
-
-        }    
 
         $(document).ready(function() {
         var date = new Date();
@@ -281,75 +207,29 @@ function selectDev(ekey){
           },
           editable: true,
           events: [
-            {
-              title: 'All Day Event',
-              start: new Date(y, m, 1)
-            },
-            {
-              title: 'Long Event',
-              start: new Date(y, m, d+5),
-              end: new Date(y, m, d+7)
-            },
-            {
-              id: 999,
-              title: 'Repeating Event',
-              start: new Date(y, m, d-3, 16, 0),
-              allDay: false
-            },
-            {
-              id: 999,
-              title: 'Repeating Event',
-              start: new Date(y, m, d+4, 16, 0),
-              allDay: false
-            },
-            {
-              title: 'Meeting',
-              start: new Date(y, m, d, 10, 30),
-              allDay: false
-            },
-            {
-              title: 'Lunch',
-              start: new Date(y, m, d, 12, 0),
-              end: new Date(y, m, d, 14, 0),
-              allDay: false
-            },
-            {
-              title: 'Birthday Party',
-              start: new Date(y, m, d+1, 19, 0),
-              end: new Date(y, m, d+1, 22, 30),
-              allDay: false
-            },
-            {
-              title: 'EGrappler.com',
-              start: new Date(y, m, 28),
-              end: new Date(y, m, 29),
-              url: 'http://EGrappler.com/'
-            }
+            
           ]
         });
-        var html1 = '';
-     	$.getJSON('devices', function(data){
+        var html1 = '', html2 = '';
+     	$.getJSON('/elderlycare/devices', function(data){
      		$.each(data, function(index, item){
      			html1+="<li><a href='#' onclick='selectDev("+item.ekey+"); return false;'>"
 	 			//html1 +="<li><a href = 'devices/"+item.ekey+"'>";
      			html1 +=item.ename+"</a></li>";
-     		});
-     		$('#eld-list').html(html1);
-     	});
-        var html2 = '';
-	 	$.getJSON('devices', function(data){
-	 		$.each(data, function(index, item){
+     		
 	 			html2+="<tr>";
 	 			html2 +="<td>"+item.ename+"</td>";
 	 			html2+="<td>"+item.ebirth+"</td>";
 	 			html2 +="<td>"+item.eaddr+"</td>";
 	 			html2 +="<td>"+item.etel+"</td>";
-	 			
-	 			html2 += 
-	 				item.stat?'<td class="td-actions"><a class="btn btn-small btn-success"><i class="btn-icon-only icon-ok"> </i></a></td>'
-	 			:'<td class="td-actions"> <a class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></td>';
+	 			console.log(item.stat);
+	 			if(item.stat== 1)
+	 				html2+= '<td class="td-actions"><a class="btn btn-small btn-success"><i class="btn-icon-only icon-ok"> </i></a></td>';
+	 			else
+	 				html2+='<td class="td-actions"> <a class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></td>';
 	 			html2+="</tr>";
 	 		});
+	 		$('#eld-list').html(html1);
 	 		$('#eld-table').html(html2);
 	 	});
       });

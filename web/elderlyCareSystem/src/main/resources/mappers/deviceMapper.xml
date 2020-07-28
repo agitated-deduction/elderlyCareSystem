@@ -20,10 +20,26 @@
 	INSERT INTO manage(staff, elderly)
 	VALUES(#{staff}, #{elderly});
 	</insert>
-	<select id = "selectDevices" parameterType = "String" resultType = "com.spring.elderlycare.dto.ElderlyDTO">
-		SELECT * FROM elderly LEFT JOIN devices ON devices.elderly =  ekey
-				LEFT JOIN manage ON manage.elderly =ekey WHERE staff = #{value};
-		
+	<select id = "selectDevices" parameterType = "String" resultType = "com.spring.elderlycare.dto.Elderly2DTO">
+		<!--  SELECT * FROM elderly LEFT JOIN devices ON devices.elderly =  ekey
+				LEFT JOIN manage ON manage.elderly =ekey WHERE staff = #{value};-->
+	select * from(
+		SELECT ekey, ename, ebirth, etel, eaddr, homeIoT, staff, relative
+    	FROM elderly 
+    	LEFT JOIN devices ON devices.elderly =  ekey
+		LEFT JOIN manage ON manage.elderly =ekey 
+		WHERE staff = #{value})a
+	left join (
+		select * from(
+			select ekey, stat from banddata
+			where (ekey, measuredtime)in(
+				select ekey, max(measuredtime) as measuredtime
+				from banddata group by ekey
+			)
+    	order by measuredtime desc
+		)t
+	)tt 
+	ON tt.ekey = a.ekey;
 	</select>
 	<select id = "selectDevice" parameterType = "int" resultType = "com.spring.elderlycare.dto.ElderlyDTO">
 		SELECT * FROM elderly WHERE ekey = #{value};

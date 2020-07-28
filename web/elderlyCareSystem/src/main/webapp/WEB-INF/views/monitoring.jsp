@@ -12,7 +12,12 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    
+    <style type = "text/css">
+    #map{
+    	height:300;
+    	width: 250;
+    }
+    </style>
 </head>
 <body>
 <%@ include file="header.jsp" %>
@@ -143,22 +148,48 @@
 
  
 <script src="<c:url value='/resources/js/base.js'/>"></script> 
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT7sSTMO5sgyqu_1l0KuaIK_QAyv0U44c&callback=initMap&libraries=&v=weekly"
+      defer
+    ></script>
+    
 <script>
+function initMap(){
+	
+}
 $(function(){
 	var ip = sessionStorage.getItem("ip");
-	var mapX = sessionStorage.getItem("mapX");
-	var mapY = sessionStorage.getItem("mapY");
+	var ekey = sessionStorage.getItem("ekey");
+	//var mapX = sessionStorage.getItem("mapX");
+	//var mapY = sessionStorage.getItem("mapY");
 	
-	console.log("ekey:"+sessionStorage.getItem("ekey"));
-	console.log("ip:"+ip);
+	console.log(sessionStorage.getItem("ekey")+":"+ip);
+	
 	var url = "http://"+ip+":8090/?action=stream";
 	
 	var streaming = '<center><iframe src ="'+url+'" width="325" height="240">이 브라우저는 iframe을 지원하지 않습니다.</iframe></center>';
 	$('#streaming').html(streaming);
 	
-	var map = '';
+	"use strict";
+	$.getJSON('/elderlycare/devices/'+ekey+'/curdata', function(data){
+		var pos = {lat: data.ealtitude,
+				lng: data.elongitude};
+		let map;
+		//function initMap(){
+			map = new google.maps.Map(document.getElementById("map"),{
+				center : pos,
+				zoom: 18
+			});
+			var marker = new google.maps.Marker({
+				position:pos, map: map
+			});
+			var image = 'img/'
+		//}
+	});
+	/* 
 	$('#map').html(map);
-	
+	 */
 });
 </script>
 </body>

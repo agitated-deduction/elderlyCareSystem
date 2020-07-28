@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.elderlycare.dto.DevicesDTO;
+import com.spring.elderlycare.dto.Elderly2DTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
 
 @Repository("deviceDAO")
@@ -19,7 +20,7 @@ public class DeviceDAOImpl implements DeviceDAO{
 	private static final String ns = "com.spring.elderlycare.dao.DeviceDAOImpl.";
 	
 	@Override
-	public List<ElderlyDTO> selectList(String id) {
+	public List<Elderly2DTO> selectList(String id) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList(ns+"selectDevices", id);
 		//return null;

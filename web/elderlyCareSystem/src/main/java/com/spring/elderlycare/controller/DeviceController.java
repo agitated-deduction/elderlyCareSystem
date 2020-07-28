@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.elderlycare.dto.Datas2DTO;
 import com.spring.elderlycare.dto.DatasDTO;
+import com.spring.elderlycare.dto.Elderly2DTO;
 import com.spring.elderlycare.dto.ElderlyDTO;
 import com.spring.elderlycare.service.DataService;
 import com.spring.elderlycare.service.DeviceService;
@@ -56,9 +57,9 @@ public class DeviceController {
 	 * 
 	 * */
 	@RequestMapping(method = RequestMethod.GET)
-	public List<ElderlyDTO> deviceList(HttpSession httpSession) {
-		List<ElderlyDTO> list = service.devicesList((String)httpSession.getAttribute("uid"));
-				
+	public List<Elderly2DTO> deviceList(HttpSession httpSession) {
+		List<Elderly2DTO> list = service.devicesList((String)httpSession.getAttribute("uid"));
+		
 		return list;
 	}
 	/*********************************/
@@ -76,7 +77,7 @@ public class DeviceController {
 	}
 	@RequestMapping(value = "/form", method = RequestMethod.GET)
 	public ModelAndView deviceRegistration(ModelAndView mav) {
-		mav.setViewName("device/registration");
+		mav.setViewName("regForm");
 		
 		return mav;
 	}

@@ -67,13 +67,13 @@
   <div class="subnavbar-inner">
     <div class="container">
       <ul class="mainnav">
-        <li class="active"><a href="${contextPath}/"><i class="icon-dashboard"></i><span>Home</span> </a> </li>
-        <li><a href="${contextPath }/devices/datas"><i class="icon-bar-chart"></i><span>Datas</span> </a> </li>
-        <li><a href="${contextPath }/devices/monitoring"><i class="icon-facetime-video"></i><span>Home monitoring</span> </a></li>
+        <li class="active" id = "home-btn"><a href="${contextPath}/"><i class="icon-dashboard"></i><span>Home</span> </a> </li>
+        <li id = "datas-btn"><a href="${contextPath }/devices/datas"><i class="icon-bar-chart"></i><span>Datas</span> </a> </li>
+        <li id = "monitoring-btn"><a href="${contextPath }/devices/monitoring"><i class="icon-facetime-video"></i><span>Home monitoring</span> </a></li>
 <c:if test = '${auth eq 1}' >
       <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Drops</span> <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="signup.html">기기 등록</a></li>
+            <li><a href="${contextPath }/devices/form">기기 등록</a></li>
             <li><a href="error.html">가입 승인</a></li>
           </ul>
         </li>
@@ -93,9 +93,9 @@
 <script src="<c:url value='/resources/js/jquery-1.7.2.min.js'/>"></script> 
 
 <script>
-
 	function logout(){
 		$.getJSON('/elderlycare/users/logout', function(data){
+			sessionStorage.clear();
 			window.location.replace('');
 		});
 	}
@@ -110,15 +110,25 @@
 	 		$.each(data, function(index, item){
 	 			//html +="<li><a href = 'devices/"+item.ekey+"'>";
 	 			var param = JSON.stringify(item)
-	 			console.log(param);
-	 			html+="<li><a href='#' onclick='selectDev("+item.ekey+", \""+item.homeIoT.toString() +"\"); return false;'>"
+	 			//console.log(param);
+	 			//html+="<li><a href='#' onclick='selectDev("+item.ekey+", \""+item.homeIoT.toString() +"\"); return false;'>";
+	 			
+	 			html+="<li><a href='#' onclick='selectDev(";
+	 			html+=item.ekey+", ";
+	 			html+='"'+item.homeIoT+'"';
+	 			html+="); return false;'>";
 	 			html +=item.ename+"</a></li>";
-	 			console.log(html);
+	 			
+	 			//console.log(html);
 	 		});
 	 		$('#eld-list').html(html);
 	 	});
 	 	//sessionStorage.getItem('ekey', ekey);
-	 	
+	 	//이거 수정
+	 	$('#datas-btn').click(function(){
+	 		$('li.activate').removeClass('activate');
+	 		$(this).addClass('activate');
+	 	});
 	 });
 </script>
 </html>

@@ -59,10 +59,7 @@ public class DeviceController {
 	@RequestMapping(method = RequestMethod.GET)
 	public List<Elderly2DTO> deviceList(HttpSession httpSession) {
 		List<Elderly2DTO> list = service.devicesList((String)httpSession.getAttribute("uid"));
-		/*
-		 * for(Elderly2DTO d: list) { System.out.println(d.getEkey());
-		 * System.out.println(d.getStat()); }
-		 */
+		
 		return list;
 	}
 	/*********************************/
@@ -80,7 +77,7 @@ public class DeviceController {
 	}
 	@RequestMapping(value = "/form", method = RequestMethod.GET)
 	public ModelAndView deviceRegistration(ModelAndView mav) {
-		mav.setViewName("device/registration");
+		mav.setViewName("regForm");
 		
 		return mav;
 	}

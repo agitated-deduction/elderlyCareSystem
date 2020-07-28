@@ -75,7 +75,7 @@ public class MemberController {
 	
 	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	public ModelAndView memberJoinForm(ModelAndView mav){
-		mav.setViewName("member/join");
+		mav.setViewName("signup");
 		return mav;
 	}
 	

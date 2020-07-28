@@ -155,6 +155,9 @@
     ></script>
     
 <script>
+function initMap(){
+	
+}
 $(function(){
 	var ip = sessionStorage.getItem("ip");
 	var ekey = sessionStorage.getItem("ekey");

@@ -2320,3 +2320,24 @@ select * from(
     order by measuredtime desc
 )t;
 ```
+
+
+20200728
+
+alone alert! ipc
+Inter Process Communication
+프로세스들이 공유하는 메모리가 필요하다!
+
+
+* pipe
+통신을 위한 별도의 메모리 공간(버퍼)를 할당해주어야 한다. 단방향 통신이다.
+
+Anonymouse pipe - 외부 프로세스에서 파이프 사용 불가. 부모프로세스가 자식 프로세스를 생성하는 경우 사용. 단방향 통신( pipe)
+
+named pipe - 외부 프로세스와 통신을 위해. 반이중통신. 전이중 통신을 위해서는 읽기용 쓰기용 두가지 파이프를 생성해줘야 한다. 다수의 클라이언트를 처리하기에 비효율적 (mkfifo, mknod)
+
+
+
+1. device/null/curdata 400 error 
+	: alert '사용하지 않는 기기이거나 선택된 리스트가 없습니다. list 목록에서 기기선택을 먼저 해주세요'
+2. header class

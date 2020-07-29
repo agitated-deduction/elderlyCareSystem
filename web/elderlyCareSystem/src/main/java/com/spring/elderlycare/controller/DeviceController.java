@@ -82,16 +82,14 @@ public class DeviceController {
 		return mav;
 	}
 
-	/*
-	 * @RequestMapping(value = "/{num}", method = RequestMethod.GET) public
-	 * ModelAndView deviceInfo(HttpSession session,ModelAndView
-	 * mav, @PathVariable("num") int dnum) {
-	 * 
-	 * edto = service.elderlyInfo(dnum); session.setAttribute("edto", edto);
-	 * mav.setViewName("redirect:/");
-	 * 
-	 * return mav; }
-	 */
+	
+	 @RequestMapping(value = "/{num}", method = RequestMethod.GET) 
+	 public ElderlyDTO deviceInfo(HttpSession session, @PathVariable("num") int dnum) {
+	  
+	  return service.elderlyInfo(dnum);
+	   
+	 }
+	 
 	@RequestMapping(value = "/{num}", method = RequestMethod.PUT)
 	public ElderlyDTO deviceInfoModify(Model model) {
 		

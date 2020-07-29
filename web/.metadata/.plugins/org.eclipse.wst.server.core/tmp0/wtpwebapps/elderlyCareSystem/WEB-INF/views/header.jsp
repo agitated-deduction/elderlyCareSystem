@@ -67,9 +67,9 @@
   <div class="subnavbar-inner">
     <div class="container">
       <ul class="mainnav">
-        <li class="active" id = "home-btn"><a href="${contextPath}/"><i class="icon-dashboard"></i><span>Home</span> </a> </li>
-        <li id = "datas-btn"><a href="${contextPath }/devices/datas"><i class="icon-bar-chart"></i><span>Datas</span> </a> </li>
-        <li id = "monitoring-btn"><a href="${contextPath }/devices/monitoring"><i class="icon-facetime-video"></i><span>Home monitoring</span> </a></li>
+        <li id = "home-btn"><a href="${contextPath }/" onclick = "navBtnActive('#home-btn');"><i class="icon-dashboard"></i><span>Home</span> </a> </li>
+        <li id = "datas-btn"><a href="${contextPath }/devices/datas" onclick = "navBtnActive('#datas-btn');"><i class="icon-bar-chart"></i><span>Datas</span> </a> </li>
+        <li id = "monitoring-btn"><a href="${contextPath }/devices/monitoring" onclick = "navBtnActive('#monitoring-btn');"><i class="icon-facetime-video"></i><span>Home monitoring</span> </a></li>
 <c:if test = '${auth eq 1}' >
       <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Drops</span> <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -104,8 +104,38 @@
 		sessionStorage.setItem("ip", ip);
 		window.location.replace('');
 	}
+	function navBtnActive(btn){
+		/* 
+		var btn = '';
+		switch(loc){
+		case 'elderlycare/':
+			btn = '#home-btn'; break;
+		case 'elderlycare/devices/datas':
+			btn = '#datas-btn'; break;
+		case 'elderlycare/devices/monitoring':
+			btn = '#monitoring-btn'; break;
+		}
+		 */
+		//$('li.active').removeClass('active');
+ 		$(btn).addClass('active');
+	}
 	 $(document).ready(function() {
-	 	var html = '';
+		//navBtnActive($(location).attr('pathname'));
+	 	
+		 var btn = '';
+			switch($(location).attr('pathname')){
+			case 'elderlycare/':
+				btn = '#home-btn'; break;
+			case 'elderlycare/devices/datas':
+				btn = '#datas-btn'; break;
+			case 'elderlycare/devices/monitoring':
+				btn = '#monitoring-btn'; break;
+			}
+			
+			//$('li.active').removeClass('active');
+	 		$(btn).addClass('active');
+		
+		var html = '';
 	 	$.getJSON('/elderlycare/devices', function(data){
 	 		$.each(data, function(index, item){
 	 			//html +="<li><a href = 'devices/"+item.ekey+"'>";
@@ -124,11 +154,13 @@
 	 		$('#eld-list').html(html);
 	 	});
 	 	//sessionStorage.getItem('ekey', ekey);
-	 	//이거 수정
+	 	/* 
 	 	$('#datas-btn').click(function(){
+	 		console.log("clicked");
 	 		$('li.activate').removeClass('activate');
 	 		$(this).addClass('activate');
 	 	});
+	 	 */
 	 });
 </script>
 </html>

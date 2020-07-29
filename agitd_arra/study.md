@@ -2341,3 +2341,13 @@ named pipe - 외부 프로세스와 통신을 위해. 반이중통신. 전이중
 1. device/null/curdata 400 error 
 	: alert '사용하지 않는 기기이거나 선택된 리스트가 없습니다. list 목록에서 기기선택을 먼저 해주세요'
 2. header class
+
+
+20200729
+
+기기등록시 mqtt 서비스는 어떻게..?
+mqtt 기능 합체 할 지...
+
+
+
+ cookie associated with a cross-site resource at http://jquery.com/ was set without the `SameSite` attribute. A future release of Chrome will only deliver cookies with cross-site requests if they are set with `SameSite=None` and `Secure`. You can review cookies in developer tools under Application>Storage>Cookies and see more details at https://www.chromestatus.com/feature/5088147346030592 and https://www.chromestatus.com/feature/5633521622188032.

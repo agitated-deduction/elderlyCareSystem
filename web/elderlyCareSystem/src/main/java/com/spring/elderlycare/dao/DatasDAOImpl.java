@@ -1,6 +1,7 @@
 package com.spring.elderlycare.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,22 @@ public class DatasDAOImpl implements DatasDAO{
 	@Override
 	public List<DatasDTO> selectHTs(int num) {
 		return sqlSession.selectList(ns+"selectHts", num);
+	}
+
+	@Override
+	public void insertHomeDatas(DatasDTO dto) {
+		float hum = (float)dto.getHumid(),temp = (float)dto.getTemp();
+		if(hum<30||hum>100) return;
+		if(temp< -20|| temp > 40) return;
+		
+		sqlSession.insert(ns+"log", dto);
+		//sqlSession.commit(true);
+		
+	}
+
+	@Override
+	public List<Map<String, Object>> getIPs() {
+		return sqlSession.selectList(ns+"selectDevIPs");
 	}
 
 	

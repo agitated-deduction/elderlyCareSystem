@@ -2351,3 +2351,41 @@ mqtt 기능 합체 할 지...
 
 
  cookie associated with a cross-site resource at http://jquery.com/ was set without the `SameSite` attribute. A future release of Chrome will only deliver cookies with cross-site requests if they are set with `SameSite=None` and `Secure`. You can review cookies in developer tools under Application>Storage>Cookies and see more details at https://www.chromestatus.com/feature/5088147346030592 and https://www.chromestatus.com/feature/5633521622188032.
+
+
+ 20200730 
+ mqtt 코드 합치기
+ (home/{num}/alone) 처리는??
+
+
+ List<DevicesDTO> list = service.getIPList();
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'MqttStarter' defined in ServletContext resource [/WEB-INF/spring/root-context.xml]: Invocation of init method failed; nested exception is java.lang.NullPointerException
+
+
+1. device/null/curdata 400 error 
+	: alert '사용하지 않는 기기이거나 선택된 리스트가 없습니다. list 목록에서 기기선택을 먼저 해주세요'
+
+회원가입 기기등록시 빈칸 오류화면 말고 alert
+
+온습도를 5초 간격으로 받아봤는데 데이터가 600개 정도에서는 버벅거리다가 한번에 쌓이고 천개부터는 안 쌓임. 
+왜 그러는지 모르겠음 내일 테스트
+
+스케쥴러로 DB realtime 데이터 밤 12시에 지우기
+
+회원가입 기기등록 안됨.
+오류화면 처리(회원가입 기기등록시 빈칸, num == null)
+mqtt video 저장
+mqtt alone 메세지
+스케쥴러 데이터 지우기
+graph 가장 최근 데이터 측정 시간 보여주기
+
+
+```xml
+<task:annotation-driven executor="myExecutor" scheduler="myScheduler" />
+<task:executor id="myExecutor" pool-size="5" />
+<task:scheduler id="myScheduler" pool-size="5" />
+<bean id="jobService" class="com.spschool.scheduler.Scheduler" />
+```
+
+`@Scheduled(fixedDelay = 5000)`, `@Scheduled(cron="* * * * * *")`

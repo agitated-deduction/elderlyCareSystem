@@ -24,6 +24,9 @@
 	INSERT INTO realtimedata (elderly, humid, temp)
 	VALUES(#{elderly}, #{humid}, #{temp});
 </insert>
+<select id = "selectDevIPs" resultType = "hashmap">
+		SELECT elderly, homeIoT FROM devices;
+	</select>
 <insert id = "log2" parameterType = "com.spring.elderlycare.dto.Datas2DTO">
 	INSERT INTO banddata (ekey, estep, epulse, ekcal, ealtitude, elongitude, stat)
 	VALUES(#{ekey}, #{estep}, #{epulse}, #{ekcal}, #{ealtitude}, #{elongitude}, #{stat});

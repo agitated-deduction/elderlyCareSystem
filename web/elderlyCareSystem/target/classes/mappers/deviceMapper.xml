@@ -13,7 +13,7 @@
 
 	</insert>
 	<insert id = "insertDevice" parameterType = "com.spring.elderlycare.dto.ElderlyDTO">
-	INSERT INTO devices(elderly, homeIoT, bandIoT)
+	INSERT INTO devices(elderly, homeIoT)
 	VALUES(#{ekey}, #{homeIoT});
 	</insert>
 	<insert id = "insertManage" parameterType = "HashMap">

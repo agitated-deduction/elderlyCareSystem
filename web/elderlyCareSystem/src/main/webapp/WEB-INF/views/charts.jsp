@@ -101,6 +101,7 @@
                             <div class="widget-header">
                                 <i class="icon-bar-chart"></i>
                                 <h3>HT graph</h3>
+                                <h6>gray : 온도 /  blue : 습도</h6>
                             </div>
                             <div class="widget-content">
                             
@@ -252,7 +253,12 @@
 $(function(){
 	var ekey = sessionStorage.getItem("ekey");
   	//var eld = sessionStorage.getItem('elderly');//'<c:out value = '${edto.ekey}'/>';
-	
+	$.getJSON(ekey, function(data){
+    	var curstats = "name : "+data.ename;
+    	curstats += "	|	birth : "+data.ebirth;
+    	$('#curstats').html(curstats);
+    	
+	});
   	var html = '';
   	$.getJSON(ekey+'/curdata', function(data){
      		
@@ -458,7 +464,8 @@ $(function(){
      });
     
     //$.getJSON(ekey, function(data){
-    //	var 
+    //	var curstats = '';
+
     //})
     
     

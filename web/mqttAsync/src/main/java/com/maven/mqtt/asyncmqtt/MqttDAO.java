@@ -33,9 +33,9 @@ public class MqttDAO {
 		if(temp< -20|| temp > 40) return;
 		
 		sqlSession.insert(ns+"log", obj);
-		sqlSession.commit(true);
+		//sqlSession.commit(true);
 	}
 	public List<Map<String, Object>> getDevList() {
-		return sqlSession.selectList("selectDevices");
+		return sqlSession.selectList("selectDevIPs");
 	}
 }

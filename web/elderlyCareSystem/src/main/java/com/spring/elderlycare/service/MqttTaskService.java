@@ -1,14 +1,11 @@
 package com.spring.elderlycare.service;
 
-import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.Map;
 
-import com.spring.elderlycare.dto.DevicesDTO;
-
-@Component
+//@Component
 public interface MqttTaskService {
-
-	public void runningBackground(DevicesDTO ddto);
-	//private void savedb();
-
-
+	public void mqttSubscribe(String broker, int port, String topic);
+	public List<Map<String, Object>> getIPList();
+	
 }

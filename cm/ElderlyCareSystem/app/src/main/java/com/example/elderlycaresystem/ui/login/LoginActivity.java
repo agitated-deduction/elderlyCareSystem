@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login2();
+                login();
                 // DO something
             }
         });
@@ -101,64 +101,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // TODO : LoopBack version. (Test version : getTestlogin() -> login(logindata)
-    private void login2() {
-        String id = idText.getText().toString();
-        String pw = pwText.getText().toString();
-
-        if (id.length()==0) {
-            Toast.makeText(LoginActivity.this, "아이디를 입력하세요", Toast.LENGTH_SHORT).show();
-            idText.requestFocus();
-            return ;
-        }
-        if (pw.length()==0) {
-            Toast.makeText(LoginActivity.this, "비밀번호를 입력하세요", Toast.LENGTH_SHORT).show();
-            pwText.requestFocus();
-            return ;
-        }
-        LoginData loginData = new LoginData(id,pw);
-
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                newToken = instanceIdResult.getToken();
-                Log.v("token","등록 id: "+newToken);
-                Toast.makeText(LoginActivity.this, "tocken: " + newToken, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        LoginData2 loginData2 = new LoginData2(id,pw,newToken);
-
-        // ProgressBar Setting
-        progressBar.setVisibility(View.VISIBLE);
-        // Server에 로그인 데이터(id,pw,regid) 전송
-        RetroUtils.getElderlyService(getApplicationContext()).getTestLogin().enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                progressBar.setVisibility(View.GONE); // ProgressBar Close
-                if(response.isSuccessful() && response.body() != null) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    if (response.body().getUid()!=null){
-                        intent.putExtra(MainActivity.INTENT_ID, response.body().getUid());
-                        startActivity(intent);
-                    }
-                    else{
-                        //Toast.makeText(LoginActivity.this,"아이디 비밀번호를 확인하세요",Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                }else {
-                    int statusCode  = response.code();
-                    Toast.makeText(LoginActivity.this, "연결 실패 : " + statusCode+", 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, "지금은 연결할 수 없습니다. " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private void login() {
         String id = idText.getText().toString();
         String pw = pwText.getText().toString();
@@ -173,11 +115,22 @@ public class LoginActivity extends AppCompatActivity {
             pwText.requestFocus();
             return ;
         }
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                newToken = instanceIdResult.getToken();
+                Log.v("token","등록 id: "+newToken);
+            }
+        });
+
         LoginData loginData = new LoginData(id,pw);
+//        LoginData loginData = new LoginData(id,pw,newToken);
 
         // ProgressBar Setting
         progressBar.setVisibility(View.VISIBLE);
         // Server에 로그인 데이터(id,pw,regid) 전송
+        // TODO : 로그인 시 nowToken 같이 보내기 => LoginData 수정 필요!!
         RetroUtils.getElderlyService(getApplicationContext()).login(loginData).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -189,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                     else{
-                        //Toast.makeText(LoginActivity.this,"아이디 비밀번호를 확인하세요",Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this,"아이디 비밀번호를 확인하세요",Toast.LENGTH_LONG).show();
                         return;
                     }
                 }else {
@@ -204,5 +157,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 }

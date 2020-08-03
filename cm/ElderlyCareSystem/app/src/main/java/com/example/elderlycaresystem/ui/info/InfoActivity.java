@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.elderlycaresystem.data.elderly.ElderlyInfo;
 import com.example.elderlycaresystem.ui.map.MapActivity;
 import com.example.elderlycaresystem.R;
 import com.example.elderlycaresystem.data.info.ElderlyData;
@@ -58,18 +59,15 @@ public class InfoActivity extends AppCompatActivity {
         humidText = findViewById(R.id.humidText);
 
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        ekey = bundle.getInt("KEY");
-        name = bundle.getString("NAME");
-        home = bundle.getString("HOME");
+        if (intent != null) {
+            ekey = intent.getIntExtra("KEY", -1);
+        }
 
-        latitude = 0;
-        longitude = 0;
-        nameText.setText(name);
-
-
-//        getElderlyList(ekey);
-        getTestData();
+        if (ekey!=-1){
+            getElderlyData(ekey);
+            getElderlyInfo(ekey);
+        }
+//        getTestData();
 
         Button mapButton = findViewById(R.id.mapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +97,119 @@ public class InfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-}
+    }
+
+    // TODO : Demo Version
+    private void getElderlyData(int ekey) {
+        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
+        RetroUtils.getElderlyService(getApplicationContext()).getElderlyData(ekey).enqueue(new Callback<ElderlyData>() {
+            // 연결 성공시
+            @Override
+            public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
+                    setData(response.body());
+                }else {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ElderlyData> call, Throwable t) {
+                Log.d("InfoActivity", "Connect_Error");
+                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+
+    // TODO : Demo Version
+    private void getElderlyInfo(int ekey) {
+        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
+        RetroUtils.getElderlyService(getApplicationContext()).getElderlyInfo(ekey).enqueue(new Callback<ElderlyInfo>() {
+            // 연결 성공시
+            @Override
+            public void onResponse(Call<ElderlyInfo> call, Response<ElderlyInfo> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+                    setInfo(response.body());
+                }else {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ElderlyInfo> call, Throwable t) {
+                Log.d("InfoActivity", "Connect_Error");
+                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+
+
+    private void setData(ElderlyData elderlyData){
+        // 정상 상태일 때 -> Intent from MainActivity
+        step = elderlyData.getEstep();
+        pulse = elderlyData.getEpulse();
+        kcal = elderlyData.getEkcal();
+        stat = elderlyData.getStat();
+        temp = elderlyData.getTemp();
+        humid = elderlyData.getHumid();
+        String str = "step: "+step+", pulse: "+pulse+", kcal: "+kcal+", stat: "+stat+", temp: "+temp;
+        Log.d("InfoActivity_SD",str);
+        Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
+
+        stepText.setText(String.valueOf(step));
+        pulseText.setText(String.valueOf(pulse));
+        kcalText.setText(String.valueOf(elderlyData.getEkcal()));
+        tempText.setText(String.valueOf(temp));
+        humidText.setText(String.valueOf(step));
+
+        latitude = elderlyData.getEaltitude();
+        longitude = elderlyData.getElongitude();
+        Log.d("InfoActivity","SET lati:"+latitude+", longi:"+longitude);
+
+        if (stat == 1){
+            statText.setText("정상");
+        } else if (stat == 0){
+            statText.setText("위험");
+        }
+    }
+
+    private void setInfo(ElderlyInfo elderlyInfo){
+        // 정상 상태일 때 -> Intent from MainActivity
+        nameText.setText(elderlyInfo.getEname());;
+        home = elderlyInfo.getHomeIoT();
+    }
+
+
+    private void showMap(double lati, double longi){
+//        Intent intent = new Intent(InfoActivity.this, MapActivity.class);
+//        intent.putExtra("LATITUDE",lati);
+//        intent.putExtra("LONGITUDE",longi);
+//        startActivity(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d("FMS Info Activity", "onNweIntent() 호출됨");
+        super.onNewIntent(intent);
+        if (intent == null) {
+            Log.d("FMS Info Activity", "Intent is null");
+            return;
+        }
+        Bundle bundle = intent.getExtras();
+        ekey = intent.getIntExtra("ekey", -1);
+        if (ekey != -1) {
+            getElderlyData(ekey);
+            getElderlyInfo(ekey);
+        } else {
+            Log.d("FMS Info Activity", "ekey :" + ekey);
+            return;
+        }
+    }
 
     // TODO : LoopBack version. ( Test version : getTestData() -> getElderlyData(ekey) )
     private void getTestData() {
@@ -126,82 +236,5 @@ public class InfoActivity extends AppCompatActivity {
         });
     }
 
-    // TODO : Final version.
-    private void getTestData2() {
-        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
-        RetroUtils.getElderlyService(getApplicationContext()).getElderlyData(ekey).enqueue(new Callback<ElderlyData>() {
-            // 연결 성공시
-            @Override
-            public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
-                if(response.isSuccessful() && response.body() != null) {
-                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
-                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
-                    setData(response.body());
-                }else {
-                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
-                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<ElderlyData> call, Throwable t) {
-                Log.d("InfoActivity", "Connect_Error");
-                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
-            }
-        });
-    }
 
-
-
-    private void setData(ElderlyData elderlyData){
-        // 정상 상태일 때 -> Intent from MainActivity
-        step = elderlyData.getEstep();
-        pulse = elderlyData.getEpulse();
-        kcal = elderlyData.getEkcal();
-        stat = elderlyData.getStat();
-        temp = elderlyData.getTemp();
-        humid = elderlyData.getHumid();
-
-        stepText.setText(String.valueOf(step));
-        pulseText.setText(String.valueOf(pulse));
-        kcalText.setText(String.valueOf(elderlyData.getEkcal()));
-        tempText.setText(String.valueOf(temp));
-        humidText.setText(String.valueOf(step));
-
-        latitude = elderlyData.getEaltitude();
-        longitude = elderlyData.getElongitude();
-        Log.d("InfoActivity","SET lati:"+latitude+", longi:"+longitude);
-
-        if (stat == 1){
-            statText.setText("정상");
-        } else if (stat == 0){
-            statText.setText("위험");
-        }
-    }
-
-    private void showMap(double lati, double longi){
-//        Intent intent = new Intent(InfoActivity.this, MapActivity.class);
-//        intent.putExtra("LATITUDE",lati);
-//        intent.putExtra("LONGITUDE",longi);
-//        startActivity(intent);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        if (intent == null){
-            Log.d("InfoActivity New Intent","Intent is null");
-            return ;
-        }
-        Bundle bundle =  intent.getExtras();
-        String title = bundle.getString("title");
-        String text = bundle.getString("text");
-        if (title == null || text == null){
-            Log.d("InfoActivity New Intent","title & text is null");
-            return ;
-        }
-        nameText.setText(title);
-        statText.setText(text);
-        Log.d("InfoActivity New Intent","title: "+ title + ", text: "+text);
-        super.onNewIntent(intent);
-    }
 }

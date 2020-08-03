@@ -23,10 +23,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.pedro.library.AutoPermissions;
-import com.pedro.library.AutoPermissionsListener;
+//import com.pedro.library.AutoPermissions;
+//import com.pedro.library.AutoPermissionsListener;
 
-public class MapActivity extends AppCompatActivity implements AutoPermissionsListener {
+
+public class MapActivity extends AppCompatActivity{// implements AutoPermissionsListener
 
     private SupportMapFragment mapFragment;
     private GoogleMap map;
@@ -42,7 +43,7 @@ public class MapActivity extends AppCompatActivity implements AutoPermissionsLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        AutoPermissions.Companion.loadAllPermissions(this, 101);
+//        AutoPermissions.Companion.loadAllPermissions(this, 101);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         lati = bundle.getDouble("LATITUDE");
@@ -153,27 +154,27 @@ public class MapActivity extends AppCompatActivity implements AutoPermissionsLis
         public void onStatusChanged(String provider, int status, Bundle extras) { }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        AutoPermissions.Companion.parsePermissions(this, requestCode, permissions, this);
-    }
-
-    @Override
-    public void onDenied(int requestCode, String[] permissions) {
-//        if (permissions.length != 0){
-//            Toast.makeText(this, "permissions denied : " + permissions.length, Toast.LENGTH_LONG).show();
-//        }
-    }
-
-    @Override
-    public void onGranted(int requestCode, String[] permissions) {
-//        if (permissions.length == 9){
-//            Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
-//        }
-//        else if (permissions.length == 8){
-//            Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
-//        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        AutoPermissions.Companion.parsePermissions(this, requestCode, permissions, this);
+//    }
+//
+//    @Override
+//    public void onDenied(int requestCode, String[] permissions) {
+////        if (permissions.length != 0){
+////            Toast.makeText(this, "permissions denied : " + permissions.length, Toast.LENGTH_LONG).show();
+////        }
+//    }
+//
+//    @Override
+//    public void onGranted(int requestCode, String[] permissions) {
+////        if (permissions.length == 9){
+////            Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
+////        }
+////        else if (permissions.length == 8){
+////            Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
+////        }
+//    }
 }

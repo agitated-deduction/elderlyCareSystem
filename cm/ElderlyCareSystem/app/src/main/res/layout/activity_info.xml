@@ -7,174 +7,188 @@
     android:orientation="vertical"
     tools:context="com.example.elderlycaresystem.ui.info.InfoActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+
+            <TextView
+                android:id="@+id/nameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:text="이름"
+                android:textSize="30sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/pulse"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="60dp"
+                android:text="맥박"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nameText" />
+
+            <TextView
+                android:id="@+id/step"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:text="걸음"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pulse" />
+
+            <TextView
+                android:id="@+id/kcal"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:text="칼로리"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/step" />
+
+            <TextView
+                android:id="@+id/temp"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:text="온도"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/kcal" />
+
+
+            <TextView
+                android:id="@+id/humid"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:text="습도"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/temp" />
+
+            <TextView
+                android:id="@+id/statText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:text="현재 상태"
+                android:textSize="30sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toEndOf="@+id/nameText"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+
+            <TextView
+                android:id="@+id/pulseText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="60dp"
+                android:text="BPM"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toEndOf="@+id/pulse"
+                app:layout_constraintTop_toBottomOf="@+id/statText" />
+
+            <TextView
+                android:id="@+id/stepText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="40dp"
+                android:text="STEP"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toEndOf="@+id/step"
+                app:layout_constraintTop_toBottomOf="@+id/pulseText" />
+
+
+            <TextView
+                android:id="@+id/kcalText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="40dp"
+                android:text="Kcal"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toEndOf="@+id/kcal"
+                app:layout_constraintTop_toBottomOf="@+id/step" />
+
+            <TextView
+                android:id="@+id/tempText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="40dp"
+                android:text="Temp"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toEndOf="@+id/temp"
+                app:layout_constraintTop_toBottomOf="@+id/kcalText" />
+
+
+            <TextView
+                android:id="@+id/humidText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="40dp"
+                android:text="Humid"
+                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                app:layout_constraintStart_toEndOf="@+id/humid"
+                app:layout_constraintTop_toBottomOf="@+id/tempText" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="565dp">
-
-
-        <TextView
-            android:id="@+id/nameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:text="이름"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/pulse"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="60dp"
-            android:text="맥박"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameText" />
-
-        <TextView
-            android:id="@+id/step"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="40dp"
-            android:text="걸음"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pulse" />
-
-        <TextView
-            android:id="@+id/kcal"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="40dp"
-            android:text="칼로리"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/step" />
-
-        <TextView
-            android:id="@+id/temp"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="40dp"
-            android:text="온도"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/kcal" />
-
-
-        <TextView
-            android:id="@+id/humid"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="40dp"
-            android:text="습도"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/temp" />
-
-        <TextView
-            android:id="@+id/statText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
-            android:text="현재 상태"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toEndOf="@+id/nameText"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <TextView
-            android:id="@+id/kcalText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="40dp"
-            android:text="Kcal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toEndOf="@+id/kcal"
-            app:layout_constraintTop_toBottomOf="@+id/step" />
-
-        <TextView
-            android:id="@+id/tempText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="40dp"
-            android:text="Temp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toEndOf="@+id/temp"
-            app:layout_constraintTop_toBottomOf="@+id/kcalText" />
-
-
-        <TextView
-            android:id="@+id/humidText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="40dp"
-            android:text="Humid"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toEndOf="@+id/humid"
-            app:layout_constraintTop_toBottomOf="@+id/tempText" />
-
-
-        <TextView
-            android:id="@+id/pulseText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="60dp"
-            android:text="BPM"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toEndOf="@+id/pulse"
-            app:layout_constraintTop_toBottomOf="@+id/statText" />
-
-        <TextView
-            android:id="@+id/stepText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="40dp"
-            android:text="STEP"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toEndOf="@+id/step"
-            app:layout_constraintTop_toBottomOf="@+id/pulseText" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="24dp">
 
         <Button
             android:id="@+id/mapButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginLeft="80dp"
-            android:layout_marginTop="50dp"
             android:text="위치 보기"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -188,9 +202,6 @@
             android:id="@+id/camButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginRight="80dp"
             android:text="영상 보기"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"

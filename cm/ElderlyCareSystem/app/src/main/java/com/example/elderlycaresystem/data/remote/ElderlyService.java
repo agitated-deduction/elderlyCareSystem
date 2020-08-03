@@ -26,9 +26,11 @@ public interface ElderlyService {
     @GET("devices")
     Call<List<ElderlyInfo>> getElderlyList(@Query("uid") String id);
 
-    @GET("devices/{num}/data")
+    @GET("devices/{num}/curdata")
     Call<ElderlyData> getElderlyData(@Path("num") int key);
 
+    @GET("devices/{num}")
+    Call<ElderlyInfo> getElderlyInfo(@Path("num") int key);
 
     @GET("users/logout")
     Call<ResponseBody> logout();
@@ -44,7 +46,7 @@ public interface ElderlyService {
     @GET("devices")
     Call<List<ElderlyInfo>> getTestList();
 
-    @GET("datas")
+    @GET("elderly")
     Call<ElderlyData> getTestData();
 
 

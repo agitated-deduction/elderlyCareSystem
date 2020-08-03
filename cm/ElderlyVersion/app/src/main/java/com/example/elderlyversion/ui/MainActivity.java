@@ -44,7 +44,6 @@ import com.example.elderlyversion.utils.RecycleUtils;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -86,7 +85,9 @@ public class MainActivity extends Activity {
     private static String homeIot;
     private static int ekey;
 
-    private static String regid = "e-A5lnhOXLg:APA91bGTHRMaaKXBT3a_tl5wjApb3pc_bkk7C2GlAqYnqaLqXebScVMZHec2F1qDaytod0CmB9OITs3fo9NNxVKnnMCnPSHhSZEnfox8HI7wa6s3rWc1FsTHKKHEC6Uz-eFk7e5Bygd5";
+
+    private static String regid;
+
     private static ElderlyData elderlyData;
 
     // Step Check
@@ -106,6 +107,8 @@ public class MainActivity extends Activity {
         AppSettings.initializeAppSettings(this);
         setContentView(R.layout.activity_main);
 
+        elderlyData = new ElderlyData(1, 12, 65,0, 6.54, 36.184718283949, 127.801093940);
+
         // Get & Set Username from LoginActivity
         Intent intent = getIntent();
         processIntent(intent);
@@ -115,6 +118,13 @@ public class MainActivity extends Activity {
 
         // Do data initialization after service started and binded
         doStartService();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sendEmergancyData();
+        sendData(elderlyData);
     }
 
     @Override
@@ -216,6 +226,7 @@ public class MainActivity extends Activity {
             startActivityForResult(enableIntent, Constants.REQUEST_ENABLE_BT);
         }
     }
+
     private void finalizeActivity() {
         Logs.d(TAG, "# Activity - finalizeActivity()");
 
@@ -328,12 +339,12 @@ public class MainActivity extends Activity {
                         if (str == MESSAGE_BT_ADDING || str == " "){
                             return;
                         }
-                        if (str.substring(0,1).equals("2")){
+                        if (str.substring(0,1).equals("0")){
                             Log.d("STATE_EMR", str);
                             messageParsing(str);
                             messageSetting(elderlyData);
 //                            TODO : Emergancy Data Push
-//                            sendEmergancyData();
+                            sendEmergancyData();
                             sendData(elderlyData);
                             lastTime = current;
                         }
@@ -371,14 +382,14 @@ public class MainActivity extends Activity {
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Log.d("PUT_SUCCESS", response.message()); // 성공 : OK(200)
-                    try {
-                        Toast.makeText(getApplicationContext(), "Put Success:" + response.body().string(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        Toast.makeText(getApplicationContext(), "Put Success:" + response.body().string(), Toast.LENGTH_SHORT).show();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                 } else {
                     Log.d("PUT_NOT_SUCCESS", response.message()); // 실패
-                    Toast.makeText(getApplicationContext(), "PUT_FAIL:" + response.message() + ", " + response.body(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "PUT_FAIL:" + response.message() + ", " + response.body(), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -394,15 +405,13 @@ public class MainActivity extends Activity {
 
     // TODO : Volley로 Push 보내기(Notification & Data)
     public void sendEmergancyData() {
+        Log.d("PUSH","Start");
         try {
             RequestQueue queue = Volley.newRequestQueue(this);
             String url = "https://fcm.googleapis.com/fcm/send";
             JSONObject pushData = new JSONObject();
 
             pushData.put("ekey", elderlyData.getEkey());
-            pushData.put("ename", name);
-            pushData.put("homeIot", homeIot);
-
             pushData.put("title", name);
             pushData.put("body", "위험");
 
@@ -433,6 +442,7 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.d("PUSH","End");
     }
 
     // TODO : Arduino Message parsing
@@ -459,12 +469,12 @@ public class MainActivity extends Activity {
 
         //step = array[0].substring(6);
         elderlyData.setEpulse(Integer.parseInt(array[1].substring(6)));
-        elderlyData.setElatitude(Double.parseDouble(array[2].substring(5)));
+        elderlyData.setEaltitude(Double.parseDouble(array[2].substring(5)));
         elderlyData.setElongitude(Double.parseDouble(array[3].substring(5)));
     }
     public void messageSetting(ElderlyData elderly){
         pulseText.setText(String.valueOf(elderly.getEpulse()));
-        latiText.setText(String.valueOf(elderly.getElatitude()));
+        latiText.setText(String.valueOf(elderly.getEaltitude()));
         longText.setText(String.valueOf(elderly.getElongitude()));
         //longi = Double.parseDouble(str[3]);
     }
@@ -499,14 +509,17 @@ public class MainActivity extends Activity {
         if (intent != null){
             Bundle bundle = intent.getExtras();
 
-            name = bundle.getString("name");
-            homeIot = bundle.getString("homeIot");
-            ekey = bundle.getInt("ekey");
+            name = intent.getStringExtra("name");
+            homeIot = intent.getStringExtra("homeIoT");
+            ekey = intent.getIntExtra("ekey",-1);
             elderlyData.setEkey(ekey);
 
             if (bundle.getString("regid")!= null){
                 regid = bundle.getString("regid");
+            }else{
+                regid = "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx";
             }
+
             Toast.makeText(this,name+"접속. " + "eKey:"+ekey+"regId:"+regid,Toast.LENGTH_SHORT).show();
         }
     }

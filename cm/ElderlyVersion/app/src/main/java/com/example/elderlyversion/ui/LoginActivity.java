@@ -58,9 +58,10 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("LoginActivity","Connect Success");
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("name", name);
+                        intent.putExtra("name", response.body().getEname());
                         intent.putExtra("ekey", response.body().getEkey());
-                        intent.putExtra("regid", response.body().getRegId());
+                        intent.putExtra("regId", response.body().getRegId());
+                        intent.putExtra("homeIoT", response.body().getHomeIoT());
                         startActivity(intent);
                         finish();
                     }
@@ -81,8 +82,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("homeIot", "http://192.168.1.22:3000/");
-        intent.putExtra("ekey", 1);
-        intent.putExtra("regid", "e-A5lnhOXLg:APA91bGTHRMaaKXBT3a_tl5wjApb3pc_bkk7C2GlAqYnqaLqXebScVMZHec2F1qDaytod0CmB9OITs3fo9NNxVKnnMCnPSHhSZEnfox8HI7wa6s3rWc1FsTHKKHEC6Uz-eFk7e5Bygd5");
+        intent.putExtra("ekey",1);
+
+        intent.putExtra("regid", "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx");
 
         startActivity(intent);
     }

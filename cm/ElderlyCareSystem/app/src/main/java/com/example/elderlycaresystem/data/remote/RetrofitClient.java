@@ -9,9 +9,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static Retrofit retrofit = null;
-//    private static final String BASE_URL = "http://192.168.1.29:9090/elderlycare/";
-    private static final String BASE_URL = "http://192.168.1.221:3001/";
-
+    private static final String BASE_URL = "http://192.168.1.29:9090/elderlycare/";
+//    private static final String BASE_URL = "http://192.168.1.221:8080/";
+//    private static final String BASE_URL = "http://192.168.43.108:8080/";
 
 
     private static OkHttpClient client = new OkHttpClient();

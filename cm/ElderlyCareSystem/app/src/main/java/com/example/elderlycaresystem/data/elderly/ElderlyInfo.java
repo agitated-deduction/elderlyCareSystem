@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class ElderlyInfo {
     private int ekey;
+    private int stat;
     private String ename;
     private String ebirth;
     private String etel;
@@ -52,4 +53,8 @@ public class ElderlyInfo {
     public String getHomeIoT() { return homeIoT; }
 
     public void setHomeIoT(String homeIoT) { this.homeIoT = homeIoT; }
+
+    public int getStat() { return stat; }
+
+    public void setStat(int stat) { this.stat = stat; }
 }

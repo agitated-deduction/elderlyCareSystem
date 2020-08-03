@@ -129,6 +129,7 @@
                                 <i class="icon-bar-chart"></i>
                                 <h3>
                                     Pulse graph</h3>
+                                    <h6 class ="latest-date"></h6>
                             </div>
                             <!-- /widget-header -->
                             <div class="widget-content">
@@ -144,6 +145,7 @@
                                 <i class="icon-bar-chart"></i>
                                 <h3>
                                     Step accumulate graph</h3>
+                                    <h6 class ="latest-date"></h6>
                             </div>
                             <!-- /widget-header -->
                             <div class="widget-content">
@@ -423,12 +425,14 @@ $(function(){
 		    +'"data": [';
  		$.each(dd,function(index, item){
  			item.timestamp = iso.parse(item.measuredtime+"+0900");
- 			//d.date = date_format(d.timestamp);
+ 			item.date = date_format(item.timestamp);
  	        item.time = time_format(item.timestamp);
  	        label += '"'+item.time+'",';
  	        datas += parseInt(item.epulse)+',';
  	        steps += parseInt(item.estep)+',';
  		});
+ 		$('h6.latest-date').html(dd[0].measuredtime);
+ 		
 		label = label.substr(0, label.length-1);
 		datas = datas.substr(0, datas.length-1);
 		steps = steps.substr(0, steps.length-1);

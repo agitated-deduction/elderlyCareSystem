@@ -1,6 +1,7 @@
 package com.spring.elderlycare.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,20 +19,17 @@ public class DeviceServiceImpl implements DeviceService{
 	
 	@Override
 	public List<Elderly2DTO> devicesList(String id) {
-		// TODO Auto-generated method stub
 		List<Elderly2DTO> list = ddao.selectList(id);
 		return list;
 	}
 
 	@Override
 	public void deviceRegistration(ElderlyDTO edto, String id) {
-		// TODO Auto-generated method stub
 		ddao.insertDevice(edto, id);
 	}
 
 	@Override
 	public ElderlyDTO elderlyInfo(int dnum) {
-		// TODO Auto-generated method stub
 		
 		return ddao.selectOne(dnum);
 	}
@@ -43,8 +41,12 @@ public class DeviceServiceImpl implements DeviceService{
 
 	@Override
 	public void deleteDevice(int dnum) {
-		// TODO Auto-generated method stub
 		ddao.deleteDevice(dnum);
+	}
+
+	@Override
+	public Map<String, Object> eldLogin(Map<String, Object> eldInfo) {
+		return ddao.eldLogin(eldInfo);
 	}
 
 }

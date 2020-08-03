@@ -4,17 +4,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+
 public class MqttDAO {
 	private SqlSession sqlSession = null;
-	
 	private static final String ns = "mqttSubscriber.";
-	public MqttDAO() {
+	Logger log;
+	public MqttDAO(Logger LOG) {
+		log = LOG;
 		String resource = "com/maven/mqtt/sql/mybatis-config.xml";
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
@@ -28,6 +31,7 @@ public class MqttDAO {
 		}
 	}
 	public void insert(Map<String, Object>obj) {
+		log.info("++++++DAO insert Test : "+obj.get("elderly")+"+++++++");
 		float hum = (float)obj.get("humid"),temp = (float)obj.get("temp");
 		if(hum<30||hum>100) return;
 		if(temp< -20|| temp > 40) return;

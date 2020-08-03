@@ -38,3 +38,7 @@
 7월 29, 2020 09:47:36.26 [1800:8108:0729/094736.263:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.756 s for first_image_paint 0.674 s
 7월 29, 2020 09:47:37.71 [1800:8108:0729/094737.715:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.756 s for first_image_paint 0.674 s
 7월 29, 2020 10:14:17.55 [1800:8108:0729/101417.552:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.339 s for first_image_paint 0.293 s
+
+8월 03, 2020 09:25:38.69 NEW SESSION
+8월 03, 2020 09:25:38.69 [6648:5180:0803/092538.693:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.351 s for first_image_paint 0.322 s
+8월 03, 2020 09:25:40.09 [6648:5180:0803/092540.092:ERROR:page_load_metrics_update_dispatcher.cc(165)] Invalid first_paint 0.351 s for first_image_paint 0.322 s

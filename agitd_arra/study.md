@@ -2389,3 +2389,37 @@ graph 가장 최근 데이터 측정 시간 보여주기
 ```
 
 `@Scheduled(fixedDelay = 5000)`, `@Scheduled(cron="* * * * * *")`
+
+
+20200803
+
+POST: datas 
+	- param: datas 
+
+GET: users/login
+POST: users/login
+	- param: uid, upwd(, regid) / return: 관리자 로그인(uid, result)
+GET: users/join
+POST: users/join
+GET: users/logout
+
+GET: devices
+	-param: uid / return: 담당 노인 정보 리스트
+GET: devices/datas
+GET: devices/monitoring
+GET: devices/{ekey}
+	-return: {ekey} 노인 정보
+GET: devices/{ekey}/banddatas 
+	-return: {ekey} 노인 최근 banddata 20개
+GET: devices/{num}/htdatas 
+	-return: {ekey} 노인 오늘 하루 ht data
+GET: devices/{num}/curdata
+	-{ekey} 노인 최근 데이터 band & ht
+
+
+POST: devices/login
+	-param : ename, ebirth / return : ekey, homeIoT(, regId)
+
+
+
+관리자 login시 regId 저장하기.

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 public class MqttStarter {
 	// 리스트 불러와서 사용
 	
-	 private final String mqttProcess = "D:\\1elderlyproject\\web\\mqttasyncht-rmdata.jar"; //로컬호스트 하나 
-	 //private final String mqttProcess = "D:\\1elderlyproject\\web\\mqttTest.jar"; 
+	 private final String mqttProcess = "D:\\1elderlyproject\\web\\mqttasyncht-rmdata_log.jar"; //로컬호스트 하나 
+	 
 	 //(2)private final MqttBean bean = new MqttBean(); 
 	//@Autowired MqttTaskService service;
 	
@@ -29,7 +29,6 @@ public class MqttStarter {
 		
 	 }
 	
-	 //destroy 쓸모없음! 나중에 지우기 
 	  public void mqttdestroy() { 
 		  //future.cancel(true); 
 		

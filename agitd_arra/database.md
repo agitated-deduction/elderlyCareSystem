@@ -273,3 +273,7 @@ create table banddata(
 ```sql
 alter table banddata add stat int;
 ```
+
+```sql
+alter table manage add regId varchar(128);
+```

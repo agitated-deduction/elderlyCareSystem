@@ -89,10 +89,6 @@
 	</tx:advice>
 	
 	<!-- 트랜잭션 어노테이션 인식 -->
-	<tx:annotation-driven/>
-	<task:annotation-driven executor = "myExecutor" scheduler = "myScheduler" />
-	<task:executor id = "myExecutor" pool-size= "5"/>
-	<task:sheduler id = "myScheduler" pool-size = "5" />
-	<bean id = "jobService" class = "" />
+	
 	</beans>
 

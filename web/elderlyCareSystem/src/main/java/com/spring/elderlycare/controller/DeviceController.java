@@ -36,26 +36,7 @@ public class DeviceController {
 	@Autowired private Datas2DTO datadto;
 	private final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-	/*
-	 * 
-	 * 
-	 * devices 부분입니다.
-	public List<ElderlyDTO> deviceList(HttpSession httpSession, @CookieValue(value="Cookie",required=false) Cookie cookie) {
-		
-		logger.info("++++++++++++"+"DeviceList"+"+++++++++++++"); 
-		logger.info(httpSession.getId()); //요청한 사람의 쿠키 확인
-		logger.info(httpSession.getAttribute("uid")); //세션 내 uid 확인
-		List<ElderlyDTO> list = service.devicesList(httpSession.getAttribute("uid").toString());//
-			return list;
-	} 
-	// 어노테이션 @CookieValue로 쿠키를 받아오려 했으나 null값 확인됩니다. -> HttpSession값을 통해 쿠키를 확인하였습니다.
-	// 웹에서 /devices 요청시 : <session 내 uid & 쿠키>, <해당 uid의 devices list return>까지 확인하였습니다.
-	// 앱에서 /devices 요청시 : <getAttribute("uid")> -> nullpoint error & <empty body return>
-	  				   + <앱에서 return받은 응답의 header에 새로운 쿠키 생성됨> 확인하였습니다.
-	 * 
-	 * 
-	 * 
-	 * */
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public List<Elderly2DTO> deviceList(HttpSession httpSession) {
 		List<Elderly2DTO> list = service.devicesList((String)httpSession.getAttribute("uid"));
@@ -64,17 +45,25 @@ public class DeviceController {
 	}
 	/*********************************/
 	/*********************************/
-	@RequestMapping(value = "/form", method = RequestMethod.POST,
-			headers= {"Content-type=application/json"})
-	public boolean form(HttpSession httpSession, @RequestBody ElderlyDTO edto) {
+	
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public Map<String, Object> eldAppLogin(@RequestBody Map<String, Object> eldInfo){
+		return service.eldLogin(eldInfo);
+	}
+	
+	@RequestMapping(value = "/form", method = RequestMethod.POST)
+			//,headers= {"Content-type=application/json"})
+	public ModelAndView form(HttpSession httpSession,ModelAndView mav, ElderlyDTO edto) {
 		
 		
 		logger.info(edto.getEname());
 		
 		service.deviceRegistration(edto, (String)httpSession.getAttribute("uid"));
+		mav.setViewName("home");
 		
-		return true;
+		return mav;
 	}
+	/*미완*/
 	@RequestMapping(value = "/form", method = RequestMethod.GET)
 	public ModelAndView deviceRegistration(ModelAndView mav) {
 		mav.setViewName("regForm");
@@ -89,31 +78,19 @@ public class DeviceController {
 	  return service.elderlyInfo(dnum);
 	   
 	 }
-	 
+	 /*미완*/
 	@RequestMapping(value = "/{num}", method = RequestMethod.PUT)
 	public ElderlyDTO deviceInfoModify(Model model) {
 		
 		return null;
 	}
+	/*미완*/
 	@RequestMapping(value = "/{num}", method = RequestMethod.DELETE)
 	public ModelAndView deviceDelete(ModelAndView mav, @PathVariable("num") int num) {
 		service.deleteDevice(num);
 		return null;
 	}
-	/*
-	 *MQTT 통신 activate, 직접 버튼 클릭하도록 일단 구현. 서버 재시작시 알아서 전부 세팅되도록 수정하고싶음. 
-	 */
-	/*@RequestMapping(value = "/{num}/mqtt-thread")
-	public ModelAndView activateMQTTThread(ModelAndView mav, @PathVariable("num") int dnum) {
-		ddto = service.deviceInfo(dnum);
-		logger.info("mqtt-thread : "+ddto.getHomeIoT());
-		
-		mqtt.runningBackground(ddto); //ㅅㄷㄴㅅ
-		
-		mav.setViewName("redirect:/");
-		
-		return mav;
-	}*/
+	
 	@RequestMapping("/{num}/daydatas")
 	public Map<String, Object> viewDataLog(Model model, @PathVariable("num") int num) {
 		Map<String, Object> map = new HashMap<String, Object>();

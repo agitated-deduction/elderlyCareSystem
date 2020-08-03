@@ -7,7 +7,7 @@
  <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
  
     <meta charset="utf-8">
-    <title>Signup - Bootstrap Admin Template</title>
+    <title>Signup - Elderlycare</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes"> 
@@ -39,7 +39,7 @@
 			</a>
 			
 			<a class="brand" href="">
-				Bootstrap Admin Template				
+				노인 건강 모니터링 시스템				
 			</a>		
 			
 			<div class="nav-collapse">
@@ -103,8 +103,8 @@
 				</div> <!-- /field -->
 				
 				<div class="field">
-					<label for="email">Email Address:</label>
-					<input type="text" id="email" name="email" value="" placeholder="Email" class="login"/>
+					<label for="uemail">Email Address:</label>
+					<input type="text" id="uemail" name="uemail" value="" placeholder="Email" class="login"/>
 				</div> <!-- /field -->
 				
 				<br><br>

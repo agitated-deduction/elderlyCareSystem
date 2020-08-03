@@ -54,4 +54,17 @@
 	<select id = "selectHomedev" resultType = "hashmap">
 		SELECT elderly, homeIoT FROM devices;
 	</select>
+	<select id = "elderlyLogin" parameterType = "hashmap" resultType = "hashmap">
+		select a.elderly,regId, homeIoT  from(
+			SELECT elderly, homeIoT 
+			FROM devices
+			where
+				(select ekey 
+				from elderly 
+				where ename = #{ename} AND ebirth = #{ebirth}) = elderly
+    			)a
+		LEFT JOIN
+			(select regId,elderly from manage )c 
+		ON a.elderly = c.elderly;
+	</select>
 </mapper>

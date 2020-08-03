@@ -127,6 +127,7 @@
 
 </body>
 <script>
+/*
 $(function(){
 	$('#registration-form').submit(function(event){
 		event.preventDefault();
@@ -143,10 +144,11 @@ $(function(){
 			contentType: 'application/json',
 			data:JSON.stringify(data),
 			success : function(){
-				alert("등록 성공");
+				window.location.replace('/elderlycare/');
 			}
 		});
 	});
 });
+*/
 </script>
  </html>

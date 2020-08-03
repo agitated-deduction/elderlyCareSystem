@@ -1,6 +1,7 @@
 package com.spring.elderlycare.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -16,5 +17,5 @@ public interface DeviceDAO {
 	public void insertDevice(ElderlyDTO edto, String id);
 	public void updateDevice(ElderlyDTO dudto);
 	public void deleteDevice(int dnum);
-	
+	public Map<String, Object> eldLogin(Map<String, Object>eldInfo);
 }

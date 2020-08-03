@@ -1,6 +1,7 @@
 package com.spring.elderlycare.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -15,5 +16,5 @@ public interface DeviceService {
 	public ElderlyDTO elderlyInfo(int dnum);
 	public DevicesDTO deviceInfo(int dnum);
 	public void deleteDevice(int dnum);
-	
+	public Map<String, Object> eldLogin(Map<String, Object> eldInfo);
 }

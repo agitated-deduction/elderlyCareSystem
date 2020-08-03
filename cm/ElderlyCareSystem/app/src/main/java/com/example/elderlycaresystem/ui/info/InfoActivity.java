@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.elderlycaresystem.data.elderly.ElderlyInfo;
 import com.example.elderlycaresystem.ui.map.MapActivity;
 import com.example.elderlycaresystem.R;
 import com.example.elderlycaresystem.data.info.ElderlyData;
@@ -60,17 +61,13 @@ public class InfoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             ekey = intent.getIntExtra("KEY", -1);
-            name = intent.getStringExtra("NAME");
-            home = intent.getStringExtra("HOME");
         }
 
-        latitude = 0;
-        longitude = 0;
-        nameText.setText(name);
-
-
-//        getElderlyList(ekey);
-        getTestData();
+        if (ekey!=-1){
+            getElderlyData(ekey);
+            getElderlyInfo(ekey);
+        }
+//        getTestData();
 
         Button mapButton = findViewById(R.id.mapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -100,35 +97,10 @@ public class InfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-}
-
-    // TODO : LoopBack version. ( Test version : getTestData() -> getElderlyData(ekey) )
-    private void getTestData() {
-        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
-        RetroUtils.getElderlyService(getApplicationContext()).getTestData().enqueue(new Callback<ElderlyData>() {
-            // 연결 성공시
-            @Override
-            public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
-                if(response.isSuccessful() && response.body() != null) {
-                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
-                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
-                    setData(response.body());
-                }else {
-                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
-                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<ElderlyData> call, Throwable t) {
-                Log.d("InfoActivity", "Connect_Error");
-                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
-            }
-        });
     }
 
-    // TODO : Final version.
-    private void getTestData2() {
+    // TODO : Demo Version
+    private void getElderlyData(int ekey) {
         // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
         RetroUtils.getElderlyService(getApplicationContext()).getElderlyData(ekey).enqueue(new Callback<ElderlyData>() {
             // 연결 성공시
@@ -152,6 +124,29 @@ public class InfoActivity extends AppCompatActivity {
         });
     }
 
+    // TODO : Demo Version
+    private void getElderlyInfo(int ekey) {
+        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
+        RetroUtils.getElderlyService(getApplicationContext()).getElderlyInfo(ekey).enqueue(new Callback<ElderlyInfo>() {
+            // 연결 성공시
+            @Override
+            public void onResponse(Call<ElderlyInfo> call, Response<ElderlyInfo> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+                    setInfo(response.body());
+                }else {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ElderlyInfo> call, Throwable t) {
+                Log.d("InfoActivity", "Connect_Error");
+                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
 
 
     private void setData(ElderlyData elderlyData){
@@ -183,6 +178,13 @@ public class InfoActivity extends AppCompatActivity {
         }
     }
 
+    private void setInfo(ElderlyInfo elderlyInfo){
+        // 정상 상태일 때 -> Intent from MainActivity
+        nameText.setText(elderlyInfo.getEname());;
+        home = elderlyInfo.getHomeIoT();
+    }
+
+
     private void showMap(double lati, double longi){
 //        Intent intent = new Intent(InfoActivity.this, MapActivity.class);
 //        intent.putExtra("LATITUDE",lati);
@@ -192,20 +194,47 @@ public class InfoActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (intent == null){
-            Log.d("InfoActivity New Intent","Intent is null");
-            return ;
-        }
-        Bundle bundle =  intent.getExtras();
-        String title = bundle.getString("title");
-        String text = bundle.getString("text");
-        if (title == null || text == null){
-            Log.d("FMS Info Activity","title & text is null");
-            return ;
-        }
-        nameText.setText(title);
-        statText.setText(text);
-        Log.d("FMS Info Activity","title: "+ title + ", text: "+text);
+        Log.d("FMS Info Activity", "onNweIntent() 호출됨");
         super.onNewIntent(intent);
+        if (intent == null) {
+            Log.d("FMS Info Activity", "Intent is null");
+            return;
+        }
+        Bundle bundle = intent.getExtras();
+        ekey = intent.getIntExtra("ekey", -1);
+        if (ekey != -1) {
+            getElderlyData(ekey);
+            getElderlyInfo(ekey);
+        } else {
+            Log.d("FMS Info Activity", "ekey :" + ekey);
+            return;
+        }
     }
+
+    // TODO : LoopBack version. ( Test version : getTestData() -> getElderlyData(ekey) )
+    private void getTestData() {
+        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
+        RetroUtils.getElderlyService(getApplicationContext()).getTestData().enqueue(new Callback<ElderlyData>() {
+            // 연결 성공시
+            @Override
+            public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
+                    setData(response.body());
+                }else {
+                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
+                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ElderlyData> call, Throwable t) {
+                Log.d("InfoActivity", "Connect_Error");
+                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+
+
 }

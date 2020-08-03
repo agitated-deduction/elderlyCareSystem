@@ -411,10 +411,7 @@ public class MainActivity extends Activity {
             String url = "https://fcm.googleapis.com/fcm/send";
             JSONObject pushData = new JSONObject();
 
-            pushData.put("KEY", elderlyData.getEkey());
-            pushData.put("NAME", name);
-            pushData.put("HOME", homeIot);
-
+            pushData.put("ekey", elderlyData.getEkey());
             pushData.put("title", name);
             pushData.put("body", "위험");
 
@@ -446,15 +443,6 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
         Log.d("PUSH","End");
-    }
-
-    public void dataPushNPut(ElderlyData elderlyData) throws InterruptedException {
-        int i = 1;
-        Thread.sleep(10000);
-        while(i==1){
-            sendEmergancyData();
-            sendData(elderlyData);
-        }
     }
 
     // TODO : Arduino Message parsing
@@ -521,14 +509,17 @@ public class MainActivity extends Activity {
         if (intent != null){
             Bundle bundle = intent.getExtras();
 
-            name = bundle.getString("name");
-            homeIot = bundle.getString("homeIot");
-            ekey = bundle.getInt("ekey");
+            name = intent.getStringExtra("name");
+            homeIot = intent.getStringExtra("homeIoT");
+            ekey = intent.getIntExtra("ekey",-1);
             elderlyData.setEkey(ekey);
 
             if (bundle.getString("regid")!= null){
                 regid = bundle.getString("regid");
+            }else{
+                regid = "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx";
             }
+
             Toast.makeText(this,name+"접속. " + "eKey:"+ekey+"regId:"+regid,Toast.LENGTH_SHORT).show();
         }
     }

@@ -1,31 +1,29 @@
 package com.example.elderlyversion.data;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class KeyData {
-    @SerializedName("regId")
-    @Expose
+    private int ekey;
+    private String ename;
+    private String ebirth;
     private String regId;
-    @SerializedName("ekey")
-    @Expose
-    private Integer ekey;
+    private String homeIoT;
 
+    public int getEkey() { return ekey; }
 
-    public String getRegId() {
-        return regId;
-    }
+    public void setEkey(int ekey) { this.ekey = ekey; }
 
-    public void setRegId(String regId) {
-        this.regId = regId;
-    }
+    public String getEname() { return ename; }
 
-    public Integer getEkey() {
-        return ekey;
-    }
+    public void setEname(String ename) { this.ename = ename; }
 
-    public void setEkey(Integer ekey) {
-        this.ekey = ekey;
-    }
+    public String getEbirth() { return ebirth; }
 
+    public void setEbirth(String ebirth) { this.ebirth = ebirth; }
+
+    public String getRegId() { return regId; }
+
+    public void setRegId(String regId) { this.regId = regId; }
+
+    public String getHomeIoT() { return homeIoT; }
+
+    public void setHomeIoT(String homeIoT) { this.homeIoT = homeIoT; }
 }

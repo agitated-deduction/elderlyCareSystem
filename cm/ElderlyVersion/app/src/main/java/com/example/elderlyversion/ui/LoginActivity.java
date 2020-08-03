@@ -58,9 +58,10 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("LoginActivity","Connect Success");
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("name", name);
+                        intent.putExtra("name", response.body().getEname());
                         intent.putExtra("ekey", response.body().getEkey());
-                        intent.putExtra("regid", response.body().getRegId());
+                        intent.putExtra("regId", response.body().getRegId());
+                        intent.putExtra("homeIoT", response.body().getHomeIoT());
                         startActivity(intent);
                         finish();
                     }
@@ -81,13 +82,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("homeIot", "http://192.168.1.22:3000/");
-        intent.putExtra("ekey", 1);
+        intent.putExtra("ekey",1);
 
-//        intent.putExtra("regid", "e-A5lnhOXLg:APA91bGTHRMaaKXBT3a_tl5wjApb3pc_bkk7C2GlAqYnqaLqXebScVMZHec2F1qDaytod0CmB9OITs3fo9NNxVKnnMCnPSHhSZEnfox8HI7wa6s3rWc1FsTHKKHEC6Uz-eFk7e5Bygd5");
-//        intent.putExtra("regid", "cU5SXNtAK1M:APA91bGCXzrFsivGR2bN1icHZM1xbXqr22UYEvOh5Tj6Sysk5RjuE7daZqkoluOhwUwqCSghaBl2iWDmEgCvjCI-7SNgwo_6FSYwUL2VsuYhF5ABQdWC818DU5UPvNkBxQR4-6vONVl5");
-//        intent.putExtra("regid", "fW5vaG9wrME:APA91bEHkDueZb_RSeqCH9soJ8k2SGc5kWFrCfz0Ahk9_EA6n69ZPcmDEK1OCNSnyx8TCcjpjK2Qc9dWR4zcZRfBVdaG59HEI7tXz3kbJhiPu74canyYF1yStVCmBSCCNixrerDU-FHC");
-        intent.putExtra("regid", "cTTX-DV0R1GPcOK48bxMf5:APA91bGZcYpPcHxfHK-IJGuPYIfMIE4KNxmCzM_IP8gHratx_uc42vrWRBrU7mNmM7pp3a2pFcs8nK2WKVOw5eLhbqZ2Q5_v8qifkVI-ti9GAx6D1m-7MjVbbtNhwYIH31DPuSErCgL-");
-
+        intent.putExtra("regid", "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx");
 
         startActivity(intent);
     }

@@ -38,25 +38,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Log.d(TAG,"onMessageReceived() 호출");
 
+        String ekey = remoteMessage.getData().get("ekey");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
-        String ekey = remoteMessage.getData().get("ekey");
-        String ename = remoteMessage.getData().get("ename");
 
-        if (title != null && body != null && ekey != null && ename != null){
+        Log.d(TAG,"Title: "+title+", body: "+body+", ekey: "+ekey);
+        if (title != null && body != null && ekey != null){
             Log.d(TAG,"Title: "+title+", body: "+body+", ekey: "+ekey);
 
             sendNotification(title,body);
-            newActivityIntent(ekey,ename);
+            newActivityIntent(ekey);
         }
     }
 
-    private void newActivityIntent(String key,String name){
+    private void newActivityIntent(String key){
         Log.d(TAG, "sendToActivity() 호출됨. ekey: " +key);
         Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
 
         intent.putExtra("ekey",Integer.valueOf(key));
-        intent.putExtra("ename",name);
 
         // Service에서 Activity 띄우려면 Intent에 Flag를 주어야 됨..!!
         // MainActivity가 이미 메모리에 올라가 있을경우 MainActivity의 onNewIntent()메서드로 데이터가 전달됨!!
@@ -80,7 +79,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setAutoCancel(true)

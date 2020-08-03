@@ -30,16 +30,8 @@ public interface ElderlyService {
     /**
      Login to Real Server
      **/
-    @POST("users/login")
+    @POST("devices/login")
     Call<KeyData> login(@Body LoginData loginData);
-
-    /**
-     Login to Fake Server
-     **/
-    @GET("admin")
-    Call<KeyData> login2(@Query("uid") String id, @Query("birth") String birth);
-
-
 
     @GET("devices/{num}/data")
     Call<ResponseBody> getElderlyData(@Path("num") int key);

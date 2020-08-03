@@ -1,26 +1,28 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language = "java" contentType = "text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
   
- <head>
+<head>
     <meta charset="utf-8">
-    <title>Signup - Bootstrap Admin Template</title>
+    <title>Bootstrap Admin Template</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes"> 
     
-<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link href="css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="<c:url value='/resources/css/bootstrap.min.css'/>" rel="stylesheet" type="text/css" />
+<link href="<c:url value='/resources/css/bootstrap-responsive.min.css'/>" rel="stylesheet" type="text/css" />
 
-<link href="css/font-awesome.css" rel="stylesheet">
+<link href="<c:url value='/resources/css/font-awesome.css'/>" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
     
-<link href="css/style.css" rel="stylesheet" type="text/css">
-<link href="css/pages/signin.css" rel="stylesheet" type="text/css">
+<link href="<c:url value='/resources/css/style.css'/>" rel="stylesheet" type="text/css">
+<link href="<c:url value='/resources/css/pages/signin.css'/>" rel="stylesheet" type="text/css">
 
 </head>
 
 <body>
-	
+<c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>	
 	<div class="navbar navbar-fixed-top">
 	
 	<div class="navbar-inner">
@@ -33,20 +35,15 @@
 				<span class="icon-bar"></span>
 			</a>
 			
-			<a class="brand" href="index.html">
-				Bootstrap Admin Template				
+			<a class="brand" href="${contextPath }/">
+				노인 건강 모니터링 시스템				
 			</a>		
 			
 			<div class="nav-collapse">
 				<ul class="nav pull-right">
+					
 					<li class="">						
-						<a href="login.html" class="">
-							Already have an account? Login now
-						</a>
-						
-					</li>
-					<li class="">						
-						<a href="index.html" class="">
+						<a href="${contextPath }/" class="">
 							<i class="icon-chevron-left"></i>
 							Back to Homepage
 						</a>
@@ -68,38 +65,38 @@
 	
 	<div class="content clearfix">
 		
-		<form action="#" method="post">
+		<form id = "#registration-form" action="form" method="post">
 		
-			<h1>Signup for Free Account</h1>			
+			<h1>Device User Registration</h1>			
 			
 			<div class="login-fields">
 				
-				<p>Create your free account:</p>
+				<p>Device User:</p>
 				
 				<div class="field">
-					<label for="firstname">First Name:</label>
-					<input type="text" id="firstname" name="firstname" value="" placeholder="First Name" class="login" />
+					<label for="ename">Elderly Name:</label>
+					<input type="text" id="ename" name="ename" value="" placeholder="Elderly Name" class="login" />
 				</div> <!-- /field -->
 				
 				<div class="field">
-					<label for="lastname">Last Name:</label>	
-					<input type="text" id="lastname" name="lastname" value="" placeholder="Last Name" class="login" />
+					<label for="ebirth">Elderly Birthday:</label>	
+					<input type="date" id="ebirth" name="ebirth" value="" placeholder="Elderly Birthday" class="login" />
 				</div> <!-- /field -->
 				
 				
 				<div class="field">
-					<label for="email">Email Address:</label>
-					<input type="text" id="email" name="email" value="" placeholder="Email" class="login"/>
+					<label for="etel">Elderly Telephone:</label>
+					<input type="text" id="etel" name="etel" value="" placeholder="Elderly Telephone" class="login"/>
 				</div> <!-- /field -->
 				
 				<div class="field">
-					<label for="password">Password:</label>
-					<input type="password" id="password" name="password" value="" placeholder="Password" class="login"/>
+					<label for="eaddr">Elderly Address:</label>
+					<input type="text" id="eaddr" name="eaddr" value="" placeholder="Elderly Address" class="login"/>
 				</div> <!-- /field -->
-				
+				<br>
 				<div class="field">
-					<label for="confirm_password">Confirm Password:</label>
-					<input type="password" id="confirm_password" name="confirm_password" value="" placeholder="Confirm Password" class="login"/>
+					<label for="homeiot">Device IP:</label>
+					<input type="text" id="homeiot" name="homeiot" value="" placeholder="Device IP" class="login"/>
 				</div> <!-- /field -->
 				
 			</div> <!-- /login-fields -->
@@ -122,17 +119,36 @@
 </div> <!-- /account-container -->
 
 
-<!-- Text Under Box -->
-<div class="login-extra">
-	Already have an account? <a href="login.html">Login to your account</a>
-</div> <!-- /login-extra -->
 
 
-<script src="js/jquery-1.7.2.min.js"></script>
-<script src="js/bootstrap.js"></script>
+<script src="<c:url value='/resources/js/jquery-1.7.2.min.js'/>"></script>
+<script src="<c:url value='/resources/js/bootstrap.js'/>"></script>
 
-<script src="js/signin.js"></script>
 
 </body>
-
+<script>
+/*
+$(function(){
+	$('#registration-form').submit(function(event){
+		event.preventDefault();
+		var data = {ename:$('#ename').val(),
+					ebirth:$('#ebirth').val(),
+					etel:$('#etel').val(),
+					eaddr:$('#eaddr').val(),
+					homeIoT:$('#homeiot').val()
+					};
+	$.ajax({
+			type: 'POST',
+			url: 'form',
+			dataType: 'json',
+			contentType: 'application/json',
+			data:JSON.stringify(data),
+			success : function(){
+				window.location.replace('/elderlycare/');
+			}
+		});
+	});
+});
+*/
+</script>
  </html>

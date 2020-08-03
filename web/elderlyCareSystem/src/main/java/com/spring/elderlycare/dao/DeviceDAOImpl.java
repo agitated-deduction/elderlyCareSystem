@@ -2,6 +2,7 @@ package com.spring.elderlycare.dao;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,12 @@ public class DeviceDAOImpl implements DeviceDAO{
 	
 	@Override
 	public List<Elderly2DTO> selectList(String id) {
-		// TODO Auto-generated method stub
 		return sqlSession.selectList(ns+"selectDevices", id);
 		//return null;
 	}
 
 	@Override
 	public ElderlyDTO selectOne(int dnum) {
-		// TODO Auto-generated method stub
 		return sqlSession.selectOne(ns+"selectDevice", dnum);
 		//return null;
 	}
@@ -48,21 +47,23 @@ public class DeviceDAOImpl implements DeviceDAO{
 
 	@Override
 	public void updateDevice(ElderlyDTO dudto) {
-		// TODO Auto-generated method stub
 		//sqlSession.update(ns+"", dudto);
 	}
 
 	@Override
 	public void deleteDevice(int dnum) {
-		// TODO Auto-generated method stub
 		sqlSession.delete(ns+"deleteDevice", dnum);
 	}
 
 	@Override
 	public DevicesDTO selectDevice(int dnum) {
-		// TODO Auto-generated method stub
 		
 		return sqlSession.selectOne(ns+"selectDeviceOne", dnum);
+	}
+
+	@Override
+	public Map<String, Object> eldLogin(Map<String, Object> eldInfo) {
+		return sqlSession.selectOne(ns+"elderlyLogin", eldInfo);
 	}
 
 }

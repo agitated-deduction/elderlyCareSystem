@@ -6,7 +6,6 @@
 <head>
     <meta charset="utf-8">
     <title>Login - Bootstrap Admin Template</title>
-<c:set var = "ctx" value = "<%=request.getContextPath() %>"></c:set>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes"> 
     
@@ -22,6 +21,7 @@
 </head>
 
 <body>
+	<c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
 	
 	
 	<div class="navbar navbar-fixed-top">

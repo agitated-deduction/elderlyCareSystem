@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
@@ -14,9 +15,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+
 public class MqttService implements MqttCallbackExtended {
 	private String brokerURL = "";
-	private String clientId = "asyncMqtt_elderlyCare";
+	private String clientId = "asyncMqtt_elderlyCare_test";
 	private MemoryPersistence persistence = new MemoryPersistence();
 
 	MqttAsyncClient client = null;
@@ -24,15 +26,15 @@ public class MqttService implements MqttCallbackExtended {
 	// ClientComms comms = null;
 	// private int eld = 0;
 
-	MqttDAO dao = new MqttDAO();
+	MqttDAO dao;
 	// private SqlSession sqlSession = null;
-
+	Logger log;
 	// private static final String ns = "mqttSubscriber.";
 
-	
-	  
 	 
-	public MqttService() {
+	public MqttService(Logger LOG){
+		dao = new MqttDAO(LOG);
+		log = LOG;
 		/*
 		 * String resource = "com/maven/mqtt/sql/mybatis-config.xml"; try { InputStream
 		 * inputStream = Resources.getResourceAsStream(resource); SqlSessionFactory
@@ -44,6 +46,7 @@ public class MqttService implements MqttCallbackExtended {
 	}
 
 	public void mqttSubscribe(String broker, int port, String topic) {
+		log.info("++++++Service subscribe:"+broker+"+++++++");
 		this.brokerURL = "tcp://" + broker + ":" + port;
 		try {
 			// this.eld = elderly;
@@ -57,7 +60,7 @@ public class MqttService implements MqttCallbackExtended {
 			client.connect(options);
 			// token.waitForCompletion();
 			Thread.sleep(1000);
-			client.setCallback(new MqttService());
+			client.setCallback(new MqttService(log));
 			
 			client.subscribe(topic, 2);
 		} catch (Exception me) {
@@ -96,7 +99,7 @@ public class MqttService implements MqttCallbackExtended {
 	}
 
 	private void insertData(String topic, MqttMessage message) {
-		System.out.println("topic "+topic);
+		//System.out.println("topic "+topic);
 		//System.out.println("message "+message);
 		try {
 			String[] tp = topic.split("/");
@@ -138,7 +141,6 @@ public class MqttService implements MqttCallbackExtended {
 	}
 	private void writeFile(String filename, byte[] data) {
 		if(data == null) return;
-		System.out.println("write File");
 		//int byteArrSize = data.length;
 		
 		try {

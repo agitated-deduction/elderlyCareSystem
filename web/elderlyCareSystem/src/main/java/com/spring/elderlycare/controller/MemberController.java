@@ -78,7 +78,7 @@ public class MemberController {
 		mav.setViewName("signup");
 		return mav;
 	}
-	
+	/*미완*/
 	@RequestMapping(value = "/join", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
 	public Map<String,Object>/*Boolean*/ memberJoin(@RequestBody Map<String, Object>map) {
@@ -102,7 +102,7 @@ public class MemberController {
 		//return ret;
 		return ret;
 	}
-	
+	/*미완*/
 	@RequestMapping("/info")
 	public MemberDTO myPage(Model model, /*@PathVariable("uid") String m_id*/HttpSession session) {
 		String uid = (String) session.getAttribute("uid");
@@ -113,6 +113,7 @@ public class MemberController {
 		sessionStatus.setComplete();
 		return true;
 	}
+	/*미완*/
 	@DeleteMapping("/info")
 	public Boolean memberDelete(SessionStatus sessionStatus, /*@PathVariable("uid") String m_id*/HttpSession session) {
 		String uid = (String) session.getAttribute("uid");
@@ -122,6 +123,7 @@ public class MemberController {
 		}
 		return false;
 	}
+	/*미완*/
 	@PutMapping("/info")
 	public Boolean memberModify(MemberDTO mdto  /*@PathVariable("uid") String m_id*/) {
 		
@@ -130,6 +132,7 @@ public class MemberController {
 		}
 		return false;
 	}
+	/*미완*/
 	@RequestMapping("/mod-form")
 	public ModelAndView modifyForm(ModelAndView mav) {
 		mav.setViewName("member/modify");

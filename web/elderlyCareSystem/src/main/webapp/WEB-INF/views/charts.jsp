@@ -75,7 +75,7 @@
             <div class="widget-content">
               <div class="widget big-stats-container">
                 <div class="widget-content">
-                  <h6 class="bigstats">실내온도     실내습도	맥박	걸음수</h6>
+                  <h6 class="bigstats" id="curstats"></h6>
                   <div id="big_stats" class="cf" id = "cur-data">
                   
                       
@@ -101,6 +101,7 @@
                             <div class="widget-header">
                                 <i class="icon-bar-chart"></i>
                                 <h3>HT graph</h3>
+                                <h6>gray : 온도 /  blue : 습도</h6>
                             </div>
                             <div class="widget-content">
                             
@@ -128,6 +129,7 @@
                                 <i class="icon-bar-chart"></i>
                                 <h3>
                                     Pulse graph</h3>
+                                    <h6 class ="latest-date"></h6>
                             </div>
                             <!-- /widget-header -->
                             <div class="widget-content">
@@ -143,6 +145,7 @@
                                 <i class="icon-bar-chart"></i>
                                 <h3>
                                     Step accumulate graph</h3>
+                                    <h6 class ="latest-date"></h6>
                             </div>
                             <!-- /widget-header -->
                             <div class="widget-content">
@@ -252,7 +255,12 @@
 $(function(){
 	var ekey = sessionStorage.getItem("ekey");
   	//var eld = sessionStorage.getItem('elderly');//'<c:out value = '${edto.ekey}'/>';
-	
+	$.getJSON(ekey, function(data){
+    	var curstats = "name : "+data.ename;
+    	curstats += "	|	birth : "+data.ebirth;
+    	$('#curstats').html(curstats);
+    	
+	});
   	var html = '';
   	$.getJSON(ekey+'/curdata', function(data){
      		
@@ -417,12 +425,14 @@ $(function(){
 		    +'"data": [';
  		$.each(dd,function(index, item){
  			item.timestamp = iso.parse(item.measuredtime+"+0900");
- 			//d.date = date_format(d.timestamp);
+ 			item.date = date_format(item.timestamp);
  	        item.time = time_format(item.timestamp);
  	        label += '"'+item.time+'",';
  	        datas += parseInt(item.epulse)+',';
  	        steps += parseInt(item.estep)+',';
  		});
+ 		$('h6.latest-date').html(dd[0].measuredtime);
+ 		
 		label = label.substr(0, label.length-1);
 		datas = datas.substr(0, datas.length-1);
 		steps = steps.substr(0, steps.length-1);
@@ -433,12 +443,10 @@ $(function(){
  		var barChartData = JSON.parse('{'+label+datas+'}');
  		barChartData.labels.reverse();
  		barChartData.datasets[0].data.reverse();
- 		console.log(barChartData);
  		
  		var lineChartData = JSON.parse('{'+label+steps+'}');
  		lineChartData.labels.reverse();
  		lineChartData.datasets[0].data.reverse();
- 		console.log(lineChartData);
  		 /* var barChartData = {
 		            labels: [],
 		            datasets: [
@@ -455,11 +463,16 @@ $(function(){
  		barChartData.datasets[0].data.push(dd[1].epluse);
  		console.log(barChartData.datasets[0].data[0]); */
 		var myLine = new Chart(document.getElementById("area-chart").getContext("2d")).Line(lineChartData);
-		var myLine = new Chart(document.getElementById("bar-chart").getContext("2d")).Bar(barChartData);
+		var myBar = new Chart(document.getElementById("bar-chart").getContext("2d")).Bar(barChartData);
 		
      });
-     
-     
+    
+    //$.getJSON(ekey, function(data){
+    //	var curstats = '';
+
+    //})
+    
+    
 });
 
        /*  var lineChartData = {

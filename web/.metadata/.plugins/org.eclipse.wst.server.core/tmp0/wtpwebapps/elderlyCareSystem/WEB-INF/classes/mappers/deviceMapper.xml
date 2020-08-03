@@ -13,7 +13,7 @@
 
 	</insert>
 	<insert id = "insertDevice" parameterType = "com.spring.elderlycare.dto.ElderlyDTO">
-	INSERT INTO devices(elderly, homeIoT, bandIoT)
+	INSERT INTO devices(elderly, homeIoT)
 	VALUES(#{ekey}, #{homeIoT});
 	</insert>
 	<insert id = "insertManage" parameterType = "HashMap">
@@ -53,5 +53,18 @@
 	
 	<select id = "selectHomedev" resultType = "hashmap">
 		SELECT elderly, homeIoT FROM devices;
+	</select>
+	<select id = "elderlyLogin" parameterType = "hashmap" resultType = "hashmap">
+		select a.elderly,regId, homeIoT  from(
+			SELECT elderly, homeIoT 
+			FROM devices
+			where
+				(select ekey 
+				from elderly 
+				where ename = #{ename} AND ebirth = #{ebirth}) = elderly
+    			)a
+		LEFT JOIN
+			(select regId,elderly from manage )c 
+		ON a.elderly = c.elderly;
 	</select>
 </mapper>

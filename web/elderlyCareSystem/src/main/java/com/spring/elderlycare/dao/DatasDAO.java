@@ -1,6 +1,7 @@
 package com.spring.elderlycare.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -18,4 +19,7 @@ public interface DatasDAO  {
 	public Datas2DTO selectCurData(int num);
 	public List<Datas2DTO> selectHealths(int num);
 	public List<DatasDTO> selectHTs(int num);
+	public void insertHomeDatas(DatasDTO dto);
+	public List<Map<String, Object>> getIPs();
+	
 }

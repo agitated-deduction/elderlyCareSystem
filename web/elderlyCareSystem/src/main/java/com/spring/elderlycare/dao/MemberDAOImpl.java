@@ -58,5 +58,9 @@ public class MemberDAOImpl implements MemberDAO{
 		
 		return ret;
 	}
+	@Override
+	public int updateRegId(Map<String, Object> map) {
+		return sqlSession.update(ns+"updateRegId", map);
+	}
 	
 }

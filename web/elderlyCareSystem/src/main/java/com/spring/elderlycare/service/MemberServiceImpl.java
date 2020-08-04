@@ -36,9 +36,14 @@ public class MemberServiceImpl implements MemberService{
 		return ret;
 	}
 	@Override
-	public int loginCheck(MemberDTO mdto){
-		mdto.setUpwd(SHA.encryptSHA256(mdto.getUpwd()));
-		return mdao.exist(mdto);
+	public int loginCheck(Map<String, Object> m) {//MemberDTO mdto){
+		mdto.setUid((String) m.get("uid"));
+		mdto.setUpwd(SHA.encryptSHA256((String) m.get("upwd")));
+		int res = mdao.exist(mdto);
+		if(res!=-2&&m.get("regId")!=null) {
+			mdao.updateRegId(m);
+		}
+		return res;
 	}
 	@Override
 	public int modify(MemberDTO mdto){

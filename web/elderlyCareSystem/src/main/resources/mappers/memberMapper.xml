@@ -33,5 +33,9 @@
 	SELECT ekey FROM elderly 
 	WHERE ename = #{ename} AND ebirth = #{ebirth});
 	</update>
+	<update id = "updateRegId" parameterType = "hashmap">
+	UPDATE manage SET regId = #{regId}
+	WHERE staff = #{uid};
+	</update>
 
 </mapper>

@@ -46,14 +46,15 @@ public class DeviceController {
 	/*********************************/
 	/*********************************/
 	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public Map<String, Object> eldAppLogin(@RequestBody Map<String, Object> eldInfo){
+	@RequestMapping(value = "/login", method = RequestMethod.POST,
+			headers= {"Content-type=application/json"})
+	public Map<String, Object> loginForEApp(@RequestBody Map<String, Object> eldInfo){
 		return service.eldLogin(eldInfo);
 	}
 	
 	@RequestMapping(value = "/form", method = RequestMethod.POST)
 			//,headers= {"Content-type=application/json"})
-	public ModelAndView form(HttpSession httpSession,ModelAndView mav, ElderlyDTO edto) {
+	public ModelAndView registrationProcess(HttpSession httpSession,ModelAndView mav, ElderlyDTO edto) {
 		
 		
 		logger.info(edto.getEname());
@@ -63,9 +64,8 @@ public class DeviceController {
 		
 		return mav;
 	}
-	/*미완*/
 	@RequestMapping(value = "/form", method = RequestMethod.GET)
-	public ModelAndView deviceRegistration(ModelAndView mav) {
+	public ModelAndView registrationForm(ModelAndView mav) {
 		mav.setViewName("regForm");
 		
 		return mav;
@@ -80,7 +80,7 @@ public class DeviceController {
 	 }
 	 /*미완*/
 	@RequestMapping(value = "/{num}", method = RequestMethod.PUT)
-	public ElderlyDTO deviceInfoModify(Model model) {
+	public ElderlyDTO deviceModify(Model model) {
 		
 		return null;
 	}
@@ -90,7 +90,7 @@ public class DeviceController {
 		service.deleteDevice(num);
 		return null;
 	}
-	
+	/*dksTma*/
 	@RequestMapping("/{num}/daydatas")
 	public Map<String, Object> viewDataLog(Model model, @PathVariable("num") int num) {
 		Map<String, Object> map = new HashMap<String, Object>();

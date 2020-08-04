@@ -55,7 +55,7 @@
 		SELECT elderly, homeIoT FROM devices;
 	</select>
 	<select id = "elderlyLogin" parameterType = "hashmap" resultType = "hashmap">
-		select a.elderly,regId, homeIoT  from(
+		select a.elderly as ekey ,regId, homeIoT  from(
 			SELECT elderly, homeIoT 
 			FROM devices
 			where

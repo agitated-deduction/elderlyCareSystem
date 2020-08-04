@@ -16,4 +16,5 @@ public interface MemberDAO {
 	public int exist(MemberDTO mdto);
 	public int insertMember(MemberDTO mdto);
 	public int insertRelation(Map<String, Object> map);//throws Exception;
+	public int updateRegId(Map<String, Object> map);
 }

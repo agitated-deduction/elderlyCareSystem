@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <!-- <h2>Serving video files from Flask template</h2>
+    <video width="320" height="240" controls autoplay muted>
+    <source src="{{ url_for('static', filename='move_200804_152403.mp4') }}"  type="video/mp4">
+    Your browser does not support the video tag.
+    </video> -->
+    <h2>Serving video files from Flask template</h2>
+    <video width="320" height="240" controls autoplay muted>
+    <source src="{{ url_for('static', filename='h264.mp4') }}"  type="video/mp4">
+    Your browser does not support the video tag.
+    </video>
+ 
+  </body>
+</html>

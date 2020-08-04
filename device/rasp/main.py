@@ -161,8 +161,6 @@ class Thread_dht(QThread):
             # thingspeak 시각자료를 위한 센서값 보내기 : API사용
 
 
-
-
             ht = str("{0}/{1}".format(h,t))
             client.publish("home/1/ht", ht)
             print('...ht')
@@ -226,7 +224,9 @@ class Thread_alone(QThread):   ## 독거노인
     def run(self):
             
      ##-------- 독거노인: 움직임 감지 실행  
-        subprocess.Popen(['lxterminal -e python live_alone.py'], cwd='/home/pi/_GUI/', shell=True)
+        # subprocess.Popen(['lxterminal -e python live_alone.py'], cwd='/home/pi/_GUI/', shell=True)   # MQTT 전송
+        subprocess.Popen(['lxterminal -e python live_alone2.py'], cwd='/home/pi/_GUI/', shell=True)    # FCM 전송
+
 
 
 class Thread_dementia(QThread):   ##  치매환자
@@ -237,7 +237,9 @@ class Thread_dementia(QThread):   ##  치매환자
     def run(self):
         
          ##-------- 치매환자: 야간 이상행동 감지 실행 
-        subprocess.Popen(['lxterminal -e python dementia.py'], cwd='/home/pi/_GUI/', shell=True)
+        # subprocess.Popen(['lxterminal -e python dementia.py'], cwd='/home/pi/_GUI/', shell=True)
+        subprocess.Popen(['lxterminal -e python dementia2.py'], cwd='/home/pi/_GUI/', shell=True)
+
 
 
 # class Thread_talk(QThread):   ## 구글 어시스턴트 실행 

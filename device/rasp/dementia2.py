@@ -10,9 +10,11 @@ from datetime import timedelta, time, datetime
 from time import sleep
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
-# import testfcm
-import videoserver
 
+import testfcm
+import videoserver 
+import bs4
+# from bs4 import BeautifulSoup
 #----> 이 파일은 main.py에 의해  불러올 것이다.
 
 ##---- MQTT
@@ -54,7 +56,7 @@ def dem():
    
 
     start_time = time(10,19)  # 밤 11시 ~ 새벽 4시
-    end_time =  time(18,30)
+    end_time =  time(15,47)
     Now_time = datetime.now().time()   # 현재 시간
 
     nightcamera = 0
@@ -69,10 +71,8 @@ def dem():
         #----- 파일 저장 설정  
         # frame_width, frame_height, frame_rate = int(cap.get(3)), int(cap.get(4)), 10
         fourcc = cv2.VideoWriter_fourcc(*'h264') # 디지털 포맷 코드 - 인코딩 방식 설정 
-        filename = '/home/pi/_GUI/Move/%s.mp4'%filenameis
-
+        filename = '/home/pi/_GUI/static/%s.mp4'%filenameis
         out = cv2.VideoWriter(filename, fourcc, 10.0, (320,240)) # 캡쳐 동영상 저장
-
 
     while(nightcamera):
         # print(end_time)
@@ -128,7 +128,7 @@ def dem():
             for(x, y, w, h) in faces:
                 cv2.rectangle(sub_frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
-                if (x+w > 0) and ( area > 3000):  # 이 시간에 사람이 인식 될 때 
+                if (x+w > 0) and ( area > 3000):  # 이 시간에 얼굴 + 큰 물체 인식 
                     cv2.putText(sub_frame,'HUMAN Detected!', (10, 90),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
                     Hflag = 1
@@ -164,20 +164,18 @@ def dem():
     except:
         pass
 
-    subprocess.call("find /home/pi/_GUI/Move -type f -size -10k -delete", shell=True)  #아무것도 찍히지 않은 잉여 파일들 자동 삭제 
+    subprocess.call("find /home/pi/_GUI/static -type f -size -10k -delete", shell=True)  #아무것도 찍히지 않은 잉여 파일들 자동 삭제 
     # sys.stdout.flush()
     dem() # 영상 녹화 완료 후  재 실행 
-
-
 
 
 def today_vid():
 
     #---- 동영상 인코딩해서 전송한다.
-    subprocess.call("find /home/pi/_GUI/Move -type f -size -10k -delete", shell=True)  #아무것도 찍히지 않은 잉여 파일들 자동 삭제 
+    subprocess.call("find /home/pi/_GUI/static -type f -size -10k -delete", shell=True)  #아무것도 찍히지 않은 잉여 파일들 자동 삭제 
 
     print('End record')
-    newest = max(glob.iglob('/home/pi/_GUI/Move/*.mp4'), key=os.path.getctime)  # 제일 최신 파일 찾기 
+    newest = max(glob.iglob('/home/pi/_GUI/static/*.mp4'), key=os.path.getctime)  # 제일 최신 파일 찾기 
     todayfile = datetime.now().strftime("%y%m%d")  # 오늘 날짜
 
     print(os.path.basename(newest))  # 최신 파일 이름 
@@ -186,19 +184,52 @@ def today_vid():
     print(newest_make)
     print (todayfile)
 
-    f  = open(newest)
-    encoded = base64.b64encode(f.read())
+    # f  = open(newest)
+    # encoded = base64.b64encode(f.read())
 
 
-    if(newest_make == todayfile):  # 최신 파일이 오늘 만든 파일이면 보낸다.
-        client.publish("home/1/vid", encoded)
+    if(newest_make == todayfile):  # 최신 파일이 오늘 만든 파일이면 알림 전송 
+        # client.publish("home/1/vid", encoded)
+
+
         print(".....Today video....")
+        print("이상행동 알림 푸시 완료...")
+        testfcm.send_fcm_notification(testfcm.device,'노인1','이상행동 동영상 업데이트 ..')
+        testfcm.send_fcm_notification(testfcm.device,'노인1','이상행동 동영상 업데이트 ..')
                 
     else:       
         print('This is not today file..')
         pass
 
-    f.close()
+    # f.close()
+
+# def chage_html():
+#     newest = max(glob.iglob('/home/pi/_GUI/static/*.mp4'), key=os.path.getctime)  # 제일 최신 파일 찾기 
+
+#     # load the file
+#     with open("templates/img_static.html") as inf:
+#         txt = inf.read()
+#         soup = bs4.BeautifulSoup(page.content, 'html.parser')
+#         # soup = bs4.BeautifulSoup(txt)
+
+
+#     # 기존 링크 삭제
+#     html = list(soup.children)[2]
+#     body = list(html.children)[3]
+#     video = list(body.children)[1]
+#     print(video.get_text())
+
+
+#     # create new link
+#     # <source src="{{ url_for('static', filename='h264.mp4') }}"  type="video/mp4">
+#     new_link = soup.new_tag("source", src="{{ url_for('static', filename='{0}}') }}".format(newest),  type="video/mp4")
+      
+#     # insert it into the document
+#     soup.body.video.append(new_link)  # <body> 안에 삽입 
+
+#     # save the file again
+#     with open("existing_file.html", "w") as outf:
+#         outf.write(str(soup))
 
 
 

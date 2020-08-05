@@ -4,7 +4,8 @@ import numpy as np
 import sys, time, datetime
 from datetime import timedelta
 # import paho.mqtt.client as mqtt
-import testfcm
+# from testfcm import send_fcm_notification
+ 
 
 cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # wifi_스트리밍 영상 가져오기 
 # cap = cv2.VideoCapture('http://192.168.1.35:8090/?action=stream')   # len_스트리밍 영상 가져오기 
@@ -102,16 +103,19 @@ while(cap.isOpened()):
         #     StartDay = datetime.datetime.now() # 시작 시간 
         #     DDay = StartDay + timedelta(days=3)  # 이틀 뒤 날짜
         #     Hflag = 0                            # 사람이 인식 되었는지 0=안됨  1=됨
+        #     import live_alone  # 버퍼링 제거    
 
         # if(NowDay.days == DDay.days):  # 이틀동안 움직이지 않았다.
         #     print("119~~~~~~~~~~~~~")
         #     cv2.putText(sub_frame,'119~~!!', (30, 120),
         #     cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
 
-        #     client.publish("home/1/alone", "1")    ##---- MQTT메시지 보내기 
-        #     print("home/1/alone: ", "1") 
-            # Hflag = 1  # 알리고 다시 세팅 
-            # import live_alone  # 버퍼링 
+        #     # client.publish("home/1/alone", "119")    ##----  MQTT메시지 보내기
+        #     # print("home/1/alone: ", "119") 
+        #     send_fcm_notification(device,'노인2','이틀간 움직임 없음..')
+        #     print("노인 움직임 없음...")
+        #     Hflag = 1  # 알리고 다시 세팅 
+        
 
 #-------------10초로 테스트 해보기 
 
@@ -129,8 +133,9 @@ while(cap.isOpened()):
             # client.publish("home/1/alone", "119")    ##----  MQTT메시지 보내기
             # print("home/1/alone: ", "119")
 
-            send_fcm_notification(device,'노인2','이틀간 움직임 없음..')
+            testfcm.send_fcm_notification(testfcm.device,'노인2','이틀간 움직임 없음..')
             print("노인 움직임 없음...")
+            testfcm.send_fcm_notification(testfcm.device,'노인2','이틀간 움직임 없음..')
 
             Hflag = 1  # 알리고 다시 세팅 
             # import live_alone  # 버퍼링 

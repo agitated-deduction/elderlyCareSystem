@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="databind"/>
+		<item key="selection" value=""/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="join"/>
+			<item value="window"/>
 			<item value="databind"/>
 			<item value="ctx"/>
 			<item value="getContext"/>
@@ -21,8 +23,6 @@
 			<item value="margin"/>
 			<item value="martgin"/>
 			<item value="getFull"/>
-			<item value="getfull"/>
-			<item value="get"/>
 		</list>
 		<list key="replacehistory">
 			<item value="serverURI"/>

@@ -1,5 +1,6 @@
 package com.spring.elderlycare.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -57,6 +58,18 @@ public class MemberDAOImpl implements MemberDAO{
 			//throw new Exception("rollback");
 		
 		return ret;
+	}
+	@Override
+	public int updateRegId(Map<String, Object> map) {
+		return sqlSession.update(ns+"updateRegId", map);
+	}
+	@Override
+	public int updateRole(String aid) {
+		return sqlSession.update(ns+"joinApproval", aid);
+	}
+	@Override
+	public List<String> selectApvList(String uid) {
+		return sqlSession.selectList(ns+"approvalList", uid);
 	}
 	
 }

@@ -28,7 +28,7 @@
     	FROM elderly 
     	LEFT JOIN devices ON devices.elderly =  ekey
 		LEFT JOIN manage ON manage.elderly =ekey 
-		WHERE staff = #{value})a
+		WHERE staff = #{value} OR relative = #{value})a
 	left join (
 		select * from(
 			select ekey, stat from banddata

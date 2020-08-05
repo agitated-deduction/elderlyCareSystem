@@ -38,7 +38,7 @@
           <div class="widget widget-nopad">
           	
             	<div class="widget-header"> <i class="icon-list-alt"></i>
-              		<h3> Recent News</h3>
+              		<h3> Calendar</h3>
             	</div>
             	<!-- /widget-header -->
             	<div class="widget-content">

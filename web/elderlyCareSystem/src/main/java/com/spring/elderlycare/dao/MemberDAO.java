@@ -1,6 +1,7 @@
 package com.spring.elderlycare.dao;
 
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -16,4 +17,7 @@ public interface MemberDAO {
 	public int exist(MemberDTO mdto);
 	public int insertMember(MemberDTO mdto);
 	public int insertRelation(Map<String, Object> map);//throws Exception;
+	public int updateRegId(Map<String, Object> map);
+	public int updateRole(String aid);
+	public List<String> selectApvList(String uid);
 }

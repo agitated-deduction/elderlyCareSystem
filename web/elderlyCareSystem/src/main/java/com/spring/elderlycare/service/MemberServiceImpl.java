@@ -1,5 +1,6 @@
 package com.spring.elderlycare.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,14 @@ public class MemberServiceImpl implements MemberService{
 		return ret;
 	}
 	@Override
-	public int loginCheck(MemberDTO mdto){
-		mdto.setUpwd(SHA.encryptSHA256(mdto.getUpwd()));
-		return mdao.exist(mdto);
+	public int loginCheck(Map<String, Object> m) {//MemberDTO mdto){
+		mdto.setUid((String) m.get("uid"));
+		mdto.setUpwd(SHA.encryptSHA256((String) m.get("upwd")));
+		int res = mdao.exist(mdto);
+		if(res!=-2&&m.get("regId")!=null) {
+			mdao.updateRegId(m);
+		}
+		return res;
 	}
 	@Override
 	public int modify(MemberDTO mdto){
@@ -61,4 +67,12 @@ public class MemberServiceImpl implements MemberService{
 		return mdao.selectManageDevices(id);
 
 	}*/
+	@Override
+	public List<String> approvalList(String uid) {
+		return mdao.selectApvList(uid);
+	}
+	@Override
+	public int approvalProcess(String aid) {
+		return mdao.updateRole(aid);
+	}
 }

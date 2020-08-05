@@ -1,6 +1,7 @@
 package com.spring.elderlycare.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -145,11 +146,18 @@ public class MemberController {
 	@RequestMapping("/approval")
 	public ModelAndView approvalForm(HttpSession httpSession, ModelAndView mav) {
 		//manage 승인해야 될 것 있는지 확인후 가져오기
+		mav.addObject("aids", service.approvalList(httpSession.getAttribute("uid").toString()));
+		mav.setViewName("approval");
 		return mav;
 	}
-	@RequestMapping(value = "/approval/{aid}", method = RequestMethod.POST)
-	public ModelAndView approvalProcess(ModelAndView mav, @PathVariable("aid")String aid) {
-		//승인 버튼 눌렀을 때, uid의 urole 바꾸기
-		return mav;
+	@RequestMapping(value = "/approval/{aid}")
+	public void/*ModelAndView*/ approvalProcess(ModelAndView mav, @PathVariable("aid")String aid) {
+		int res = service.approvalProcess(aid);
+		if(res<1) {
+			
+		}else {
+			//mav.setViewName("approval");
+		}
+		//return mav;
 	}
 }

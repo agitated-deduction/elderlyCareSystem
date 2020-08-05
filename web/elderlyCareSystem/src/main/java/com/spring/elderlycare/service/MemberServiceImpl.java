@@ -1,5 +1,6 @@
 package com.spring.elderlycare.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,4 +67,12 @@ public class MemberServiceImpl implements MemberService{
 		return mdao.selectManageDevices(id);
 
 	}*/
+	@Override
+	public List<String> approvalList(String uid) {
+		return mdao.selectApvList(uid);
+	}
+	@Override
+	public int approvalProcess(String aid) {
+		return mdao.updateRole(aid);
+	}
 }

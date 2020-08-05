@@ -1,6 +1,7 @@
 package com.spring.elderlycare.service;
 
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -15,4 +16,6 @@ public interface MemberService {
 	public int modify(MemberDTO mdto);
 	public int delet(String id);
 	public MemberDTO myPage(String id);
+	public List<String> approvalList(String uid);
+	public int approvalProcess(String aid);
 }

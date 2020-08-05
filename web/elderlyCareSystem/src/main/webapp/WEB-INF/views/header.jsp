@@ -37,13 +37,15 @@
                     class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="${contextPath}/">노인 건강 모니터링 시스템 </a>
       <div class="nav-collapse">
         <ul class="nav pull-right">
+        <c:if test ="${auth ge 0 }">
           <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog"></i> 
-                            <c:if test ="${empty edto }">List</c:if>
-                            ${edto.ename } <b class="caret"></b></a>
+                            List
+                             <b class="caret"></b></a>
             <ul class="dropdown-menu" id = "eld-list">
               <li>
             </ul>
           </li>
+          </c:if>
           <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
                             class="icon-user"></i> ${ uid} <b class="caret"></b></a>
             <ul class="dropdown-menu">
@@ -74,7 +76,7 @@
       <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Drops</span> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="${contextPath }/devices/form">기기 등록</a></li>
-            <li><a href="error.html">가입 승인</a></li>
+            <li><a href="${contextPath}/users/approval">가입 승인</a></li>
           </ul>
         </li>
         </c:if>

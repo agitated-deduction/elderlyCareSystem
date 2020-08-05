@@ -37,5 +37,10 @@
 	UPDATE manage SET regId = #{regId}
 	WHERE staff = #{uid};
 	</update>
+	<select id = "approvalList" parameterType = "String" resultType = "String">
+	select uid from (select relative from manage
+	where staff = #{value})a left join `user` on relative = `user`.uid
+	where urole = -1;
+	</select>
 
 </mapper>

@@ -5,7 +5,7 @@ import sys, time, datetime
 from datetime import timedelta
 # import paho.mqtt.client as mqtt
 # from testfcm import send_fcm_notification
- 
+import testfcm
 
 cap = cv2.VideoCapture('http://192.168.1.19:8090/?action=stream')   # wifi_스트리밍 영상 가져오기 
 # cap = cv2.VideoCapture('http://192.168.1.35:8090/?action=stream')   # len_스트리밍 영상 가져오기 
@@ -134,8 +134,9 @@ while(cap.isOpened()):
             # print("home/1/alone: ", "119")
 
             testfcm.send_fcm_notification(testfcm.device,'노인2','이틀간 움직임 없음..')
-            print("노인 움직임 없음...")
             testfcm.send_fcm_notification(testfcm.device,'노인2','이틀간 움직임 없음..')
+            print("노인 움직임 없음...")
+            
 
             Hflag = 1  # 알리고 다시 세팅 
             # import live_alone  # 버퍼링 

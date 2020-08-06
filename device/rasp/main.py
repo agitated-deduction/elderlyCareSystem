@@ -51,6 +51,7 @@ class mainGUI(QDialog):
         self.th4 = Thread_stream() # camera stream
         self.th5 = Thread_alone() # 독거노인
         self.th6 = Thread_dementia() # 치매환자
+        self.th7 = Flask_start()
 
         ##--- 현재 날짜 세팅 , 함수 실행 , 쓰레드 실행 
         self.dateTimeVar = QDateTime.currentDateTime()  # 값 받아오기 
@@ -62,7 +63,7 @@ class mainGUI(QDialog):
         self.th4.start() # 카메라 스트리밍 실행 
         self.th5.start() # 독거노인 실행 
         self.th6.start() # 치매환자 실행 
-       
+        self.th7.start() # 치매환자 실행 
         
         self.ui.pushButton.clicked.connect(self.google_talk)  # 버튼 눌렀을 때 구글 어시스턴트 실행 
 
@@ -232,7 +233,7 @@ class Thread_alone(QThread):   ## 독거노인
 class Thread_dementia(QThread):   ##  치매환자
 
     def __init__(self):
-        QThread.__init__(self)
+        QThread.__init__(self) 
 
     def run(self):
         
@@ -242,14 +243,14 @@ class Thread_dementia(QThread):   ##  치매환자
 
 
 
-# class Thread_talk(QThread):   ## 구글 어시스턴트 실행 
+class Flask_start(QThread):   ## Flask 서버 실행 
 
-#     def __init__(self):
-#         QThread.__init__(self)
+    def __init__(self):
+        QThread.__init__(self)
         
-#     def run(self):
-#         ##-------------
-#         proc1 = subprocess.Popen('~/googletalk.sh', shell=True,  stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    def run(self):
+        ##-------------
+        proc1 = subprocess.Popen(['lxterminal -e python videoserver.py'], cwd='/home/pi/_GUI/', shell=True)
         
 
 if __name__ == '__main__':

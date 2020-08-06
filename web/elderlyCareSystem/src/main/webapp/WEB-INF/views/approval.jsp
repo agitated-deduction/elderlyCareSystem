@@ -5,7 +5,7 @@
   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <head>
     <meta charset="utf-8">
-    <title>Login - Bootstrap Admin Template</title>
+    <title>join approval</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes"> 
     
@@ -36,7 +36,7 @@
 			<div class="login-fields">
 				
 			<c:forEach var = "id" items = "${aids }">
-			<pre id = '${id }'>${id }					<a href = "${contextPath }/users/approval/${id }">v</a></pre>
+			<pre id = 'pre${id }'>${id }					<a class = "apCheck" id = "${id }" href = "" >v</a></pre>
 			
 			</c:forEach>
 			
@@ -56,9 +56,21 @@
 <script type = "text/javascript">
 
 $(function(){
-	function approve(id){
-		$(id).remove();
-	}
+	$('a.apCheck').bind("click", function(event){
+		event.preventDefault();
+		var clicked_id = $(this).attr('id');
+		$.ajax({
+				type : 'POST',                            
+				url : "approval" ,
+				data : JSON.stringify({id: clicked_id}),
+				contentType : 'application/json',
+				dataType : 'json',
+				success : function(response){
+						$('pre').remove('#pre'+clicked_id);
+				}
+				
+		});
+	});
 });
 	
 

@@ -8,6 +8,8 @@
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="redirect"/>
+			<item value="aspect"/>
 			<item value="join"/>
 			<item value="window"/>
 			<item value="databind"/>
@@ -21,8 +23,6 @@
 			<item value="console"/>
 			<item value="Bar"/>
 			<item value="margin"/>
-			<item value="martgin"/>
-			<item value="getFull"/>
 		</list>
 		<list key="replacehistory">
 			<item value="serverURI"/>

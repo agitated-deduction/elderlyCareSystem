@@ -52,6 +52,6 @@
 	SELECT * FROM banddata
 	<!--WHERE ekey = #{value} AND DATE(measuredtime) = DATE(NOW())-->
 	WHERE ekey = #{value} <!-- AND DATE(measuredtime) = DATE("2020-07-21") --> <!--for test -->
-	ORDER BY measuredtime DESC limit 20;
+	ORDER BY measuredtime DESC limit 30;
 </select>
 </mapper>

@@ -1,7 +1,6 @@
 package com.spring.elderlycare.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.elderlycare.dto.CalendarDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 import com.spring.elderlycare.service.MemberService;
 
@@ -150,14 +149,29 @@ public class MemberController {
 		mav.setViewName("approval");
 		return mav;
 	}
-	@RequestMapping(value = "/approval/{aid}")
-	public void/*ModelAndView*/ approvalProcess(ModelAndView mav, @PathVariable("aid")String aid) {
-		int res = service.approvalProcess(aid);
+	@RequestMapping(value = "/approval", method = RequestMethod.POST,
+			headers= {"Content-type=application/json"})
+	public Map<String, Object> approvalProcess(@RequestBody Map<String, Object> m) {
+		int res = service.approvalProcess(m.get("id").toString());
+		
 		if(res<1) {
-			
+			m.put("result", true);
 		}else {
-			//mav.setViewName("approval");
+			m.put("result", false);
 		}
-		//return mav;
+		return m;
+	}
+	@RequestMapping(value = "/calendar", method = RequestMethod.POST)
+	public Map<String, Object> calendarPost(@RequestBody CalendarDTO cdto) {
+		Map<String, Object> m = new HashMap<String, Object>();
+		
+		//session uid랑 cdto 이용해서 저장. calendar db.
+		
+		return m;
+	}
+	@RequestMapping(value = "/calendar", method = RequestMethod.GET)
+	public CalendarDTO calendarGet() {
+		//session uid 이용해서 cdto 가져오기
+		return null;
 	}
 }

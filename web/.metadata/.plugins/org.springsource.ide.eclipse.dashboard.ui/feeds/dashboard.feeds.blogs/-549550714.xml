@@ -76,7 +76,13 @@
 &lt;p&gt;Added support for disabling JDBC support via a property.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-contract" class="anchor" name="spring-cloud-contract"&gt;&lt;/a&gt;Spring Cloud Contract&lt;/h3&gt;
 &lt;p&gt;Added a &lt;code&gt;StubRunner&lt;/code&gt; based implementation of &lt;code&gt;ReactiveDiscoveryClient&lt;/code&gt;.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-openfeign" class="anchor" name="spring-cloud-openfeign"&gt;&lt;/a&gt;Spring Cloud OpenFeign&lt;/h3&gt;
 &lt;p&gt;Added support for &lt;code&gt;CollectionFormat&lt;/code&gt; and improvements in working with &lt;code&gt;@FeignClient&lt;/code&gt;.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-aws" class="anchor" name="spring-cloud-aws"&gt;&lt;/a&gt;Spring Cloud AWS&lt;/h3&gt;
-&lt;p&gt;This is the first GA release under new community maintainers.&lt;/p&gt;
+&lt;p&gt;This is the first GA release under new community maintainers.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-gcp" class="anchor" name="spring-cloud-gcp"&gt;&lt;/a&gt;Spring Cloud GCP&lt;/h3&gt;
+&lt;p&gt;This release features many excellent community contributions:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;New Spring Cloud GCP starter, &lt;code&gt;spring-cloud-gcp-starter-metrics&lt;/code&gt;, configures Micrometer Stackdriver to automatically pick up project ID and credentials (thanks to &lt;a href="https://github.com/eddumelendez"&gt;@eddumelendez&lt;/a&gt;).&lt;/li&gt;
+  &lt;li&gt;Additional operations for managing secret versions on &lt;code&gt;SecretManagerTemplate&lt;/code&gt; (thanks to &lt;a href="https://github.com/kioie"&gt;@kioie&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Additional GCS Spring Integration file filters &lt;code&gt;GcsAcceptModifiedAfterFileListFilter&lt;/code&gt; and &lt;code&gt;GcsDiscardRecentModifiedFileListFilter&lt;/code&gt; (thanks to &lt;a href="https://github.com/hosainnet"&gt;@hosainnet&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr/&gt;
 &lt;p&gt;The following modules were updated as part of Hoxton.SR7:&lt;/p&gt;
 &lt;table&gt;

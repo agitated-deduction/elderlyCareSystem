@@ -5,7 +5,7 @@
 <%@ page session="true" %>
 <html>
 <head>
-	<title>Home</title>
+	<title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link href="<c:url value='/resources/css/bootstrap.min.css'/>" rel="stylesheet">
@@ -27,10 +27,11 @@
 </head>
 <body>
 <c:set var = "contextPath" value = "<%=request.getContextPath() %>"></c:set>
+<!--  
 <c:if test = "${empty uid }">
-<%response.sendRedirect(request.getContextPath()+"/users/login"); %>
+<%//response.sendRedirect(request.getContextPath()+"/users/login"); %>
 </c:if>
-
+-->
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span

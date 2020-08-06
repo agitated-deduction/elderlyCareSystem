@@ -6,25 +6,11 @@
 <html>
 <head>
 	<title>Home</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link href="<c:url value='/resources/css/bootstrap.min.css'/>" rel="stylesheet">
-<link href="<c:url value='/resources/css/bootstrap-responsive.min.css'/>" rel="stylesheet">
-<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
-        rel="stylesheet">
-<link href="<c:url value='/resources/css/font-awesome.css'/>" rel="stylesheet">
-<link href="<c:url value='/resources/css/style.css'/>" rel="stylesheet">
-<link href="<c:url value='/resources/css/pages/dashboard.css'/>" rel="stylesheet">
-<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-<!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-   
-<script type = "text/javascript" charset = "utf-8">
-    //sessionStorage.setItem("contextPath", "${pageContext.request.contextPath}");
-    //var ctx = sessionStorage.getItem("ctx");
-    </script>
 </head>
+<style>
+tbody{
+font-size: 13px;}
+</style>
 <body>
 <%@ include file="header.jsp" %>
 
@@ -177,37 +163,56 @@
 <script>     
 
 
-        $(document).ready(function() {
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-        var calendar = $('#calendar').fullCalendar({
-          header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,agendaWeek,agendaDay'
-          },
-          selectable: true,
-          selectHelper: true,
-          select: function(start, end, allDay) {
+$(document).ready(function() {
+	var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+	var calendar = $('#calendar').fullCalendar({
+    	header: {
+    		left: 'prev,next today',
+        	center: 'title',
+        	right: 'month,agendaWeek,agendaDay'
+		},
+    	selectable: true,
+    	selectHelper: true,
+    	select: function(start, end, allDay) {
             var title = prompt('Event Title:');
             if (title) {
-              calendar.fullCalendar('renderEvent',
-                {
-                  title: title,
-                  start: start,
-                  end: end,
-                  allDay: allDay
-                },
-                true // make the event "stick"
-              );
+            	
+            	var calJson = {
+                    	title: title,
+                    	start: start,
+                    	end: end,
+                    	allDay: allDay
+                    };
+            	
+            	$.ajax({
+            		url:'users/calendar',
+            		type: 'POST',
+            		contentType: 'application/json;charset=utf-8',
+            		data: JSON.stringify(calJson),
+            		dataType: 'json',
+            		success: function(response){
+            			calendar.fullCalendar('renderEvent', calJson, true);
+            		}
+            	});
+            	
+            	
+            	
+            	
+            	//calendar.fullCalendar('renderEvent',calJson,true);
+            	// make the event "stick" (true?))
+            	
             }
             calendar.fullCalendar('unselect');
           },
           editable: true,
           events: [
-            
+        	  { title: "title",
+            start: '2020-08-09', 
+            end: '2020-08-10'
+        	  }
           ]
         });
         var html1 = '', html2 = '';

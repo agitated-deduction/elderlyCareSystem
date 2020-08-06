@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Charts - Bootstrap Admin Template</title>
+    <title>Datas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
@@ -79,16 +79,16 @@
                   <div id="big_stats" class="cf" id = "cur-data">
                   
                       
-                    <div class="stat"> <i class="icon-asterisk"></i> <span class="value" id = "cur-temp"></span> </div>
+                    <div class="stat"> <span class="value" id = "cur-temp"></span> </div>
                 
                     
-                    <div class="stat"> <i class="icon-tint"></i> <span class="value"id = "cur-humid"></span> </div>
+                    <div class="stat"><span class="value"id = "cur-humid"></span> </div>
              
                     
-                    <div class="stat"> <i class="icon-heart"></i> <span class="value"id = "cur-epulse"></span> </div>
+                    <div class="stat">  <span class="value"id = "cur-epulse"></span> </div>
               
                     
-                    <div class="stat"> <i class="icon-shopping-cart"></i> <span class="value"id = "cur-estep"></span> </div>
+                    <div class="stat">  <span class="value"id = "cur-estep"></span> </div>
                
                 </div>
                 <!-- /widget-content --> 
@@ -168,30 +168,29 @@
         <!-- /main-inner -->
     </div>
     <!-- /main -->
-    <div class="extra">
-        <div class="extra-inner">
-            <div class="container">
-                <div class="row">
+ <div class="extra">
+  <div class="extra-inner">
+    <div class="container">
+      <div class="row">
                     <div class="span3">
                         <h4>
-                            Elderly health care and home monitoring</h4>
+                            About Free Admin Template</h4>
                         <ul>
-                            <li><a href="javascript:;">Web site</a></li>
-                            <li><a href="javascript:;">Mobile Application</a></li>
-                            <li><a href="javascript:;">HomeIoT device</a></li>
-                            <li><a href="javascript:;">Wearable band device</a></li>
+                            <li><a href="javascript:;">EGrappler.com</a></li>
+                            <li><a href="javascript:;">Web Development Resources</a></li>
+                            <li><a href="javascript:;">Responsive HTML5 Portfolio Templates</a></li>
+                            <li><a href="javascript:;">Free Resources and Scripts</a></li>
                         </ul>
                     </div>
                     <!-- /span3 -->
                     <div class="span3">
                         <h4>
-                            Reference</h4>
+                            Support</h4>
                         <ul>
-                            <li><a href="https://github.com/haydenpark/haydenpark.github.io/tree/master/double-axes">HT graph</a></li>
-                            <li><a href="https://www.egrappler.com/templatevamp-twitter-bootstrap-admin-template-now-available/
-                            ">Free dash board template</a></li>
-                            <li><a href="javascript:;">bla</a></li>
-                            <li><a href="javascript:;">bla bla</a></li>
+                            <li><a href="javascript:;">Frequently Asked Questions</a></li>
+                            <li><a href="javascript:;">Ask a Question</a></li>
+                            <li><a href="javascript:;">Video Tutorial</a></li>
+                            <li><a href="javascript:;">Feedback</a></li>
                         </ul>
                     </div>
                     <!-- /span3 -->
@@ -209,21 +208,20 @@
                         <h4>
                             Open Source jQuery Plugins</h4>
                         <ul>
-                            <li><a href="#">Open Source jQuery Plugins</a></li>
-                            <li><a href="#">HTML5 Responsive Tempaltes</a></li>
-                            <li><a href="#">Free Contact Form Plugin</a></li>
-                            <li><a href="#">Flat UI PSD</a></li>
+                            <li><a href="">Open Source jQuery Plugins</a></li>
+                            <li><a href="">HTML5 Responsive Tempaltes</a></li>
+                            <li><a href="">Free Contact Form Plugin</a></li>
+                            <li><a href="">Flat UI PSD</a></li>
                         </ul>
                     </div>
                     <!-- /span3 -->
                 </div>
-                <!-- /row -->
-            </div>
-            <!-- /container -->
-        </div>
-        <!-- /extra-inner -->
+      <!-- /row --> 
     </div>
-    <!-- /extra -->
+    <!-- /container --> 
+  </div>
+  <!-- /extra-inner --> 
+</div>
     <div class="footer">
         <div class="footer-inner">
             <div class="container">
@@ -266,22 +264,22 @@ $(function(){
      		
 		//$.each(data, function(index, item){
 		//html += "<div class='stat'> <i class='icon-asterisk'></i> <span class='value'>";
-		html= data.temp;
+		html= "<h3>온도</h3>"+data.temp+"℃";
 		//html+= "</span> </div>";
 		$('#cur-temp').html(html);
      			
 		//html += "<div class='stat'> <i class='icon-tint'></i> <span class='value'>";
-   		html= data.humid;
+   		html= "<h3>습도</h3>"+data.humid+"%";
    		//html+= "</span> </div>";
    		$('#cur-humid').html(html);
 	     			
    		//html += "<div class='stat'> <i class='icon-heart'></i> <span class='value'>";
-    	html= data.epulse;
+    	html= "<h3>심박수</h3>"+data.epulse;
      	//html+= "</span> </div>";
      	$('#cur-epulse').html(html);
 		     		
      	//html += "<div class='stat'> <i class='icon-shopping-cart'></i> <span class='value'>";
-	    html= data.estep;
+	    html= "<h3>걸음 수</h3>"+data.estep;
 	    //html+= "</span> </div>";
 	    $('#cur-estep').html(html);
    		//});
@@ -462,8 +460,8 @@ $(function(){
  		barChartData.datasets[0].data.push(dd[0].epluse);
  		barChartData.datasets[0].data.push(dd[1].epluse);
  		console.log(barChartData.datasets[0].data[0]); */
-		var myLine = new Chart(document.getElementById("area-chart").getContext("2d")).Line(lineChartData);
-		var myBar = new Chart(document.getElementById("bar-chart").getContext("2d")).Bar(barChartData);
+		var myBar = new Chart(document.getElementById("area-chart").getContext("2d")).Bar(lineChartData);
+		var myLine = new Chart(document.getElementById("bar-chart").getContext("2d")).Line(barChartData);
 		
      });
     

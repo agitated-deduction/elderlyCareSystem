@@ -2466,3 +2466,29 @@ approvalForm
 
 	3-1. 로그인 후 home 화면에서 alert("승인되지 않은 가입자 입니다.")
 
+
+
+
+https://walbatrossw.github.io/spring-mvc/2018/07/24/17-spring-mvc-board-remember-me.html
+
+function(start, end, allDay) {
+    var title = prompt('Event Title:');
+    if (title) {
+       	calendar.fullCalendar('renderEvent',
+        {
+           	title: title,
+           	start: start,
+           	end: end,
+           	allDay: allDay
+        },
+        true // make the event "stick"
+    	);
+    }
+    calendar.fullCalendar('unselect');
+}
+
+
+
+
+내일 할 일 : calendar, 걸음 수 dao에서 직접 계산... 
+20200807

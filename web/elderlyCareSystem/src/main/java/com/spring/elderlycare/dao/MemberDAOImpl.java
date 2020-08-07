@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.elderlycare.dto.CalendarDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 
 @Repository("memberDAO")
@@ -70,6 +71,14 @@ public class MemberDAOImpl implements MemberDAO{
 	@Override
 	public List<String> selectApvList(String uid) {
 		return sqlSession.selectList(ns+"approvalList", uid);
+	}
+	@Override
+	public int insertCalendar(Map<String, Object> map) {
+		return sqlSession.insert(ns+"insertCalendar", map);
+	}
+	@Override
+	public List<CalendarDTO> selectCalendars(String uid) {
+		return sqlSession.selectList(ns+"selectCalendars", uid);
 	}
 	
 }

@@ -1,6 +1,8 @@
 package com.spring.elderlycare.controller;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +43,7 @@ public class MemberController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST,
 			headers= {"Content-type=application/json"})
 	public Map<String, Object> loginProcess(HttpSession httpSession,@RequestBody Map<String, Object>m){//MemberDTO mdto) {
-			
+		//logger.info("regId: "+m.get("regId").toString());
 		int isExist = service.loginCheck(m);//dto);
 		Map<String, Object> ret = new HashMap<String, Object>();
 		//ret.put("result", false);
@@ -162,16 +165,21 @@ public class MemberController {
 		return m;
 	}
 	@RequestMapping(value = "/calendar", method = RequestMethod.POST)
-	public Map<String, Object> calendarPost(@RequestBody CalendarDTO cdto) {
+	public boolean calendarPost(@ModelAttribute("uid")String uid, @RequestBody CalendarDTO cdto) {
 		Map<String, Object> m = new HashMap<String, Object>();
-		
+		m.put("uid", uid);
+		m.put("cdto", cdto);
+		CalendarDTO c = (CalendarDTO) m.get("cdto");
+		System.out.println(c.getStart());
+		int res = service.calendarPost(m);
 		//session uid랑 cdto 이용해서 저장. calendar db.
 		
-		return m;
+		return res>0?true:false;
+		//return true;
 	}
 	@RequestMapping(value = "/calendar", method = RequestMethod.GET)
-	public CalendarDTO calendarGet() {
+	public List<CalendarDTO> calendarGet(@ModelAttribute("uid")String uid) {
 		//session uid 이용해서 cdto 가져오기
-		return null;
+		return service.calendarGet(uid);
 	}
 }

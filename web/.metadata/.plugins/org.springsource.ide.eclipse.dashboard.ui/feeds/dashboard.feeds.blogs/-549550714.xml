@@ -67,22 +67,7 @@
     <updated>2020-08-04T16:01:00Z</updated>
     <content type="html">&lt;p&gt;On behalf of the community, I am pleased to announce that Service Release 7 (SR7) of the &lt;a href="https://cloud.spring.io"&gt;Spring Cloud Hoxton&lt;/a&gt; Release Train is available today. The release can be found in &lt;a href="https://repo1.maven.org/maven2/org/springframework/cloud/spring-cloud-dependencies/Hoxton.SR7/"&gt;Maven Central&lt;/a&gt;. You can check out the Hoxton &lt;a href="https://github.com/spring-projects/spring-cloud/wiki/Spring-Cloud-Hoxton-Release-Notes"&gt;release notes for more information&lt;/a&gt;.&lt;/p&gt;&lt;h2&gt;&lt;a href="#notable-changes-in-the-hoxton-release-train" class="anchor" name="notable-changes-in-the-hoxton-release-train"&gt;&lt;/a&gt;Notable Changes in the Hoxton Release Train&lt;/h2&gt;
 &lt;p&gt;See all of the included issues and pull requests at the &lt;a href="https://github.com/orgs/spring-cloud/projects/41"&gt;GitHub project&lt;/a&gt;.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-netflix" class="anchor" name="spring-cloud-netflix"&gt;&lt;/a&gt;Spring Cloud Netflix&lt;/h3&gt;
-&lt;p&gt;&lt;em&gt;CVE-2020-5412: Hystrix Dashboard Proxy In spring-cloud-netflix-hystrix-dashboard&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;Affected Pivotal Products and Versions&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Spring Cloud Netflix 2.2.0 to 2.2.3&lt;/li&gt;
-  &lt;li&gt;Spring Cloud Netflix 2.1.0 to 2.1.5&lt;/li&gt;
-  &lt;li&gt;Older unsupported versions are also affected&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Spring Cloud Netflix, versions 2.2.x prior to 2.2.4, versions 2.1.x prior to 2.1.6, and older unsupported versions allow applications to use the Hystrix Dashboard proxy.stream endpoint to make requests to any server reachable by the server hosting the dashboard. A malicious user, or attacker, can send a request to other servers that should not be exposed publicly.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Mitigation&lt;/em&gt;&lt;br/&gt;Users of affected versions should apply the following mitigation:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;2.2.x users should upgrade to 2.2.4&lt;/li&gt;
-  &lt;li&gt;2.1.x users should upgrade to 2.1.6&lt;/li&gt;
-  &lt;li&gt;Older versions should upgrade to a supported branch&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;There are no other mitigation steps necessary. &lt;/p&gt;
-&lt;p&gt;Note that Hystrix Dashboard in spring-cloud-netflix should only be available on internal networks to clients that require it and it should be secured with Spring Security. This limits exposure to this vulnerability to those with internal network access and those users with proper authentication. &lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-cloud-foundry" class="anchor" name="spring-cloud-cloud-foundry"&gt;&lt;/a&gt;Spring Cloud Cloud Foundry&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://tanzu.vmware.com/security/cve-2020-5412"&gt;&lt;em&gt;CVE-2020-5412: Hystrix Dashboard Proxy In spring-cloud-netflix-hystrix-dashboard&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-cloud-foundry" class="anchor" name="spring-cloud-cloud-foundry"&gt;&lt;/a&gt;Spring Cloud Cloud Foundry&lt;/h3&gt;
 &lt;p&gt;Upgraded CF Java client to 3.25.0.RELEASE.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-consul" class="anchor" name="spring-cloud-consul"&gt;&lt;/a&gt;Spring Cloud Consul&lt;/h3&gt;
 &lt;p&gt;Added support for &lt;code&gt;byte[]&lt;/code&gt; messages in Consul binder.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-gateway" class="anchor" name="spring-cloud-gateway"&gt;&lt;/a&gt;Spring Cloud Gateway&lt;/h3&gt;
 &lt;p&gt;Added support for tripping Spring Cloud Circuitbreaker based on HTTP status code.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-config" class="anchor" name="spring-cloud-config"&gt;&lt;/a&gt;Spring Cloud Config&lt;/h3&gt;

@@ -1,5 +1,6 @@
 package com.spring.elderlycare.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,12 @@ public class DeviceServiceImpl implements DeviceService{
 
 	@Override
 	public void deviceRegistration(ElderlyDTO edto, String id) {
-		ddao.insertDevice(edto, id);
+		ddao.insertDevice(edto);
+		ddao.insertElderly(edto);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("elderly", edto.getEkey());
+		map.put("staff", id);
+		ddao.insertManage(map);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.MqttException"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.TimerPingSender"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.MqttPingSender"/>
     <fullyQualifiedTypeName name="org.eclipse.paho.client.mqttv3.MqttSecurityException"/>
@@ -60,4 +59,5 @@
     <fullyQualifiedTypeName name="java.sql.Date"/>
     <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
     <fullyQualifiedTypeName name="java.util.Date"/>
+    <fullyQualifiedTypeName name="org.springframework.web.servlet.view.RedirectView"/>
 </qualifiedTypeNameHistroy>

@@ -103,10 +103,7 @@
 			
 			<div class="login-actions">
 				
-				<span class="login-checkbox">
-					<input id="Field" name="Field" type="checkbox" class="field login-checkbox" value="First Choice" tabindex="4" />
-					<label class="choice" for="Field">Agree with the Terms & Conditions.</label>
-				</span>
+				
 									
 				<button class="button btn btn-primary btn-large">Register</button>
 				

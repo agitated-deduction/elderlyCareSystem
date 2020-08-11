@@ -96,6 +96,8 @@
 			<mvc:exclude-mapping path = "/users/log*"/>
 			<mvc:exclude-mapping path = "/devices/log*"/>
 			<mvc:exclude-mapping path = "/users/join"/>
+			
+			<mvc:exclude-mapping path = "/datas"/>
 			<bean class = "com.spring.elderlycare.util.SessInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>

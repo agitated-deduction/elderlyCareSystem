@@ -18411,3 +18411,351 @@
   <message>++++++Service subscribe:null+++++++</message>
 </record>
 </log>
+<?xml version="1.0" encoding="x-windows-949" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-08-11T03:42:53.580194200Z</date>
+  <millis>1597117373580</millis>
+  <nanos>194200</nanos>
+  <sequence>0</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.App</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>test</message>
+</record>
+<record>
+  <date>2020-08-11T03:42:53.585198300Z</date>
+  <millis>1597117373585</millis>
+  <nanos>198300</nanos>
+  <sequence>1</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+</log>
+<?xml version="1.0" encoding="x-windows-949" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-08-11T04:32:29.062544700Z</date>
+  <millis>1597120349062</millis>
+  <nanos>544700</nanos>
+  <sequence>0</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.App</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>test</message>
+</record>
+<record>
+  <date>2020-08-11T04:32:29.069549500Z</date>
+  <millis>1597120349069</millis>
+  <nanos>549500</nanos>
+  <sequence>1</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:32:30.168328200Z</date>
+  <millis>1597120350168</millis>
+  <nanos>328200</nanos>
+  <sequence>2</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+</log>
+<?xml version="1.0" encoding="x-windows-949" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-08-11T04:33:13.576115400Z</date>
+  <millis>1597120393576</millis>
+  <nanos>115400</nanos>
+  <sequence>0</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.App</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>test</message>
+</record>
+<record>
+  <date>2020-08-11T04:33:13.581118800Z</date>
+  <millis>1597120393581</millis>
+  <nanos>118800</nanos>
+  <sequence>1</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:33:14.634866Z</date>
+  <millis>1597120394634</millis>
+  <nanos>866000</nanos>
+  <sequence>2</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+</log>
+<?xml version="1.0" encoding="x-windows-949" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-08-11T04:41:23.113318200Z</date>
+  <millis>1597120883113</millis>
+  <nanos>318200</nanos>
+  <sequence>0</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.App</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>test</message>
+</record>
+<record>
+  <date>2020-08-11T04:41:23.122324400Z</date>
+  <millis>1597120883122</millis>
+  <nanos>324400</nanos>
+  <sequence>1</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:41:24.207093800Z</date>
+  <millis>1597120884207</millis>
+  <nanos>93800</nanos>
+  <sequence>2</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+</log>
+<?xml version="1.0" encoding="x-windows-949" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-08-11T04:47:07.296428300Z</date>
+  <millis>1597121227296</millis>
+  <nanos>428300</nanos>
+  <sequence>0</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.App</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>test</message>
+</record>
+<record>
+  <date>2020-08-11T04:47:07.300430500Z</date>
+  <millis>1597121227300</millis>
+  <nanos>430500</nanos>
+  <sequence>1</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:47:08.386201100Z</date>
+  <millis>1597121228386</millis>
+  <nanos>201100</nanos>
+  <sequence>2</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:null+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:47:09.427939500Z</date>
+  <millis>1597121229427</millis>
+  <nanos>939500</nanos>
+  <sequence>3</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:"test"+++++++</message>
+</record>
+</log>
+<?xml version="1.0" encoding="x-windows-949" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-08-11T04:50:55.819507300Z</date>
+  <millis>1597121455819</millis>
+  <nanos>507300</nanos>
+  <sequence>0</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.App</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>test</message>
+</record>
+<record>
+  <date>2020-08-11T04:50:55.829513500Z</date>
+  <millis>1597121455829</millis>
+  <nanos>513500</nanos>
+  <sequence>1</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:121.138.83.121+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:50:56.873254800Z</date>
+  <millis>1597121456873</millis>
+  <nanos>254800</nanos>
+  <sequence>2</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:192.168.1.52+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:50:57.911991600Z</date>
+  <millis>1597121457911</millis>
+  <nanos>991600</nanos>
+  <sequence>3</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:"test"+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:50:57.915005700Z</date>
+  <millis>1597121457915</millis>
+  <nanos>5700</nanos>
+  <sequence>4</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttService</class>
+  <method>mqttSubscribe</method>
+  <thread>1</thread>
+  <message>++++++Service subscribe:1+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:51:09.003859700Z</date>
+  <millis>1597121469003</millis>
+  <nanos>859700</nanos>
+  <sequence>5</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttDAO</class>
+  <method>insert</method>
+  <thread>29</thread>
+  <message>++++++DAO insert Test : 1+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:51:48.277712900Z</date>
+  <millis>1597121508277</millis>
+  <nanos>712900</nanos>
+  <sequence>6</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttDAO</class>
+  <method>insert</method>
+  <thread>30</thread>
+  <message>++++++DAO insert Test : 2+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:52:10.648580200Z</date>
+  <millis>1597121530648</millis>
+  <nanos>580200</nanos>
+  <sequence>7</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttDAO</class>
+  <method>insert</method>
+  <thread>31</thread>
+  <message>++++++DAO insert Test : 1+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:52:48.814650400Z</date>
+  <millis>1597121568814</millis>
+  <nanos>650400</nanos>
+  <sequence>8</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttDAO</class>
+  <method>insert</method>
+  <thread>32</thread>
+  <message>++++++DAO insert Test : 2+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:53:22.307402700Z</date>
+  <millis>1597121602307</millis>
+  <nanos>402700</nanos>
+  <sequence>9</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttDAO</class>
+  <method>insert</method>
+  <thread>33</thread>
+  <message>++++++DAO insert Test : 1+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:53:49.342580100Z</date>
+  <millis>1597121629342</millis>
+  <nanos>580100</nanos>
+  <sequence>10</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttDAO</class>
+  <method>insert</method>
+  <thread>34</thread>
+  <message>++++++DAO insert Test : 2+++++++</message>
+</record>
+<record>
+  <date>2020-08-11T04:54:26.489924100Z</date>
+  <millis>1597121666489</millis>
+  <nanos>924100</nanos>
+  <sequence>11</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.maven.mqtt.asyncmqtt.MqttDAO</class>
+  <method>insert</method>
+  <thread>35</thread>
+  <message>++++++DAO insert Test : 1+++++++</message>
+</record>
+</log>

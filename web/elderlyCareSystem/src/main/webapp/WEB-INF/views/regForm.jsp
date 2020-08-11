@@ -95,8 +95,8 @@
 				</div> <!-- /field -->
 				<br>
 				<div class="field">
-					<label for="homeiot">Device IP:</label>
-					<input type="text" id="homeiot" name="homeiot" value="" placeholder="Device IP" class="login"/>
+					<label for="homeIoT">Device IP:</label>
+					<input type="text" id="homeIoT" name="homeIoT" value="" placeholder="Device IP" class="login"/>
 				</div> <!-- /field -->
 				
 			</div> <!-- /login-fields -->

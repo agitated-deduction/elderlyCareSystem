@@ -150,7 +150,7 @@
 	 			html+="); return false;'>";
 	 			html +=item.ename+"</a></li>";
 	 			
-	 			//console.log(html);
+	 			console.log(html);
 	 		});
 	 		$('#eld-list').html(html);
 	 	});

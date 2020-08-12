@@ -51,6 +51,7 @@ import com.example.elderlyversion.utils.RecycleUtils;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -358,7 +359,7 @@ public class MainActivity extends Activity {
                 case Constants.MESSAGE_READ_CHAT_DATA:
 
                     if(msg.obj != null) {
-                        Log.d("RECEIVE_MSG",(String)msg.obj);
+                        Log.d("__MSG",(String)msg.obj);
                         String str = addMessage((String)msg.obj);
                         if (str == MESSAGE_BT_ADDING || str == " "){
                             return;
@@ -373,12 +374,14 @@ public class MainActivity extends Activity {
                         if (checkBPM(elderlyData)){
                             Log.d("RECEIVE_Data","HIGH_BPM!!");
                             elderlyData.setEstat(0);
+//                            sendEmergancyData(name,"긴급 버튼!");
+
 //                            sendEmergancyData(name,"심박수 높음!");
                             showNoti(name,"심박수 높음!");
                         }
                         if(elderlyData.getEstat()==0){
                             phoneCall();
-                            sendEmergancyData(name,"위험");
+//                            sendEmergancyData(name,"긴급 버튼!");
 //                            sendData(elderlyData);
                             lastTime = current;
                         }
@@ -386,7 +389,6 @@ public class MainActivity extends Activity {
 //                            sendData(elderlyData);
                             lastTime = current;
                         }
-
                     }
                     receiveMessage = "";
                     break;
@@ -414,7 +416,6 @@ public class MainActivity extends Activity {
                 .setContentTitle(title)
                 .setContentText(text)
                 .setAutoCancel(true)
-//                .setSound(defaultSoundUri)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
 //                .setOngoing(true)
@@ -466,11 +467,15 @@ public class MainActivity extends Activity {
     }
 
     public Boolean messageParsing(String receiveMsg){
+        if (receiveMsg.length() <  60){
+            return false;
+        }
         String[] array = receiveMsg.split(",");
-        Log.d("RECEIVE_Parsing_MSG",receiveMsg);
-        Log.d("RECEIVE_Parsing_MSG"," Msg.(0) : "+receiveMsg.substring(0,1));
-        if(receiveMsg.substring(0,1) == "0"||receiveMsg.substring(0,1) == "1"){
-            Log.d("RECEIVE_Parsing_MSG","First Msg : "+receiveMsg.substring(0,1));
+        Log.d("Parsing_MSG",receiveMsg);
+
+        if(array[0].equals("0") || array[0].equals("1")){
+            Log.d("Parsing_MSG","Start parsing");
+
             elderlyData.setEstat(Integer.parseInt(array[0]));
             elderlyData.setEpulse(Integer.parseInt(array[1].substring(6)));
             elderlyData.setEstep(Integer.parseInt(array[2].substring(5)));
@@ -488,11 +493,15 @@ public class MainActivity extends Activity {
     public void sendData(ElderlyData elderlyData){
         // TODO : Elderly Data -> 서버에 전송( 주기 : DATA_INTERVAL 설정 ㄱㄱ)
         ApiUtils.getElderlyService(getApplicationContext()).putElderlyData(elderlyData).enqueue(new retrofit2.Callback<ResponseBody>() {
-//        ApiUtils.getElderlyService(getApplicationContext()).putElderlyData2("elderlyData").enqueue(new retrofit2.Callback<ResponseBody>(){
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Log.d("PUT_SUCCESS", response.message()); // 성공 : OK(200)
+                    try {
+                        Toast.makeText(getApplicationContext(),"데이터 전송 성공! :"+response.body().string(),Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.d("PUT_NOT_SUCCESS", response.message()); // 실패
                 }
@@ -585,14 +594,15 @@ public class MainActivity extends Activity {
             homeIot = intent.getStringExtra("homeIoT");
             ekey = intent.getIntExtra("ekey",-1);
             elderlyData.setEkey(ekey);
+            regid = "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx";
 
-            if (intent.getStringExtra("regid")!= null){
-                regid = intent.getStringExtra("regid");
-            }else{
-                regid = "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx";
-            }
-            Toast.makeText(this,regid+"님 환영합니다.",Toast.LENGTH_SHORT).show();
-            Log.d("Main_Lgoin", "eKey:"+ekey+"regId:"+regid);
+//            if (intent.getStringExtra("regId")!= null){
+//                regid = intent.getStringExtra("regid");
+//            }else{
+//                regid = "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx";
+//            }
+            Toast.makeText(this,name+"님 환영합니다.",Toast.LENGTH_SHORT).show();
+            Log.d("Main_Lgoin", "eKey:"+ekey+", regId:"+regid+", homeIoT:"+homeIot);
         }
     }
 

@@ -131,7 +131,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext() , InfoActivity.class);
-                    intent.putExtra("KEY",item.getEkey()); //
+                    intent.putExtra("ekey",item.getEkey()); //
                     v.getContext().startActivity(intent);
                 }
             });

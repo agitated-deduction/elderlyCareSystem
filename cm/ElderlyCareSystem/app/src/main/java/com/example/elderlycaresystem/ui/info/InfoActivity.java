@@ -49,6 +49,13 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+        Log.d("FMS Main Activity","oncreate() 호출됨");
+        Intent intent = getIntent();
+        Log.d("FMS Main Activity","oncreate() intent");
+        uiSetting(intent);
+    }
+
+    private void uiSetting(Intent intent){
 
         nameText = findViewById(R.id.nameText);
         statText = findViewById(R.id.statText);
@@ -58,9 +65,9 @@ public class InfoActivity extends AppCompatActivity {
         tempText = findViewById(R.id.tempText);
         humidText = findViewById(R.id.humidText);
 
-        Intent intent = getIntent();
         if (intent != null) {
-            ekey = intent.getIntExtra("KEY", -1);
+            ekey = intent.getIntExtra("ekey", -1);
+            Log.d("FMS_Info","uiSetting() 호출됨. ekey:"+ekey);
         }
 
         if (ekey!=-1){
@@ -98,7 +105,6 @@ public class InfoActivity extends AppCompatActivity {
             }
         });
     }
-
     // TODO : Demo Version
     private void getElderlyData(int ekey) {
         // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
@@ -108,17 +114,17 @@ public class InfoActivity extends AppCompatActivity {
             public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
                 if(response.isSuccessful() && response.body() != null) {
                     Log.d("InfoActivity", "GET_DATA_SUCCESS");
-                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
                     setData(response.body());
                 }else {
                     Log.d("InfoActivity", "GET_DATA_SUCCESS");
-                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<ElderlyData> call, Throwable t) {
                 Log.d("InfoActivity", "Connect_Error");
-                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
         });
@@ -142,7 +148,7 @@ public class InfoActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ElderlyInfo> call, Throwable t) {
                 Log.d("InfoActivity", "Connect_Error");
-                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
         });
@@ -159,7 +165,7 @@ public class InfoActivity extends AppCompatActivity {
         humid = elderlyData.getHumid();
         String str = "step: "+step+", pulse: "+pulse+", kcal: "+kcal+", stat: "+stat+", temp: "+temp;
         Log.d("InfoActivity_SD",str);
-        Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
 
         stepText.setText(String.valueOf(step));
         pulseText.setText(String.valueOf(pulse));
@@ -196,45 +202,7 @@ public class InfoActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         Log.d("FMS Info Activity", "onNweIntent() 호출됨");
         super.onNewIntent(intent);
-        if (intent == null) {
-            Log.d("FMS Info Activity", "Intent is null");
-            return;
-        }
-        Bundle bundle = intent.getExtras();
-        ekey = intent.getIntExtra("ekey", -1);
-        if (ekey != -1) {
-            getElderlyData(ekey);
-            getElderlyInfo(ekey);
-        } else {
-            Log.d("FMS Info Activity", "ekey :" + ekey);
-            return;
-        }
+
+        uiSetting(intent);
     }
-
-    // TODO : LoopBack version. ( Test version : getTestData() -> getElderlyData(ekey) )
-    private void getTestData() {
-        // Server에서 InfoActivity에 띄울 ElderlyData를 받아와 layout 구성하기
-        RetroUtils.getElderlyService(getApplicationContext()).getTestData().enqueue(new Callback<ElderlyData>() {
-            // 연결 성공시
-            @Override
-            public void onResponse(Call<ElderlyData> call, Response<ElderlyData> response) {
-                if(response.isSuccessful() && response.body() != null) {
-                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
-                    Toast.makeText(InfoActivity.this, "Elderly State : " + response.body().getStat(), Toast.LENGTH_SHORT).show();
-                    setData(response.body());
-                }else {
-                    Log.d("InfoActivity", "GET_DATA_SUCCESS");
-                    Toast.makeText(InfoActivity.this, "Empty Body : " + response.code(), Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<ElderlyData> call, Throwable t) {
-                Log.d("InfoActivity", "Connect_Error");
-                Toast.makeText(InfoActivity.this, "Failure : " + call.toString(), Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
-            }
-        });
-    }
-
-
 }

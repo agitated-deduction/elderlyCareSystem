@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private EditText nameText;
     private EditText birthText;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +39,15 @@ public class LoginActivity extends AppCompatActivity {
 
         nameText.setText("김노인");
         birthText.setText("19430524");
-        requestCallPermission();
+        progressBar = findViewById(R.id.progressBar);
 
+        requestCallPermission();
 
         Button startButton = findViewById(R.id.button);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 login();
             }
         });
@@ -61,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<KeyData> call, Response<KeyData> response) {
                     if(response.isSuccessful() && response.body() != null) {
                         // TODO : response.body()의 데이터(3개) 정상 확인 후 MainActivity로..
+                        progressBar.setVisibility(View.GONE); // ProgressBar Close
                         Log.d("LoginActivity","Connect Success");
                         Log.d("LoginActivity","Data: "+response.body().getEkey()+
                                 ", regId: "+response.body().getRegId()+", HomeIoT: "+response.body().getHomeIoT());
@@ -72,13 +77,14 @@ public class LoginActivity extends AppCompatActivity {
 //                        intent.putExtra("regid", "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx");
                         intent.putExtra("homeIoT", response.body().getHomeIoT());
                         Log.d("LoginActivity","Get Data -> regId:" + response.body().getRegId() + ", Ekey:" +response.body().getEkey() + ", HomeIoT:" +response.body().getHomeIoT());
-                        Toast.makeText(LoginActivity.this, "연결성공! Data:. "+response.body().getRegId(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginActivity.this, "연결성공! Data:. "+response.body().getRegId(), Toast.LENGTH_SHORT).show();
                         startActivity(intent);
                         finish();
                     }
                 }
                 @Override
                 public void onFailure(Call<KeyData> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(LoginActivity.this, "지금은 연결할 수 없습니다. " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 

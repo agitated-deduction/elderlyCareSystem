@@ -33,6 +33,9 @@ public interface ElderlyService {
     @POST("devices/login")
     Call<KeyData> login(@Body LoginData loginData);
 
+    @POST("devices/login")
+    Call<ResponseBody> login2(@Body LoginData loginData);
+
     @GET("devices/{num}/data")
     Call<ResponseBody> getElderlyData(@Path("num") int key);
 

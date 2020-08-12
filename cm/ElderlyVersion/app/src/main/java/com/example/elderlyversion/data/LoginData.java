@@ -1,19 +1,19 @@
 package com.example.elderlyversion.data;
 
 public class LoginData {
-    private String uName;
-    private String uBirth;
+    private String ename;
+    private String ebirth;
 
     public LoginData(String name, String birth){
-        uName = name;
-        uBirth = birth;
+        ename = name;
+        ebirth = birth;
     }
 
-    public String getuName() { return uName; }
+    public String getuName() { return ename; }
 
-    public void setuName(String uName) { this.uName = uName; }
+    public void setuName(String uName) { this.ename = uName; }
 
-    public String getuBirth() { return uBirth; }
+    public String getuBirth() { return ebirth; }
 
-    public void setuBirth(String uBirth) { this.uBirth = uBirth; }
+    public void setuBirth(String uBirth) { this.ebirth = uBirth; }
 }

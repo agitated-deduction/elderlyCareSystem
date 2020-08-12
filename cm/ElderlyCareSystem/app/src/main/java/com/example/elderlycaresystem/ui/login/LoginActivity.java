@@ -43,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView joinText;
     private Button loginButton;
     private ProgressBar progressBar;
-    private  ArrayList<ElderlyInfo> elderlyInfoArrayList;
-    String newToken = "";
+    private String newToken;
+    private LoginData loginData;
 
     private ElderlyInfo elder;
 
@@ -97,13 +97,12 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this,"전화 권한 없음.", Toast.LENGTH_LONG).show();
                     ActivityCompat.requestPermissions(LoginActivity.this,targets,101);
             }
-
         }
     }
 
     private void login() {
-        String id = idText.getText().toString();
-        String pw = pwText.getText().toString();
+        final String id = idText.getText().toString();
+        final String pw = pwText.getText().toString();
 
         if (id.length()==0) {
             Toast.makeText(LoginActivity.this, "아이디를 입력하세요", Toast.LENGTH_SHORT).show();
@@ -120,40 +119,41 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 newToken = instanceIdResult.getToken();
-                Log.v("token","등록 id: "+newToken);
-            }
-        });
+                loginData = new LoginData(id,pw,newToken);
+                Log.v("MyToken_FMS","Token: "+newToken);
+                Log.v("MyToken_ID","id: "+loginData.getUid());
+                Log.v("MyToken_PW","pw: "+loginData.getUpwd());
+                Log.v("MyToken_RegId","regId: "+loginData.getRegId());
 
-        LoginData loginData = new LoginData(id,pw);
-//        LoginData loginData = new LoginData(id,pw,newToken);
-
-        // ProgressBar Setting
-        progressBar.setVisibility(View.VISIBLE);
-        // Server에 로그인 데이터(id,pw,regid) 전송
-        // TODO : 로그인 시 nowToken 같이 보내기 => LoginData 수정 필요!!
-        RetroUtils.getElderlyService(getApplicationContext()).login(loginData).enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                progressBar.setVisibility(View.GONE); // ProgressBar Close
-                if(response.isSuccessful() && response.body() != null) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    if (response.body().getUid()!=null){
-                        intent.putExtra(MainActivity.INTENT_ID, response.body().getUid());
-                        startActivity(intent);
+                // ProgressBar Setting
+                progressBar.setVisibility(View.VISIBLE);
+                // Server에 로그인 데이터(id,pw,regid) 전송
+                // TODO : 로그인 시 nowToken 같이 보내기 => LoginData 수정 필요!!
+                RetroUtils.getElderlyService(getApplicationContext()).login(loginData).enqueue(new Callback<LoginResponse>() {
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        progressBar.setVisibility(View.GONE); // ProgressBar Close
+                        if(response.isSuccessful() && response.body() != null) {
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            if (response.body().getUid()!=null){
+                                intent.putExtra(MainActivity.INTENT_ID, response.body().getUid());
+                                startActivity(intent);
+                            }
+                            else{
+                                Toast.makeText(LoginActivity.this,"아이디 비밀번호를 확인하세요",Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }else {
+                            int statusCode  = response.code();
+                            Toast.makeText(LoginActivity.this, "연결 실패 : " + statusCode+", 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    else{
-                        Toast.makeText(LoginActivity.this,"아이디 비밀번호를 확인하세요",Toast.LENGTH_LONG).show();
-                        return;
+                    @Override
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(LoginActivity.this, "지금은 연결할 수 없습니다. " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                }else {
-                    int statusCode  = response.code();
-                    Toast.makeText(LoginActivity.this, "연결 실패 : " + statusCode+", 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, "지금은 연결할 수 없습니다. " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }

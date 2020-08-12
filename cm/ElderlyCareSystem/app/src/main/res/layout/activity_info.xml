@@ -9,8 +9,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="550dp"
         android:layout_weight="1">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -24,8 +25,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:text="이름"
-                android:textSize="30sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="30sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,8 +38,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="60dp"
                 android:text="맥박"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nameText" />
 
@@ -50,8 +51,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="40dp"
                 android:text="걸음"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pulse" />
 
@@ -63,8 +64,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="40dp"
                 android:text="칼로리"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/step" />
 
@@ -76,8 +77,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="40dp"
                 android:text="온도"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/kcal" />
 
@@ -90,8 +91,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="40dp"
                 android:text="습도"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/temp" />
 
@@ -103,11 +104,10 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="20dp"
                 android:text="현재 상태"
-                android:textSize="30sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="30sp"
                 app:layout_constraintStart_toEndOf="@+id/nameText"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
 
             <TextView
@@ -118,8 +118,8 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="60dp"
                 android:text="BPM"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toEndOf="@+id/pulse"
                 app:layout_constraintTop_toBottomOf="@+id/statText" />
 
@@ -131,8 +131,8 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="40dp"
                 android:text="STEP"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toEndOf="@+id/step"
                 app:layout_constraintTop_toBottomOf="@+id/pulseText" />
 
@@ -145,8 +145,8 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="40dp"
                 android:text="Kcal"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toEndOf="@+id/kcal"
                 app:layout_constraintTop_toBottomOf="@+id/step" />
 
@@ -158,8 +158,8 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="40dp"
                 android:text="Temp"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toEndOf="@+id/temp"
                 app:layout_constraintTop_toBottomOf="@+id/kcalText" />
 
@@ -172,17 +172,18 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="40dp"
                 android:text="Humid"
-                android:textSize="24sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintStart_toEndOf="@+id/humid"
                 app:layout_constraintTop_toBottomOf="@+id/tempText" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:padding="24dp">
 
         <Button

@@ -2575,3 +2575,7 @@ public class ErrorController {
 </body>
 </html>
 ```
+
+20200812
+
+인터셉터 등록시 jquery 인식 못하는 듯 함 왜?

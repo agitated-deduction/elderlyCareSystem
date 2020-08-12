@@ -101,6 +101,6 @@
 			<bean class = "com.spring.elderlycare.util.SessInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
-	
+
 	</beans>
 

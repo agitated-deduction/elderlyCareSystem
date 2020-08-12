@@ -2491,4 +2491,91 @@ function(start, end, allDay) {
 
 
 내일 할 일 : calendar, 걸음 수 dao에서 직접 계산... 
+
+
+Resource interpreted as Stylesheet but transferred with MIME type text/html: "<URL>".
+	잘되는거 확인하고 껐는데 켰더니'' 오류남 
+	이클립스 몇번 껐다가 켰더니 다시 됨 너무 화가 남
+
+
+
 20200807
+
+Date.toISOString() 함수는 ISO 8601에 기반한 24 혹은 27 길이의 날짜/시각 문자열을 반환하는 함수인데,
+
+timezone이 항상 zero UTC offset이다.
+
+timezone을 반영하고 싶으면 아래 코드 참고.
+
+
+출처: https://bloodguy.tistory.com/entry/JavaScript-DatetoISOString-timezone-offset-반영 [Bloodguy]
+
+
+20200811 
+error page 설정
+
+web.xml
+```xml
+<error-page>
+	<location>/errors</location>
+</error-page>
+```
+
+controller
+```java
+@Controller
+public class ErrorController {
+
+	@RequestMapping(value = "errors", method = RequestMethod.GET)
+    public ModelAndView renderErrorPage(HttpServletRequest httpRequest) {
+        
+        ModelAndView errorPage = new ModelAndView("errorPage");
+        String errorMsg = "";
+        int httpErrorCode = getErrorCode(httpRequest);
+ 
+        switch (httpErrorCode) {
+            case 400: {
+                errorMsg = "Http Error Code: 400. Bad Request";
+                break;
+            }
+            case 401: {
+                errorMsg = "Http Error Code: 401. Unauthorized";
+                break;
+            }
+            case 404: {
+                errorMsg = "Http Error Code: 404. Resource not found";
+                break;
+            }
+            case 500: {
+                errorMsg = "Http Error Code: 500. Internal Server Error";
+                break;
+            }
+        }
+        errorPage.addObject("errorMsg", errorMsg);
+        return errorPage;
+    }
+    
+    private int getErrorCode(HttpServletRequest httpRequest) {
+        return (Integer) httpRequest
+          .getAttribute("javax.servlet.error.status_code");
+    }
+}
+
+```
+
+```
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false"%>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h1>${errorMsg}</h1>
+</body>
+</html>
+```
+
+20200812
+
+인터셉터 등록시 jquery 인식 못하는 듯 함 왜?

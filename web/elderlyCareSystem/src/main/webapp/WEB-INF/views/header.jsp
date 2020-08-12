@@ -55,9 +55,7 @@
             </ul>
           </li>
         </ul>
-        <form class="navbar-search pull-right">
-          <input type="text" class="search-query" placeholder="Search">
-        </form>
+        
       </div>
       <!--/.nav-collapse --> 
     </div>
@@ -152,7 +150,7 @@
 	 			html+="); return false;'>";
 	 			html +=item.ename+"</a></li>";
 	 			
-	 			//console.log(html);
+	 			console.log(html);
 	 		});
 	 		$('#eld-list').html(html);
 	 	});

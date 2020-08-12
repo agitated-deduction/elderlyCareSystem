@@ -33,8 +33,8 @@ public class MqttDAO {
 	public void insert(Map<String, Object>obj) {
 		log.info("++++++DAO insert Test : "+obj.get("elderly")+"+++++++");
 		float hum = (float)obj.get("humid"),temp = (float)obj.get("temp");
-		if(hum<30||hum>100) return;
-		if(temp< -20|| temp > 40) return;
+		if(hum<10||hum>100) return;
+		if(temp< -20|| temp > 60) return;
 		
 		sqlSession.insert(ns+"log", obj);
 		//sqlSession.commit(true);

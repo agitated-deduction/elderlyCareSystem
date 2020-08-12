@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.spring.elderlycare.dto.CalendarDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 
 @Component
@@ -20,4 +21,6 @@ public interface MemberDAO {
 	public int updateRegId(Map<String, Object> map);
 	public int updateRole(String aid);
 	public List<String> selectApvList(String uid);
+	public int insertCalendar(Map<String, Object>map);
+	public List<CalendarDTO>selectCalendars(String uid);
 }

@@ -168,7 +168,16 @@ $(document).ready(function() {
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
+    
+    var eList = [];
+    var temp = null;
+    var ev = new Object();
+    $.getJSON('users/calendar', function(data){
+    	temp = data;
+    	
+    
 	var calendar = $('#calendar').fullCalendar({
+		
     	header: {
     		left: 'prev,next today',
         	center: 'title',
@@ -179,14 +188,14 @@ $(document).ready(function() {
     	select: function(start, end, allDay) {
             var title = prompt('Event Title:');
             if (title) {
-            	
+            	var etimezoneOffset = new Date(end).getTimezoneOffset()*60000;
+            	var stimezoneOffset = new Date(start).getTimezoneOffset()*60000;
             	var calJson = {
                     	title: title,
-                    	start: start,
-                    	end: end,
+                    	start: (new Date(start-stimezoneOffset)).toISOString(),
+                    	end: (new Date(end-etimezoneOffset)).toISOString(),
                     	allDay: allDay
                     };
-            	
             	$.ajax({
             		url:'users/calendar',
             		type: 'POST',
@@ -208,13 +217,9 @@ $(document).ready(function() {
             calendar.fullCalendar('unselect');
           },
           editable: true,
-          events: [
-        	  { title: "title",
-            start: '2020-08-09', 
-            end: '2020-08-10'
-        	  }
-          ]
+          events: temp
         });
+    });
         var html1 = '', html2 = '';
      	$.getJSON('/elderlycare/devices', function(data){
      		$.each(data, function(index, item){

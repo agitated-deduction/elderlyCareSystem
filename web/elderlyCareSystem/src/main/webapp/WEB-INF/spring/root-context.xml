@@ -89,14 +89,18 @@
 	</tx:advice>
 	
 	<!-- 트랜잭션 어노테이션 인식 -->
+	
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path = "/**"/>
 			<mvc:exclude-mapping path = "/users/log*"/>
+			<mvc:exclude-mapping path = "/devices/log*"/>
 			<mvc:exclude-mapping path = "/users/join"/>
+			
+			<mvc:exclude-mapping path = "/datas"/>
 			<bean class = "com.spring.elderlycare.util.SessInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
-	
+
 	</beans>
 

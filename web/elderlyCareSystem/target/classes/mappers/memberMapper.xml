@@ -42,5 +42,12 @@
 	where staff = #{value})a left join `user` on relative = `user`.uid
 	where urole = -1;
 	</select>
-
+<insert id = "insertCalendar" parameterType = "hashmap">
+		insert into calendar(uid, `start`, `end`, title, allDay)
+		values (#{uid}, #{cdto.start}, #{cdto.end}, #{cdto.title}, #{cdto.allDay});
+	</insert>
+	<select id ="selectCalendars" parameterType = "string" resultType = "com.spring.elderlycare.dto.CalendarDTO">
+		select * from calendar
+		where uid = #{value};
+	</select>
 </mapper>

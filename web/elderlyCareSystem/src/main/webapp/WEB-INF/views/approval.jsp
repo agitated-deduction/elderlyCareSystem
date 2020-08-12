@@ -36,7 +36,7 @@
 			<div class="login-fields">
 				
 			<c:forEach var = "id" items = "${aids }">
-			<pre id = 'pre${id }'>${id }					<a class = "apCheck" id = "${id }" href = "" >v</a></pre>
+			<pre id = 'pre${id }'>${id }				<a class = "apCheck" id = "${id }" href = "" >v</a></pre>
 			
 			</c:forEach>
 			

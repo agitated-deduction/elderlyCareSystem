@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.spring.elderlycare.dto.Datas2DTO;
 import com.spring.elderlycare.dto.DatasDTO;
@@ -56,11 +57,11 @@ public class DeviceController {
 			//,headers= {"Content-type=application/json"})
 	public ModelAndView registrationProcess(HttpSession httpSession,ModelAndView mav, ElderlyDTO edto) {
 		
-		
-		logger.info(edto.getEname());
-		
 		service.deviceRegistration(edto, (String)httpSession.getAttribute("uid"));
-		mav.setViewName("home");
+		RedirectView redirectView = new RedirectView();
+		redirectView.setUrl("/elderlycare/");
+		redirectView.setExposeModelAttributes(false);
+		mav.setView(redirectView);
 		
 		return mav;
 	}

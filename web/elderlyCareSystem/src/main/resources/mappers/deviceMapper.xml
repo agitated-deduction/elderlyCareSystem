@@ -67,4 +67,5 @@
 			(select regId,elderly from manage )c 
 		ON a.elderly = c.elderly;
 	</select>
+	
 </mapper>

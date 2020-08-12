@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.elderlycare.dao.MemberDAO;
+import com.spring.elderlycare.dto.CalendarDTO;
 import com.spring.elderlycare.dto.MemberDTO;
 import com.spring.elderlycare.util.SHAUtil;
 
@@ -74,5 +75,13 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public int approvalProcess(String aid) {
 		return mdao.updateRole(aid);
+	}
+	@Override
+	public int calendarPost(Map<String, Object> map) {
+		return mdao.insertCalendar(map);
+	}
+	@Override
+	public List<CalendarDTO> calendarGet(String uid) {
+		return mdao.selectCalendars(uid);
 	}
 }

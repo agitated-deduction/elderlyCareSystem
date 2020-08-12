@@ -285,7 +285,9 @@ $(function(){
    		//});
    		//$('#cur-data').html(html);
 	}); 
-     	 
+    /*
+    온습도 그래프 출처  https://github.com/haydenpark/haydenpark.github.io/tree/master/double-axes 
+    */
 	// size and margins vary as the mode changes (desktop or mobile)
     //mode = $("body").attr("mode");
     //num  = $("body").attr("num"); 

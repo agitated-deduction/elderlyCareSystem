@@ -33,17 +33,13 @@ public class DeviceDAOImpl implements DeviceDAO{
 	}
 
 	@Override
-	public void insertDevice(ElderlyDTO edto, String id) {
-		// insert elderly
+	public void insertDevice(ElderlyDTO edto) {
+		
 		sqlSession.insert(ns+"insertElderly", edto);
-		//insert device
-		sqlSession.insert(ns+"insertDevice", edto);
-		//device registration
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("elderly", edto.getEkey());
-		map.put("staff", id);
-		sqlSession.insert(ns+"insertManage", map);
+		
 	}
+	
+	
 
 	@Override
 	public void updateDevice(ElderlyDTO dudto) {
@@ -64,6 +60,18 @@ public class DeviceDAOImpl implements DeviceDAO{
 	@Override
 	public Map<String, Object> eldLogin(Map<String, Object> eldInfo) {
 		return sqlSession.selectOne(ns+"elderlyLogin", eldInfo);
+	}
+
+	@Override
+	public void insertElderly(ElderlyDTO edto) {
+		sqlSession.insert(ns+"insertDevice", edto);
+		
+	}
+
+	@Override
+	public void insertManage(Map<String, Object>map) {
+		sqlSession.insert(ns+"insertManage", map);
+		
 	}
 
 }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.elderlycaresystem.data.elderly.ElderlyInfo;
 import com.example.elderlycaresystem.R;
+import com.example.elderlycaresystem.ui.login.LoginActivity;
 import com.example.elderlycaresystem.util.RetroUtils;
 
 import java.util.List;
@@ -36,8 +37,16 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO : 1. LoginActivity에서 Key(ID) 받아오기
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        id = bundle.getString(INTENT_ID);
+        //TODO : Push로 App 실행 후 MainActivity로 접근 시
+        if (intent.getStringExtra(INTENT_ID)==null){
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
+            finish();
+        }else{
+            id = intent.getStringExtra(INTENT_ID);
+        }
+
+
         //String cookie = bundle.getString(INTENT_COOKIE);
 
         Toast.makeText(MainActivity.this, "User's ID : " + id, Toast.LENGTH_SHORT).show();

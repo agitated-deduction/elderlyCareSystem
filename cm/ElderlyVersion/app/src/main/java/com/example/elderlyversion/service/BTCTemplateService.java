@@ -11,6 +11,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Messenger;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,7 +27,8 @@ import java.util.Timer;
 
 public class BTCTemplateService extends Service {
     private static final String TAG = "LLService";
-
+    public static final int MSG_REGISTER_CLIENT = 222;
+    public static final int MSG_SEND_TO_ACTIVITY = 444;
     // Context, System
     private Context mContext = null;
     private static Handler mActivityHandler = null;
@@ -46,6 +48,7 @@ public class BTCTemplateService extends Service {
     private Timer mRefreshTimer = null;
     private Timer mDeleteTimer = null;
 
+    private Messenger mClient = null;   // Activity 에서 가져온 Messenger
 
     /*****************************************************
      *	Overrided methods
@@ -78,6 +81,19 @@ public class BTCTemplateService extends Service {
         Log.d(TAG, "# Service - onBind()");
         return mBinder;
     }
+    /** activity로부터 binding 된 Messenger */
+    private final Messenger mMessenger = new Messenger(new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Log.w("test","ControlService - message what : "+msg.what +" , msg.obj "+ msg.obj);
+            switch (msg.what) {
+                case MSG_REGISTER_CLIENT:
+                    mClient = msg.replyTo;  // activity로부터 가져온
+                    break;
+            }
+            return false;
+        }
+    }));
 
     @Override
     public boolean onUnbind(Intent intent) {

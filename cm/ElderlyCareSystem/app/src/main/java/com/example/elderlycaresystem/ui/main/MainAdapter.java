@@ -1,7 +1,10 @@
 package com.example.elderlycaresystem.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.elderlycaresystem.data.elderly.ElderlyInfo;
@@ -75,6 +80,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
         TextView name;
         TextView age;
         TextView addr;
+        TextView statement;
         Button tellButton;
         Button infoButton;
 
@@ -88,25 +94,32 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
             addr = ElderView.findViewById(R.id.addrText);
             tellButton = ElderView.findViewById(R.id.tellButton);
             infoButton = ElderView.findViewById(R.id.infoButton);
+            statement = ElderView.findViewById(R.id.statement);
         }
 
         // TODO: View item 세팅하기
+        @SuppressLint("SetTextI18n")
         public void setItem(final ElderlyInfo item){
-            name.setText("이름 - "+item.getEname()); // 이름
+            name.setText(item.getEname()); // 이름
+            Log.d("MainAdapter!",item.getEname());
 
             String str = item.getEbirth();
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int a = Integer.parseInt(str.substring(0,4));
-            age.setText("나이 - "+String.valueOf(year-a)+"세"); // 나이
-
-            addr.setText("주소 - "+item.getEaddr()); // 주소
-
+            age.setText((year-a)+"세"); // 나이
+            addr.setText(item.getEaddr()); // 주소
+            int stat = item.getStat();
+            if (stat == 1){
+                statement.setBackgroundColor(Color.GREEN);
+            }else if(stat == 0){
+                statement.setBackgroundColor(Color.RED);
+            }
             // 전화버튼 이벤트
             tellButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String tellNumber = ("tel:" + item.getEtel().toString());
+                    String tellNumber = ("tel:" + item.getEtel());
                     Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse(tellNumber));
                     Toast.makeText(v.getContext(),"tel:"+item.getEtel(),Toast.LENGTH_LONG).show();
                     v.getContext().startActivity(intent);

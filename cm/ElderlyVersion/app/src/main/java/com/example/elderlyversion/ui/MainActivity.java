@@ -3,6 +3,10 @@ package com.example.elderlyversion.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -11,11 +15,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Messenger;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -34,7 +42,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.elderlyversion.R;
 import com.example.elderlyversion.data.ElderlyData;
-import com.example.elderlyversion.data.step.StepCheckService;
 import com.example.elderlyversion.service.BTCTemplateService;
 import com.example.elderlyversion.utils.ApiUtils;
 import com.example.elderlyversion.utils.AppSettings;
@@ -74,19 +81,20 @@ public class MainActivity extends Activity {
     private TextView longText = null;
 
     // Time to get message from Arduino
-    private static final int NEW_LINE_INTERVAL = 500;
+    private static final int NEW_LINE_INTERVAL = 1000;
     private static long mLastReceivedTime = 0L;
     // Time to send Data to Server
     private static final int DATA_INTERVAL = 10000; // 600000
     private static long lastTime = 0L;
 
-    // Post to server & Push
+    // Post to server & Push & Notification
     private static String name;
     private static String homeIot;
     private static int ekey;
-
-
     private static String regid;
+    NotificationManager manager;
+    private static String CHANNEL_ID = "channel1";
+    private static String CHANNEL_NAME = "Channel1";
 
     private static ElderlyData elderlyData;
 
@@ -104,10 +112,11 @@ public class MainActivity extends Activity {
         elderlyData.setEstat(1);
 
         mActivityHandler = new ActivityHandler();
+
         AppSettings.initializeAppSettings(this);
         setContentView(R.layout.activity_main);
 
-        elderlyData = new ElderlyData(1, 12, 65,0, 6.54, 36.184718283949, 127.801093940);
+//        elderlyData = new ElderlyData(1, 12, 65,1, 6.54, 36.184718283949, 127.801093940);
 
         // Get & Set Username from LoginActivity
         Intent intent = getIntent();
@@ -120,11 +129,28 @@ public class MainActivity extends Activity {
         doStartService();
     }
 
+    /** Service 로 부터 message를 받음 */
+    private final Messenger mMessenger = new Messenger(new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Log.i("test","act : what "+msg.what);
+            switch (msg.what) {
+                case BTCTemplateService.MSG_SEND_TO_ACTIVITY://444
+                    int value1 = msg.getData().getInt("fromService");
+                    String value2 = msg.getData().getString("test");
+                    Log.i("test","act : value1 "+value1);
+                    Log.i("test","act : value2 "+value2);
+                    break;
+            }
+            return false;
+        }
+    }));
+
     @Override
     protected void onResume() {
         super.onResume();
-        sendEmergancyData();
-        sendData(elderlyData);
+//        sendEmergancyData();
+//        sendData(elderlyData);
     }
 
     @Override
@@ -145,7 +171,7 @@ public class MainActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        finalizeActivity();
+//        finalizeActivity();
     }
 
     @Override
@@ -231,7 +257,7 @@ public class MainActivity extends Activity {
         Logs.d(TAG, "# Activity - finalizeActivity()");
 
         if(!AppSettings.getBgService()) {
-            doStopService();
+//            doStopService();
         }
         // Clean used resources
         RecycleUtils.recursiveRecycle(getWindow().getDecorView());
@@ -284,7 +310,6 @@ public class MainActivity extends Activity {
         }    // End of switch(requestCode)
     }
 
-
     @SuppressLint("HandlerLeak")
     public class ActivityHandler extends Handler {
         @SuppressLint("SetTextI18n")
@@ -331,47 +356,133 @@ public class MainActivity extends Activity {
                 ///////////////////////////////////////////////
                 // TODO : Arduino Message -> 화면에 표시
                 case Constants.MESSAGE_READ_CHAT_DATA:
-                    long current = System.currentTimeMillis();
+
                     if(msg.obj != null) {
                         Log.d("RECEIVE_MSG",(String)msg.obj);
                         String str = addMessage((String)msg.obj);
-
                         if (str == MESSAGE_BT_ADDING || str == " "){
                             return;
-                        }
-                        if (str.substring(0,1).equals("0")){
-                            Log.d("STATE_EMR", str);
-                            messageParsing(str);
-                            messageSetting(elderlyData);
-//                            TODO : Emergancy Data Push
-                            sendEmergancyData();
-                            sendData(elderlyData);
-                            lastTime = current;
-                        }
-                        else if (str.substring(0,1).equals("1")){
-                            Log.d("STATE_NOR", str);
-                            messageParsing(str);
-                            messageSetting(elderlyData);
-                        }
-                        else{
-                            Log.d("RECEIVE_ERROR",str);
+                        }else{
+                            Log.d("RECEIVE_Data", str);
+                            if (messageParsing(str)){
+                                messageSetting(elderlyData);
+                            }
                         }
 
+                        long current = System.currentTimeMillis();
+                        if (checkBPM(elderlyData)){
+                            Log.d("RECEIVE_Data","HIGH_BPM!!");
+                            elderlyData.setEstat(0);
+//                            sendEmergancyData(name,"심박수 높음!");
+                            showNoti(name,"심박수 높음!");
+                        }
+                        if(elderlyData.getEstat()==0){
+                            phoneCall();
+                            sendEmergancyData(name,"위험");
+//                            sendData(elderlyData);
+                            lastTime = current;
+                        }
                         if(current - lastTime > DATA_INTERVAL) {
-                            sendData(elderlyData);
+//                            sendData(elderlyData);
                             lastTime = current;
                         }
-                    }
 
+                    }
                     receiveMessage = "";
                     break;
                 default:
                     break;
             }
-
             super.handleMessage(msg);
         }
     }	// End of class ActivityHandler
+
+    public void showNoti(String title, String text) {
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|
+                Intent.FLAG_ACTIVITY_SINGLE_TOP|
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Log.d(TAG, "Notification호출됨");
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 ,
+                intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setAutoCancel(true)
+//                .setSound(defaultSoundUri)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+//                .setOngoing(true)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
+        notificationManager.notify(2 /* ID of notification */, notificationBuilder.build());
+    }
+
+
+    public void phoneCall(){
+        String tellNumber = "tel:119";
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(tellNumber));
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|
+                Intent.FLAG_ACTIVITY_SINGLE_TOP|
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    public Boolean checkBPM(ElderlyData elderlyData){
+        if ( elderlyData.getEpulse()>80){ return true; }
+        else{ return false; }
+    }
+
+    // TODO : Arduino Message parsing
+    public String addMessage(String message) {
+        String addMessage = "";
+        if (message != null && message.length() > 0) {
+            receiveMessage += message;
+            long current = System.currentTimeMillis();
+            if (current - mLastReceivedTime > NEW_LINE_INTERVAL) {
+                Log.d("ADDED MESSAGE END", receiveMessage);
+                mLastReceivedTime = current;
+                addMessage = receiveMessage;
+                return addMessage;
+            }
+        }
+        Log.d("Method", "Message Adding..");
+        return MESSAGE_BT_ADDING;
+    }
+
+    public Boolean messageParsing(String receiveMsg){
+        String[] array = receiveMsg.split(",");
+        Log.d("RECEIVE_Parsing_MSG",receiveMsg);
+        Log.d("RECEIVE_Parsing_MSG"," Msg.(0) : "+receiveMsg.substring(0,1));
+        if(receiveMsg.substring(0,1) == "0"||receiveMsg.substring(0,1) == "1"){
+            Log.d("RECEIVE_Parsing_MSG","First Msg : "+receiveMsg.substring(0,1));
+            elderlyData.setEstat(Integer.parseInt(array[0]));
+            elderlyData.setEpulse(Integer.parseInt(array[1].substring(6)));
+            elderlyData.setEstep(Integer.parseInt(array[2].substring(5)));
+            elderlyData.setEaltitude(Double.parseDouble(array[3].substring(5,20)));
+            elderlyData.setElongitude(Double.parseDouble(array[4].substring(5,20)));
+            return true;
+        }
+        else{
+            Log.d("RECEIVE_Parsing_MSG","First Data missing.. : "+ array[0]);
+            return false;
+        }
+    }
 
     // TODO : Server에 메시지 PUT
     public void sendData(ElderlyData elderlyData){
@@ -382,38 +493,30 @@ public class MainActivity extends Activity {
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Log.d("PUT_SUCCESS", response.message()); // 성공 : OK(200)
-//                    try {
-//                        Toast.makeText(getApplicationContext(), "Put Success:" + response.body().string(), Toast.LENGTH_SHORT).show();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
                 } else {
                     Log.d("PUT_NOT_SUCCESS", response.message()); // 실패
-//                    Toast.makeText(getApplicationContext(), "PUT_FAIL:" + response.message() + ", " + response.body(), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                t.getLocalizedMessage();
                 Log.d("PUT_FAILURE", call.toString());
-                t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "PUT_FAILURE" + call.toString(), Toast.LENGTH_SHORT).show();
+//                t.printStackTrace();t.getLocalizedMessage();
             }
         });
-
     }
 
     // TODO : Volley로 Push 보내기(Notification & Data)
-    public void sendEmergancyData() {
-        Log.d("PUSH","Start");
+    public void sendEmergancyData(String title, String text) {
+        Log.d("PUSH", "Start");
         try {
             RequestQueue queue = Volley.newRequestQueue(this);
             String url = "https://fcm.googleapis.com/fcm/send";
             JSONObject pushData = new JSONObject();
 
             pushData.put("ekey", elderlyData.getEkey());
-            pushData.put("title", name);
-            pushData.put("body", "위험");
+            pushData.put("title", title);
+            pushData.put("body", text);
+            pushData.put("url", "null");
 
             JSONObject push = new JSONObject();
             push.put("to", regid);
@@ -422,12 +525,12 @@ public class MainActivity extends Activity {
             JsonObjectRequest request = new JsonObjectRequest(url, push, new com.android.volley.Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Log.d("Emergancy_Push","success:"+response.toString());
+                    Log.d("Emergancy_Push", "success:" + response.toString());
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("Emergancy_Push","error:"+error.getMessage());
+                    Log.d("Emergancy_Push", "error:" + error.getMessage());
                 }
             }) {
                 @Override
@@ -442,41 +545,17 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d("PUSH","End");
+        Log.d("PUSH", "End");
     }
 
-    // TODO : Arduino Message parsing
-    public String addMessage(String message) {
-        String addMessage = "";
-        if (message != null && message.length() > 0) {
-            receiveMessage += message;
-
-            long current = System.currentTimeMillis();
-            if (current - mLastReceivedTime > NEW_LINE_INTERVAL) {
-                Log.d("ADDED MESSAGE END", receiveMessage);
-                mLastReceivedTime = current;
-                addMessage = receiveMessage;
-
-                return addMessage;
-            }
-        }
-        Log.d("Method", "Message Adding..");
-        return MESSAGE_BT_ADDING;
-    }
-
-    public void messageParsing(String receiveMsg){
-        String[] array = receiveMsg.split(",");
-
-        //step = array[0].substring(6);
-        elderlyData.setEpulse(Integer.parseInt(array[1].substring(6)));
-        elderlyData.setEaltitude(Double.parseDouble(array[2].substring(5)));
-        elderlyData.setElongitude(Double.parseDouble(array[3].substring(5)));
-    }
     public void messageSetting(ElderlyData elderly){
+        stepText.setText(String.valueOf(elderlyData.getEstep()));
+        elderlyData.setEkcal(elderlyData.getEstep() * 70 * 5.5 / 10000);
+        kcalText.setText(String.valueOf(elderlyData.getEkcal()));
+
         pulseText.setText(String.valueOf(elderly.getEpulse()));
         latiText.setText(String.valueOf(elderly.getEaltitude()));
         longText.setText(String.valueOf(elderly.getElongitude()));
-        //longi = Double.parseDouble(str[3]);
     }
 
     // Count Step
@@ -484,11 +563,6 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i("PlayignReceiver", "IN");
-            int s = Integer.parseInt(intent.getStringExtra("stepService"));
-            elderlyData.setEstep(s) ;
-            stepText.setText(String.valueOf(elderlyData.getEstep()) );
-            elderlyData.setEkcal(elderlyData.getEstep() * 70 * 5.5 / 10000);
-            kcalText.setText(String.valueOf(elderlyData.getEkcal()));
         }
     }
 
@@ -507,20 +581,18 @@ public class MainActivity extends Activity {
 
     public void processIntent(Intent intent) {
         if (intent != null){
-            Bundle bundle = intent.getExtras();
-
-            name = intent.getStringExtra("name");
+            name = intent.getStringExtra("ename");
             homeIot = intent.getStringExtra("homeIoT");
             ekey = intent.getIntExtra("ekey",-1);
             elderlyData.setEkey(ekey);
 
-            if (bundle.getString("regid")!= null){
-                regid = bundle.getString("regid");
+            if (intent.getStringExtra("regid")!= null){
+                regid = intent.getStringExtra("regid");
             }else{
                 regid = "eTRx-Z31TdCjy00iLSygQB:APA91bHKGYvaPTKc26kIJjhC2Bu_GQf-XPlwnZNMubK4gqptdhxtIEmqdh-r9-RyFClj0BLAoXRQn_xOBN-obMhMsUU__q_JqmKeSN1DCcQlb5zSzgepPzJM6gD_Qwu43S4bpZhhA1Gx";
             }
-
-            Toast.makeText(this,name+"접속. " + "eKey:"+ekey+"regId:"+regid,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,regid+"님 환영합니다.",Toast.LENGTH_SHORT).show();
+            Log.d("Main_Lgoin", "eKey:"+ekey+"regId:"+regid);
         }
     }
 
@@ -537,17 +609,22 @@ public class MainActivity extends Activity {
         latiText = findViewById(R.id.latitudeText);
         longText = findViewById(R.id.longitudeText);
 
-        // Step Count
-        manboService = new Intent(this, StepCheckService.class);
-        receiver = new StepReceiver();
         stepText = findViewById(R.id.stepText);
-        getSteps();
 
-        Button button = findViewById(R.id.mapButton);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        Button mapButton = findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+        });
+        Button homeIoTButton = findViewById(R.id.homeButton);
+        homeIoTButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(homeIot));
                 startActivity(intent);
             }
         });

@@ -72,8 +72,12 @@ spring프로젝트와의 연결 전에는 잘 작동하였으나 연결 후, 받
 로그인 시 비밀번호는 SHA-256 암호화를 한다. 암호화 과정은 다이어그램상 service 단에서 하는 것으로 되어 있으나 controller부분으로 코드 수정 예정이다.
 <br>
 로그인 화면이다.<br>
+
 ![login](./img/login.png)
+
 <br>
+----------------
+
 ![success](./img/login_suc.png)
 ![fail](./img/login_f.png)<br>
 각각 로그인 성공과 실패시 화면이다. 로그인 성공시 홈 화면으로 redirect되고 실패시 로그인 화면에 그대로 남는다.
@@ -101,9 +105,14 @@ drop버튼을 누르면 부가 기능이 나온다. 기기등록 및 가입 승�
 무료 대시보드 템플릿에 있는 달력을 활용해서 구현했다.<br>
 id마다 각각 본인이 입력한 정보만 저장되며 볼 수 있다. 추후 다른 사람과 공유할 일정과 개인 일정을 설정하여 입력 가능하게 구현 할 예정이다.
 
-![cal](./img/cal_in.png)<br>
+![cal](./img/cal_in.png) <br>
 일정 입력<br>
 ![cal1](./img/cal1.png)<br>
 ![cal2](./img/cal2.png)<br>
 아이디마다 다른 데이터가 저장된 모습
+
+
+
+### DATABASE
+![erd](./img/erd.jpg)
 
